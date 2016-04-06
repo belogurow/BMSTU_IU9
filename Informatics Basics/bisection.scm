@@ -1,0 +1,12 @@
+(define pi (acos -1))
+
+(define (area-and-volume figure . args)
+  (cond ((equal? figure 'cube) (list (* 6 (car args) (car args))
+                                     (* (car args) (car args) (car args))))
+        ((equal? figure 'ball) (list (* 4 pi (car args) (car args))
+                                     (/ (* 4 pi (car args) (car args) (car args)) 3)))
+        ((equal? figure 'cylinder) (list (+ (* 2 pi (car args) (cadr args)) (* 2 pi (car args) (car args)))
+                                         (* pi (car args) (car args) (cadr args))))
+        ((equal? figure 'cone) (list (* pi (car args) (+ (car args) (sqrt (+ (* (car args) (car args)) (* (cadr args) (cadr args))))))
+                                     (/ (* pi (car args) (car args) (cadr args)) 3)))
+        (else (list))))

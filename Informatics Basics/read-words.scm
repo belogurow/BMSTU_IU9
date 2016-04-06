@@ -1,0 +1,13 @@
+(define (read-words)
+  (let A ((spis '()))
+    (let ((file (read-char)))
+      (if (eof-object? file)
+          (if (null? spis)
+              '()
+              (list (list->string spis)))
+          (if (or (equal? file #\space) (equal? file #\newline))
+              (if (null? spis)
+                  (A '())
+                  (cons (list->string spis) (A '())))
+              (A (append spis (list file))))))))
+          

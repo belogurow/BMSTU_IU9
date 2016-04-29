@@ -4,6 +4,7 @@ from pyglet.gl import *
 from pyglet.window import mouse
 from pyglet.window import key
 
+
 window = pyglet.window.Window(1300, 700, resizable=True, caption='Lab 4')
 
 stack = []
@@ -14,6 +15,7 @@ data = (GLfloat * (3*window.width*window.height))()
 #print(data[0])
 
 sign = lambda x: 1 if (x > 1) else -1 if (x < 0) else 0
+color = lambda x, y: 1 if data[(y * window.width + x) * 3 + 0] == 1 else 0
 
 
 def clear_data():
@@ -31,6 +33,7 @@ def put_pixel(x, y, intens=1):
     #print("(%d, %d)" % (x, y))
     for i in range(3):
         data[(y * window.width + x) * 3 + i] = intens
+    #data[(y * window.width + x) * 3 + 3] = 1
 
 
 def bresenham(x1, y1, x2, y2):
@@ -126,16 +129,59 @@ def my_test_border(x, y):
         x -= 1
     if stack.count([x, y, 1]) == 0:
         stack.append([x, y, 1])
-    # в 8 - сторон
-    """if data[((y+1)*window.width + (x-1)) * 3 + 0] != 1:
-        stack.append([x-1, y+1, 1])
-    if data[((y+1)*window.width + (x+1)) * 3 + 0] != 1:
-        stack.append([x+1, y+1, 1])
-    if data[((y-1)*window.width + (x-1)) * 3 + 0] != 1:
-        stack.append([x-1, y-1, 1])
-    if data[((y-1)*window.width + (x+1)) * 3 + 0] != 1:
-        stack.append([x+1, y-1, 1]) """
 
+
+def my_test_border2(x_left, x_right, y):
+    if data[(y * window.width + x_right) * 3 + 0] == 1:
+        while data[(y * window.width + x_right) * 3 + 0] == 1:
+            x_right -= 1
+    else:
+        while data[(y * window.width + x_right) * 3 + 0] != 1:
+            x_right += 1
+        x_right -= 1
+
+    if data[(y * window.width + x_left) * 3 + 0] == 1:
+        while data[(y * window.width + x_left) * 3 + 0] == 1:
+            x_left += 1
+    else:
+        while data[(y * window.width + x_left) * 3 + 0] != 1:
+            x_left -= 1
+        x_left += 1
+
+    if x_left <= x_right:
+        #stack.append([x_left, y])
+        x = x_left
+        fill = False
+        while x <= x_right:
+            stack.append([x, y])
+            while data[(y * window.width + x) * 3 + 0] != 1:
+                x += 1
+            if x-1 == x_right:
+                break
+            while data[(y * window.width + x) * 3 + 0] == 1:
+                x += 1
+
+
+def postfiltr(x, y):
+    left_up = color(x-1, y+1)
+    up = color(x, y+1)
+    right_up = color(x+1, y+1)
+    left = color(x-1, y)
+    this = color(x, y)
+    right = color(x+1, y)
+    left_down = color(x-1, y-1)
+    down = color(x, y-1)
+    right_down = color(x+1, y-1)
+    intens = this/2 + (left_up + up + right_up + left + right + left_down + down + right_down)/16
+    put_pixel(x-1, y+1, intens=intens/16)
+    put_pixel(x, y+1, intens=intens/16)
+    put_pixel(x+1, y+1, intens=intens/16)
+    put_pixel(x-1, y, intens=intens/16)
+    put_pixel(x, y, intens=intens/2)
+    put_pixel(x, y+1, intens=intens/16)
+    put_pixel(x-1, y-1, intens=intens/16)
+    put_pixel(x, y-1, intens=intens/16)
+    put_pixel(x+1, y-1, intens=intens/16)
 
 
 @window.event
@@ -160,12 +206,12 @@ def on_mouse_press(x, y, button, modifiers):
 def on_resize(width, height):
     if height == 0:
         height = 1
-
+    glViewport(0, 0, width, height)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    glViewport(0, 0, width, height)
     gluOrtho2D(0, width, 0, height)
     glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
     # print("New: %d %d" % (width,height))
     # print("New_window %d %d" % (window.width,window.height))
     # data.fill(0)
@@ -199,7 +245,7 @@ def on_draw():
     # glReadBuffer(GL_FRONT)
     # data = (GLubyte * (3*window.width*window.height))(0)
     # data = (GLfloat * (3*window.width*window.height))(0)
-    while len(stack) > 0:
+    """while len(stack) > 0:
         x, y = stack[len(stack) - 1][0], stack[len(stack) - 1][1]
         stack.pop()
         if data[(y * window.width + x) * 3 + 0] != 1.0:
@@ -218,28 +264,31 @@ def on_draw():
             my_test_border(x, y-1)
             my_test_border(x, y+1)
     """
+    # TODO change feel polygon
     while len(stack) > 0:
         x, y = stack[len(stack) - 1][0], stack[len(stack) - 1][1]
         stack.pop()
         put_pixel(x, y)
         x0 = x
-        while data[(y * window.width + (x + 1)) * 3 + 0] != 1.0:
-            x += 1
-            put_pixel(x, y)
-        x_right = x
-        x = x0
         while data[(y * window.width + (x - 1)) * 3 + 0] != 1.0:
             x -= 1
             put_pixel(x, y)
         x_left = x
-        # print("x_left - x_right: " + str(x_left) + "-" + str(x_right))
-        test_border(x, y - 1, x_right)
-        test_border(x, y + 1, x_right)
-    """
+        x = x0
+        while data[(y * window.width + (x + 1)) * 3 + 0] != 1.0:
+            x += 1
+            put_pixel(x, y)
+        x_right = x
+        my_test_border2(x_left, x_right, y+1)
+        my_test_border2(x_left, x_right, y-1)
+
+
     # glDrawPixels(window.width, window.height, GL_RGB, GL_FLOAT, (GLfloat * len(data))(*data))
     #glDrawPixels(window.width, window.height, GL_RGB, GL_INT, data)
+    #for x in range(1, 500, 2):
+    #    for y in range(1, 500, 2):
+    #        postfiltr(x ,y)
     glDrawPixels(window.width, window.height, GL_RGB, GL_FLOAT, data)
-    #glPixelZoom(0.9, 0.9)
     glFlush()
 
 

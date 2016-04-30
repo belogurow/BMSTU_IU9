@@ -132,6 +132,7 @@ def my_test_border(x, y):
 
 
 def my_test_border2(x_left, x_right, y):
+    """x0 = x_left
     if data[(y * window.width + x_right) * 3 + 0] == 1:
         while data[(y * window.width + x_right) * 3 + 0] == 1:
             x_right -= 1
@@ -139,7 +140,8 @@ def my_test_border2(x_left, x_right, y):
         while data[(y * window.width + x_right) * 3 + 0] != 1:
             x_right += 1
         x_right -= 1
-
+    # #######x
+    # #x---->
     if data[(y * window.width + x_left) * 3 + 0] == 1:
         while data[(y * window.width + x_left) * 3 + 0] == 1:
             x_left += 1
@@ -147,11 +149,40 @@ def my_test_border2(x_left, x_right, y):
         while data[(y * window.width + x_left) * 3 + 0] != 1:
             x_left -= 1
         x_left += 1
+    """
+    if data[(y * window.width + (x_right+1)) * 3 + 1] != 1:
+        while data[(y * window.width + (x_right+1)) * 3 + 0] != 1:
+            x_right += 1
+    else:
+        while data[(y * window.width + (x_right)) * 3 + 1] == 1:
+            x_right -= 1
+        #x_right -= 1
 
+    if data[(y * window.width + (x_left-1)) * 3 + 0] != 1:
+        while data[(y * window.width + (x_left-1)) * 3 + 0] != 1:
+            x_left -= 1
+    else:
+        while data[(y * window.width + x_left) * 3 + 0] == 1:
+            x_left += 1
+        #x_left -= 1
+    #data[(y * window.width + x_left) * 3 + 0] = 1
+    #data[(y * window.width + x_right) * 3 + 1] = 1
+    """
+    data[(y * window.width + x_right) * 3 + 1] = 1
+    x = x_left
+    while x <= x_right:
+        if data[(y * window.width + x) * 3 + 0] == 1:
+            while data[(y * window.width + (x+1)) * 3 + 0] == 1:
+                x += 1
+            if x == x_right:
+                break
+            x += 1
+        data[(y * window.width + x) * 3 + 0] = 1
+        while data[(y * window.width + (x+1)) * 3 + 0] != 0:
+            x += 1
+    """
     if x_left <= x_right:
-        #stack.append([x_left, y])
         x = x_left
-        fill = False
         while x <= x_right:
             stack.append([x, y])
             while data[(y * window.width + x) * 3 + 0] != 1:
@@ -232,11 +263,11 @@ def on_draw():
         for i in range(len(vertex) - 1):
             bresenham(vertex[i][0], vertex[i][1], vertex[i + 1][0], vertex[i + 1][1])
         bresenham(vertex[len(vertex) - 1][0], vertex[len(vertex) - 1][1], vertex[0][0], vertex[0][1])
-    bresenham(150, 100, 200, 90)
+    bresenham(18, 100, 200, 90)
     bresenham(200, 90, 168, 133)
     bresenham(168, 133, 160, 70)
-    bresenham(160, 70, 150, 125)
-    bresenham(150, 125, 150, 100)
+    bresenham(160, 70, 18, 125)
+    bresenham(18, 125, 18, 100)
 
     bresenham(200, 380, 202, 380)
     bresenham(202, 380, 202, 400)

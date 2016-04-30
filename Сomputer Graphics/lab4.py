@@ -5,7 +5,7 @@ from pyglet.window import mouse
 from pyglet.window import key
 
 
-window = pyglet.window.Window(1300, 700, resizable=True, caption='Lab 4')
+window = pyglet.window.Window(800, 600, resizable=True, caption='Lab 4')
 
 stack = []
 vertex = []
@@ -15,7 +15,7 @@ data = (GLfloat * (3*window.width*window.height))()
 #print(data[0])
 
 sign = lambda x: 1 if (x > 1) else -1 if (x < 0) else 0
-color = lambda x, y: 1 if data[(y * window.width + x) * 3 + 0] == 1 else 0
+color = lambda x, y: data[(y * window.width + x) * 3 + 0]
 
 
 def clear_data():
@@ -72,91 +72,13 @@ def bresenham(x1, y1, x2, y2):
         put_pixel(x, y)
 
 
-def test_border(x, y, x_right):
-    while x <= x_right:
-        flag = False
-        while data[(y * window.width + x) * 3 + 0] != 1.0 and x < x_right:
-            if not flag:
-                flag = True
-            x += 1
-        if flag:
-            if x == x_right and data[(y * window.width + x) * 3 + 0] != 1.0:
-                stack.append([x, y, 1])
-            else:
-                stack.append([x - 1, y, 1])
-        else:
-            flag = False
-        x_entry = x
-        while data[(y * window.width + x) * 3 + 0] == 1.0 and x < x_right:
-            x += 1
-        if x == x_entry:
-            x += 1
-
-
-def test_border_up(x, y):
-    """while data[((y+1)*window.width + x - 1)*3+0] != 1:
-        x -= 1
-        #print(x)
-    if stack.count([x, y+1, 1]) == 0:
-        stack.append([x, y+1, 1])
-    while data[((y-1)*window.width + x0 - 1)*3+0] != 1:
-        x -= 1
-    if stack.count([x0, y-1, 1]) == 0:
-        stack.append([x, y-1, 1])
-    #print("test border : " + str(stack[:len(stack)]))"""
-    #put_pixel(x, y)
-    y += 1
-    #if data[(y*window.width + x) * 3 + 0] != 1:
-    #    test_border_up(x, y)
-    while data[(y*window.width + x-1) * 3 + 0] != 1:
-        x -= 1
-    if stack.count([x, y, 1]) == 0:
-        stack.append([x, y, 1])
-    """if data[((y+1)*window.width + (x-1)) * 3 + 0] != 1:
-        test_border_up(x, y)
-    if data[((y+1)*window.width + (x+1)) * 3 + 0] != 1:
-        test_border_up(x, y)
-    if data[((y-1)*window.width + (x-1)) * 3 + 0] != 1:
-        test_border_up(x, y)
-    if data[((y-1)*window.width + (x+1)) * 3 + 0] != 1:
-        test_border_up(x, y)"""
-
-
-def my_test_border(x, y):
-    #if data[(y*window.width + x) * 3 + 0] != 1:
-    #    my_test_border(x, y)
-    while data[(y*window.width + (x-1)) * 3 + 0] != 1:
-        x -= 1
-    if stack.count([x, y, 1]) == 0:
-        stack.append([x, y, 1])
-
-
 def my_test_border2(x_left, x_right, y):
-    """x0 = x_left
-    if data[(y * window.width + x_right) * 3 + 0] == 1:
-        while data[(y * window.width + x_right) * 3 + 0] == 1:
-            x_right -= 1
-    else:
-        while data[(y * window.width + x_right) * 3 + 0] != 1:
-            x_right += 1
-        x_right -= 1
-    # #######x
-    # #x---->
-    if data[(y * window.width + x_left) * 3 + 0] == 1:
-        while data[(y * window.width + x_left) * 3 + 0] == 1:
-            x_left += 1
-    else:
-        while data[(y * window.width + x_left) * 3 + 0] != 1:
-            x_left -= 1
-        x_left += 1
-    """
     if data[(y * window.width + (x_right+1)) * 3 + 1] != 1:
         while data[(y * window.width + (x_right+1)) * 3 + 0] != 1:
             x_right += 1
     else:
-        while data[(y * window.width + (x_right)) * 3 + 1] == 1:
+        while data[(y * window.width + x_right) * 3 + 1] == 1:
             x_right -= 1
-        #x_right -= 1
 
     if data[(y * window.width + (x_left-1)) * 3 + 0] != 1:
         while data[(y * window.width + (x_left-1)) * 3 + 0] != 1:
@@ -164,23 +86,6 @@ def my_test_border2(x_left, x_right, y):
     else:
         while data[(y * window.width + x_left) * 3 + 0] == 1:
             x_left += 1
-        #x_left -= 1
-    #data[(y * window.width + x_left) * 3 + 0] = 1
-    #data[(y * window.width + x_right) * 3 + 1] = 1
-    """
-    data[(y * window.width + x_right) * 3 + 1] = 1
-    x = x_left
-    while x <= x_right:
-        if data[(y * window.width + x) * 3 + 0] == 1:
-            while data[(y * window.width + (x+1)) * 3 + 0] == 1:
-                x += 1
-            if x == x_right:
-                break
-            x += 1
-        data[(y * window.width + x) * 3 + 0] = 1
-        while data[(y * window.width + (x+1)) * 3 + 0] != 0:
-            x += 1
-    """
     if x_left <= x_right:
         x = x_left
         while x <= x_right:
@@ -203,33 +108,46 @@ def postfiltr(x, y):
     left_down = color(x-1, y-1)
     down = color(x, y-1)
     right_down = color(x+1, y-1)
-    intens = this/2 + (left_up + up + right_up + left + right + left_down + down + right_down)/16
-    put_pixel(x-1, y+1, intens=intens/16)
-    put_pixel(x, y+1, intens=intens/16)
-    put_pixel(x+1, y+1, intens=intens/16)
-    put_pixel(x-1, y, intens=intens/16)
-    put_pixel(x, y, intens=intens/2)
-    put_pixel(x, y+1, intens=intens/16)
-    put_pixel(x-1, y-1, intens=intens/16)
-    put_pixel(x, y-1, intens=intens/16)
-    put_pixel(x+1, y-1, intens=intens/16)
+    #print(left_up, up, right_up)
+    #print(left, this, right)
+    #print(left_down, down, right_down)
+    #print()
+    n = 2
+    k = 25
+    intens = this + left_up + up + right_up + left + right + left_down + down + right_down
+    #intens = this/n + (left_up + up + right_up + left + right + left_down + down + right_down)/16
+    #intens = this/4 + (up + left + right + down)/6 + (left_up + right_up + left_down + right_down)/k
+    put_pixel(x-1, y+1, intens=intens/k)
+    put_pixel(x, y+1, intens=intens/k)
+    put_pixel(x+1, y+1, intens=intens/k)
+    put_pixel(x-1, y, intens=intens/k)
+    put_pixel(x, y, intens=intens/n)
+    put_pixel(x+1, y, intens=intens/k)
+    put_pixel(x-1, y-1, intens=intens/k)
+    put_pixel(x, y-1, intens=intens/k)
+    put_pixel(x+1, y-1, intens=intens/k)
+    #print(color(x-1, y+1), color(x, y+1), color(x+1, y+1))
+    #print(color(x-1, y), color(x, y), color(x+1, y))
+    #print(color(x-1, y-1), color(x, y-1), color(x+1, y-1))
+    #print("===================================")
 
+flag = False
 
 @window.event
 def on_key_press(symbol, modifiers):
     if symbol == key.SPACE:
         clear_data()
         vertex.clear()
+    if symbol == key.ENTER:
+        global flag
+        flag = not flag
 
 
 @window.event
 def on_mouse_press(x, y, button, modifiers):
     if button == mouse.LEFT:
-        # data = (GLfloat * (3*window.width*window.height))(0)
         vertex.append([x, y])
     if button == mouse.RIGHT:
-        # global x0, y0
-        # x0, y0 = x, y
         stack.append([x, y, 1])
 
 
@@ -257,7 +175,8 @@ def on_draw():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     # glLoadIdentity()
     # glEnable(GL_DEPTH_TEST)
-    clear_data()
+    if not flag:
+        clear_data()
     #bresenham(0, 0, 7, 5)
     if len(vertex) >= 2:
         for i in range(len(vertex) - 1):
@@ -276,26 +195,6 @@ def on_draw():
     # glReadBuffer(GL_FRONT)
     # data = (GLubyte * (3*window.width*window.height))(0)
     # data = (GLfloat * (3*window.width*window.height))(0)
-    """while len(stack) > 0:
-        x, y = stack[len(stack) - 1][0], stack[len(stack) - 1][1]
-        stack.pop()
-        if data[(y * window.width + x) * 3 + 0] != 1.0:
-            my_test_border(x, y-1)
-            my_test_border(x, y+1)
-        put_pixel(x, y)
-        x0 = x
-        while data[(y * window.width + (x - 1)) * 3 + 0] != 1.0:
-            x -= 1
-            put_pixel(x, y)
-        x = x0
-        while data[(y * window.width + (x + 1)) * 3 + 0] != 1.0:
-            x += 1
-            put_pixel(x, y)
-            #test_border_up(x, y)
-            my_test_border(x, y-1)
-            my_test_border(x, y+1)
-    """
-    # TODO change feel polygon
     while len(stack) > 0:
         x, y = stack[len(stack) - 1][0], stack[len(stack) - 1][1]
         stack.pop()
@@ -312,13 +211,17 @@ def on_draw():
         x_right = x
         my_test_border2(x_left, x_right, y+1)
         my_test_border2(x_left, x_right, y-1)
-
-
-    # glDrawPixels(window.width, window.height, GL_RGB, GL_FLOAT, (GLfloat * len(data))(*data))
-    #glDrawPixels(window.width, window.height, GL_RGB, GL_INT, data)
-    #for x in range(1, 500, 2):
-    #    for y in range(1, 500, 2):
-    #        postfiltr(x ,y)
+    # TODO add postfiltr
+    """if flag:
+        for x in range(1, 500, 1):
+            for y in range(1, 500, 1):
+                postfiltr(x ,y)"""
+    h = window.height
+    w = window.width
+    if flag:
+        for x in range(1, w-1, 1):
+            for y in range(0, h-1, 1):
+                postfiltr(x, y)
     glDrawPixels(window.width, window.height, GL_RGB, GL_FLOAT, data)
     glFlush()
 

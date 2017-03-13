@@ -37,7 +37,7 @@ public class Lab3 {
         // Регулярные выражения
         String number = "[0-9]+";
         String nixil = "(?i)NIXIL";
-        String validRoman = "(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})";
+        String validRoman = "(?i)(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})";
 
         String pattern = "(" + number + ")|(" + nixil + ")|(" + validRoman + ")|(\\S)";
 

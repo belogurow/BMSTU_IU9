@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by alexbelogurow on 03.03.17.
+ * Created by alexbelogurow on 12.03.17.
  *
  * Идентификаторы: последовательности десятичных цифр. Числовые литералы: римские цифры
  * и ключевое слово "NIXIL", не чувствительны к регистру.

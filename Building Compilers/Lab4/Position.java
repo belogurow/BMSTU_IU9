@@ -4,15 +4,9 @@ import java.io.UnsupportedEncodingException;
 /**
  * Created by alexbelogurow on 21.03.17.
  */
-public class Position implements Comparable<Position>{
+public class Position  {
     private String text;
     private int line, pos, index;
-
-    public Position(String text) {
-        this.text = text;
-        line = pos = 1;
-        index = 0;
-    }
 
     public int getLine() {
         return line;
@@ -26,22 +20,39 @@ public class Position implements Comparable<Position>{
         return index;
     }
 
-    @Override
+    public String getText() {
+        return text;
+    }
+
+    public Position(String text) {
+        this.text = text;
+        line = pos = 1;
+        index = 0;
+    }
+
+    public Position(Position p) {
+        this.text = p.getText();
+        this.line = p.getLine();
+        this.pos = p.getPos();
+        this.index = p.getIndex();
+    }
+
+    public boolean isEOF() {
+        return index == text.length();
+    }
+
     public String toString() {
         return "(" + line + "," + pos + ")";
     }
 
-    public int getCp() {
-        return (index == text.length()) ? -1 : text.codePointAt(index);
+    public int getCode() {
+        return isEOF() ? -1 : text.codePointAt(index);
     }
 
-    public boolean isWhiteSpace() {
-        return index != text.length() && Character.isWhitespace(text.charAt(index));
+    public boolean isWhitespace() {
+        return !isEOF() && Character.isWhitespace(getCode());
     }
 
-    public boolean isDecimalDigit() {
-        return index != text.length() && text.charAt(index) >= '0' && text.charAt(index) <= '9';
-    }
 
     public boolean isNewLine() {
         // \n - Modern Mac and Unix
@@ -58,27 +69,35 @@ public class Position implements Comparable<Position>{
         return (text.charAt(index) == '\n');
     }
 
-    public void next() {
-        if (index < text.length()) {
-            if (this.isNewLine()) {
-                if (text.charAt(index) == '\r') {
-                    index++;
-                }
-                line++;
-                pos = 1;
-            }
-            else {
-                if (Character.isHighSurrogate(text.charAt(index))) {
-                    index++;
-                }
-                pos++;
-            }
-            index++;
-        }
+    public boolean isDecimalDigit() {
+        return !isEOF() && text.charAt(index) >= '0' && text.charAt(index) <= '9';
     }
 
-    @Override
-    public int compareTo(Position o) {
-        return this.index - o.index;
+    public Position next() {
+        Position p = new Position(this);
+        if (!p.isEOF()) {
+            if (p.isNewLine()) {
+                if (p.text.charAt(p.index) == '\r')
+                    p.index++;
+                p.line++;
+                p.pos = 1;
+            } else {
+                if (Character.isHighSurrogate(p.text.charAt(p.index)))
+                    p.index++;
+                p.pos++;
+            }
+            p.index++;
+        }
+        return p;
     }
+    public Position prev() {
+        Position p = new Position(this);
+        if (!p.isEOF()) {
+            p.pos--;
+        }
+        return p;
+    }
+
+
 }
+

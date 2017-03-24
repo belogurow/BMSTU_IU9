@@ -2,9 +2,9 @@
  * Created by alexbelogurow on 21.03.17.
  */
 public class VariableToken extends Token {
-    public final long value;
+    public final String value;
 
-    protected VariableToken(long value, Position starting, Position following) {
+    public VariableToken(String value, Position starting, Position following) {
         super(DomainTag.VARIABLE, starting, following);
         this.value = value;
     }

@@ -1,0 +1,281 @@
+% !TEX encoding = UTF-8 Unicode
+\documentclass[a4paper, 12pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[left=20mm, top=15mm, right=15mm, bottom=15mm, nohead, footskip=10mm]{geometry}    
+
+            
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or epsÃÂ§ with pdflatex; use eps in DVI mode
+\usepackage[14pt]{extsizes}
+\usepackage{setspace,amsmath}
+\usepackage{ dsfont }
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{framed}
+
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{setspace}
+\definecolor{Code}{rgb}{0,0,0}
+\definecolor{Decorators}{rgb}{0.5,0.5,0.5}
+\definecolor{Numbers}{rgb}{0.5,0,0}
+\definecolor{MatchingBrackets}{rgb}{0.25,0.5,0.5}
+\definecolor{Keywords}{rgb}{0,0,1}
+\definecolor{self}{rgb}{0,0,0}
+\definecolor{Strings}{rgb}{0,0.63,0}
+\definecolor{Comments}{rgb}{0,0.63,1}
+\definecolor{Backquotes}{rgb}{0,0,0}
+\definecolor{Classname}{rgb}{0,0,0}
+\definecolor{FunctionName}{rgb}{0,0,0}
+\definecolor{Operators}{rgb}{0,0,0}
+\definecolor{Background}{rgb}{0.98,0.98,0.98}
+\lstdefinelanguage{Python}{
+numbers=left,
+numberstyle=\footnotesize,
+numbersep=1em,
+xleftmargin=0em,
+xrightmargin=-3em,
+framextopmargin=2em,
+framexbottommargin=2em,
+showspaces=false,
+showtabs=false,
+showstringspaces=false,
+frame=l,
+tabsize=2,
+% Basic
+basicstyle=\ttfamily\small\setstretch{1},
+%backgroundcolor=\color{Background},
+% Comments
+commentstyle=\color{Comments}\slshape,
+% Strings
+stringstyle=\color{Strings},
+morecomment=[s][\color{Strings}]{"""}{"""},
+morecomment=[s][\color{Strings}]{'''}{'''},
+% keywords
+morekeywords={import,from,class,def,for,while,if,is,in,elif,else,not,and,or,print,break,continue,return,True,False,None,access,as,,del,except,exec,finally,global,import,lambda,pass,print,raise,try,assert},
+keywordstyle={\color{Keywords}\bfseries},
+% additional keywords
+morekeywords={[2]@invariant,pylab,numpy,np,scipy},
+keywordstyle={[2]\color{Decorators}\slshape},
+emph={self},
+emphstyle={\color{self}\slshape},
+texcl=true,
+%
+}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white} 
+
+
+\usepackage{cmap} % Улучшенный поиск русских слов в полученном pdf-файле
+\usepackage[T2A]{fontenc} % Поддержка русских букв
+\usepackage[utf8]{inputenc} % Кодировка utf8
+\usepackage[english, russian]{babel} % Языки: русский, английский
+
+
+ 
+
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+
+
+\begin{document}
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+\begin{center}
+Федеральное государственное бюджетное образовательное учреждение высшего профессионального образования Московский государственный технический университет имени Н.Э. Баумана
+\end{center}
+
+
+\vfill
+
+\centerline{\large{Лабораторная работа №5}}
+\centerline{\large{<<Метод Рунге-Кутта четвертого порядка}}
+\centerline{\large{для решения дифференциальных уравнений II-порядка>>}}
+\centerline{\large{по дисциплине}}
+\centerline{\large{<<Численные методы>>}}
+
+\vfill
+
+Студент группы ИУ9-62 \hfill Белогуров А.А.
+
+Преподаватель \hfill Домрачева А.Б.
+\vfill
+
+\centerline{Москва, 2017}
+\clearpage
+\end{titlepage}
+
+\newpage
+\setcounter{page}{2}
+
+\textbf{Цель:}
+Анализ метода Рунге-Кутта четвертого порядка, и решение дифференциального уравнения II-порядка с помощью него.
+\\\\
+
+ 
+ \textbf{Постановка задачи:}
+ 
+ Дано дифференциальное уравнение II-порядка \eqref{eq:testing1}, коэффициенты которого выбираются произвольно. В моем случае были выбраны следующие значения \eqref{eq:testing2}:
+  \begin{equation}\label{eq:testing1}
+ y''(x) + p(x)y'(x) + g(x)y(x) = f(x)
+ \end{equation}
+  \begin{equation}\label{eq:testing2}
+y(x) = e^x,\quad p(x) = 1,\quad q(x) = -1
+ \end{equation}
+ 
+ После подстановки \eqref{eq:testing2} в \eqref{eq:testing1} получим следующее дифференциальное уравнение \eqref{eq:testing3}:
+ \begin{equation}\label{eq:testing3}
+y''(x) + y'(x) - y(x) = e^x
+ \end{equation}
+ 
+ Так же необходимо определить условия Коши \eqref{eq:testing4}, которые в данном случае будут равны значениям \eqref{eq:testing5}, и количество разбиений $n$ \eqref{eq:testing6} данного отрезка. 
+  \begin{equation}\label{eq:testing4}
+x \in [a, b], \quad y(a) = A, \quad y'(a) = B
+ \end{equation}
+  \begin{equation}\label{eq:testing5}
+x \in [0, 1], \quad y(0) = e^0 = 1, \quad y'(a) = e^0 = 1
+ \end{equation}
+ \begin{equation}\label{eq:testing6}
+n = 10
+ \end{equation}
+
+ 
+ C помощью метода Рунге-Кутта четвертого порядка вычислить приближенное значение дифференциального уравнения \eqref{eq:testing3} с заданными условиями Коши \eqref{eq:testing5} и сравнить возникшую погрешность метода с действительным значением функции.
+\\\\
+
+\textbf{Теоретические сведения:}
+
+\textbf{Методы Рунге-Кутта} (в разных источниках используется название Рунге-Кутты) - большой класс численных методов для решения задачи Коши для обыкновенных дифференциальных уравнений и их систем. Первые методы данного класса были предложены около 1900 года немецкими математиками К. Рунге и М. В. Куттой.
+
+В данной лабораторной работе будет рассматриваться классический метод Рунге-Кутта, имеющий четвертый порядок точности. Стоит отметить, что данный метод предназначен для решения дифференциальных уравнений I-порядка, поэтому в нашем случае необходимо будет понизить порядок уравнения \eqref{eq:testing3}.
+
+Для этого необходимо будет выполнить замену \eqref{eq:rk1} и \eqref{eq:rk2}, и решить полученные дифференциальные уравнение методом Рунге-Кутта.
+ \begin{equation}\label{eq:rk1}
+g(x, y, z) = z = y'(x)
+ \end{equation}
+ \begin{equation}\label{eq:rk2}
+f(x, y, z) = z' = e^x + y(x) - y'(x)
+ \end{equation}
+ 
+ \textbf{Описание алгоритма: }
+ Приближенное значение дифференциального уравнения считается по итерационной формуле \eqref{eq:rk3}, где количество итераций было задано раннее \eqref{eq:testing6} :
+ \begin{equation}\label{eq:rk3}
+y_{n+1} = y_n + \frac {(k_1 + 2 k_2 + 2 k_3 + k_4)}{6}, \quad n = \overline{0, 10}
+ \end{equation}
+ 
+ Где значения $k_i$, кроме $k_1$, вычисляются на основе предыдущего значения $k_{i-1}$: 
+ $$ k_1 = h \times f(x_n, y_n, z_n) $$
+ $$ k_2 = h \times f(x_n + \frac{h}{2}, y_n + \frac{k_1}{2}, z_n + \frac{k_1}{2}) $$
+ $$ k_3 = h \times f(x_n + \frac{h}{2}, y_n + \frac{k_2}{2}, z_n + \frac{k_2}{2}) $$
+ $$ k_4 = h \times f(x_n + h, y_n + k_3, z_n + k_3) $$
+ 
+ Начальные значение для уравнения \eqref{eq:testing3} были заданы раннее \eqref{eq:testing5}. Тогда получим \eqref{eq:rk4}:
+ \begin{equation}\label{eq:rk4}
+ x_0 = 0, \quad y_0 = 1, \quad z_0 = 1, \quad h = \frac{b-a}{n}= 0.1
+ \end{equation}
+ 
+ Этот метод имеет четвертый порядок точности. Это значит, что ошибка на одном шаге имеет порядок $O(h^5)$, а суммарная ошибка на конечном интервале интегрирования имеет порядок $O(h^4)$.
+
+
+\textbf{Практическая реализация:}
+\hypertarget{lst:quad}{}
+\lstinputlisting[label = lst:quad,  caption=Метод Рунге-Кутта четвертого порядка для решения диф. уравнения II-порядка, language=Python]{lab5.py}
+
+
+\textbf{Результаты:}
+
+Для тестирования было выбрано уравнение \eqref{eq:testing3}. Погрешность считается по формуле \eqref{eq:result}:
+\begin{equation}\label{eq:result}
+ \varepsilon = e^{x_n} -  y_n
+ \end{equation}
+
+Ниже приведена таблица результата тестовой программы \hyperlink{lst:quad}{(Листинг 1)} на формуле \eqref{eq:rk2}:
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|P{4cm}|P{4cm}|P{4cm}|}
+\hline
+Значение $x$ & Результат программы & Погрешность $\varepsilon (\times 10^{-9})$\\
+\hline
+0.0 & 1 & 0.0 \\
+\hline
+0.1 & 1.105171 & -3.651 \\
+\hline
+0.2 & 1.221403 & -7.685 \\
+\hline
+0.3 & 1.349859 & -12.144 \\
+\hline
+0.4 & 1.491825 & -17.072 \\
+\hline
+0.5 & 1.648721 & -22.518 \\
+\hline
+0.6 & 1.822119 & -28.537 \\
+\hline
+0.7 & 2.013753 & -35.189 \\
+\hline
+0.8 & 2.225541 & -42.541 \\
+\hline
+0.9 & 2.459603 & -50.666 \\
+\hline
+1.0 & 2.718282 & -59.645 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+Далее приведена таблица сравнений результатов для формул \eqref{eq:rk2} и \eqref{eq:rk1}:
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|P{4cm}|P{4cm}|P{4cm}|}
+\hline
+Значение $x$ & Результат программы для $f(x,y,z)$ & Результат программы для $g(x,y,z)$\\
+\hline
+0.0 & 1 & 1 \\
+\hline
+0.1 & 1.10517092 & 1.10517083 \\
+\hline
+0.2 & 1.22140277 & 1.22140257 \\
+\hline
+0.3 & 1.34985882 & 1.3498585 \\
+\hline
+0.4 & 1.49182471 & 1.49182424 \\
+\hline
+0.5 & 1.64872129 & 1.64872064 \\
+\hline
+0.6 & 1.82211883 & 1.82211796 \\
+\hline
+0.7 & 2.01375274 & 2.01375163 \\
+\hline
+0.8 & 2.22554097 & 2.22553956 \\
+\hline
+0.9 & 2.45960316 & 2.45960141 \\
+\hline
+1.0 & 2.71828189 & 2.71827974 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+\textbf{Выводы:}
+
+В ходе выполнения лабораторной работы был рассмотрен метод Рунге-Кутта четвертого порядка для решения дифференциальных уравнений II-порядка. Была написана реализация данного метода на языке программирования Python.
+
+Как видно выше в таблице вычислений, данный метод вполне успешно можно использовать для решений различных типов дифференциальных уравнений, так как возникшая погрешность довольна мала и ею можно пренебречь. Но если все же важно добиться как можно большей точности, то для этого необходимо увеличивать количество разбиений $n$ \eqref{eq:testing6} до тех пор, пока не будет получен нужный результат. 
+
+Метод Рунге-Кутта является одним из самых популярных методов для решений дифференциальных уравнений в силу своей простоты и скоростью вычислений. Но так же стоит отметить, что в разделе численных методов существуют и другие методы для решений данного класса уравнений, которые отличаются своими преимуществами и недостатками.
+
+
+ 
+ \end{document}

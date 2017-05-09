@@ -1,0 +1,294 @@
+% !TEX encoding = UTF-8 Unicode
+\documentclass[a4paper, 12pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[left=20mm, top=15mm, right=15mm, bottom=15mm, nohead, footskip=10mm]{geometry}    
+
+            
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or epsÃÂ§ with pdflatex; use eps in DVI mode
+\usepackage[14pt]{extsizes}
+\usepackage{setspace,amsmath}
+\usepackage{ dsfont }
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{framed}
+
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{setspace}
+\definecolor{Code}{rgb}{0,0,0}
+\definecolor{Decorators}{rgb}{0.5,0.5,0.5}
+\definecolor{Numbers}{rgb}{0.5,0,0}
+\definecolor{MatchingBrackets}{rgb}{0.25,0.5,0.5}
+\definecolor{Keywords}{rgb}{0,0,1}
+\definecolor{self}{rgb}{0,0,0}
+\definecolor{Strings}{rgb}{0,0.63,0}
+\definecolor{Comments}{rgb}{0,0.63,1}
+\definecolor{Backquotes}{rgb}{0,0,0}
+\definecolor{Classname}{rgb}{0,0,0}
+\definecolor{FunctionName}{rgb}{0,0,0}
+\definecolor{Operators}{rgb}{0,0,0}
+\definecolor{Background}{rgb}{0.98,0.98,0.98}
+\lstdefinelanguage{Python}{
+numbers=left,
+numberstyle=\footnotesize,
+numbersep=1em,
+xleftmargin=0em,
+xrightmargin=-3em,
+framextopmargin=2em,
+framexbottommargin=2em,
+showspaces=false,
+showtabs=false,
+showstringspaces=false,
+frame=l,
+tabsize=2,
+% Basic
+basicstyle=\ttfamily\small\setstretch{1},
+%backgroundcolor=\color{Background},
+% Comments
+commentstyle=\color{Comments}\slshape,
+% Strings
+stringstyle=\color{Strings},
+morecomment=[s][\color{Strings}]{"""}{"""},
+morecomment=[s][\color{Strings}]{'''}{'''},
+% keywords
+morekeywords={import,from,class,def,for,while,if,is,in,elif,else,not,and,or,print,break,continue,return,True,False,None,access,as,,del,except,exec,finally,global,import,lambda,pass,print,raise,try,assert},
+keywordstyle={\color{Keywords}\bfseries},
+% additional keywords
+morekeywords={[2]@invariant,pylab,numpy,np,scipy},
+keywordstyle={[2]\color{Decorators}\slshape},
+emph={self},
+emphstyle={\color{self}\slshape},
+texcl=true,
+%
+}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white} 
+
+
+\usepackage{cmap} % Улучшенный поиск русских слов в полученном pdf-файле
+\usepackage[T2A]{fontenc} % Поддержка русских букв
+\usepackage[utf8]{inputenc} % Кодировка utf8
+\usepackage[english, russian]{babel} % Языки: русский, английский
+
+
+ 
+
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+
+
+\begin{document}
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+\begin{center}
+Федеральное государственное бюджетное образовательное учреждение высшего профессионального образования Московский государственный технический университет имени Н.Э. Баумана
+\end{center}
+
+
+\vfill
+
+\centerline{\large{Лабораторная работа №4}}
+\centerline{\large{<<Сравнение методов решения уравнения $f(x) =0$>>}}
+\centerline{\large{по дисциплине}}
+\centerline{\large{<<Численные методы>>}}
+
+\vfill
+
+Студент группы ИУ9-62 \hfill Белогуров А.А.
+
+Преподаватель \hfill Домрачева А.Б.
+\vfill
+
+\centerline{Москва, 2017}
+\clearpage
+\end{titlepage}
+
+\newpage
+\setcounter{page}{2}
+
+\textbf{Цель:}
+Сравнительный анализ методов решения уравнения $f(x)$: 
+\begin{enumerate}
+\item Метод деления отрезка пополам.
+\item Метод золотого сечения.
+\\\\
+\end{enumerate}
+
+
+ 
+ \textbf{Постановка задачи:}
+ 
+ Дано нелинейное уравнение $f(x) = 0$ третьей степени, которое выбирается произвольно. В моем случае было выбрано следующее ур-е \eqref{eq:testing}:
+ \begin{equation}\label{eq:testing}
+ f(x) = 5x^3 - 8x^2 - 8x + 5 = 0
+ \end{equation}
+ 
+ C помощью выбранных методов получить приближенное решение ур-я \eqref{eq:testing} с заданной точностью $\varepsilon$ и сравнить полученные результаты.
+ 
+ Функция $f(x)$ должна быть непрерывна.
+\\\\
+
+\textbf{Теоретические сведения:}
+
+\textbf{1. Метод деления отрезка пополам}
+
+Метод деления отрезка пополам (метод бисекции) - один из методов поиска корней нелинейного уравнения, которое основывается на разбиении отрезка пополам на каждом шаге алгоритма.
+
+\textbf{Описание алгоритма: }
+Для начала вычислений необходимо знать значения отрезка \eqref{eq:bis1}, на концах которого функция принимает значения разных знаков (следствие из теоремы Больцано-Коши)
+\begin{equation}\label{eq:bis1}
+[x_L, x_R]
+\end{equation}
+\begin{framed}
+\textbf{Cледствие из теоремы Больцано-Коши:}
+
+Пусть непрерывная функция $f(x) \in C([a, b])$, тогда если \\$sign(f(a)) \neq sign(f(b))$, то 
+$\exists с \in [a, b]: f(c) = 0.$
+\end{framed}
+
+Для того, чтобы определить, принимает ли функция разные значения на концах отрезка - можно использовать два способа: через умножение \eqref{eq:bis2} и через обычное сравнение \eqref{eq:bis3}:
+\begin{equation}\label{eq:bis2}
+ f(x_L) \times f(x_R) < 0
+ \end{equation}
+ \begin{equation}\label{eq:bis3}
+ sign(f(x_L)) \neq sign(f(x_R))
+ \end{equation}
+ 
+При использовании формулы \eqref{eq:bis2} может возникнуть преждевременное переполнение, поэтому для устранения этой проблемы и для увеличения быстродействия будет использоваться формула \eqref{eq:bis3}.
+
+Из непрерывности функции $f(x)$ и условия \eqref{eq:bis3} следует, что на отрезке \eqref{eq:bis1} существует хотя бы один корень уравнения. В нашем случае уравнение третьей степени, поэтому мы должны выделить <<вилки>> - отрезки, включающие точку, в котором график пересекает ось $oX$ (решение). Таким образом надо будет выделить три таких отрезка.
+
+Далее вычисляется значение $x_M$ \eqref{eq:bis4} в середине отрезка:
+\begin{equation}\label{eq:bis4}
+ \frac{x_L+x_R}{2}
+ \end{equation}
+ 
+ \begin{itemize}
+\item Если $|b - a| \leq 2 \times \varepsilon$, то корень $x = \frac{b-a}{2}$ найден
+\item Иначе разобьем отрезок \eqref{eq:bis1} на два равных отрезка \eqref{eq:bis5}, \eqref{eq:bis6}:
+\end{itemize}
+\begin{equation}\label{eq:bis5}
+[x_L, x_M]
+\end{equation}
+\begin{equation}\label{eq:bis6}
+[x_M, x_R]
+\end{equation}
+
+Определим отрезок, на котором функция меняет свой знак:
+\begin{itemize}
+ \item Если условие \eqref{eq:bis3} выполняется на левом отрезке \eqref{eq:bis5}, то, соответственно, корень находится на левом отрезке. Производим замену $x_R = x_M$ и возвращаемся к шагу разбиения отрезка пополам \eqref{eq:bis4}
+ \item Если условие \eqref{eq:bis3} выполняется на правом отрезке \eqref{eq:bis6}, то, соответственно, корень находится на правом отрезке. Производим замену $x_L = x_M$ и возвращаемся к шагу разбиения отрезка пополам \eqref{eq:bis4}
+ \end{itemize}
+
+\textbf{2. Метод золотого сечения}
+
+В основе метода лежит принцип деления отрезка пополам в пропорциях золотого сечения. 
+
+Аналогично предыдущему методу выбирается отрезок \eqref{eq:golden1}, внутри которого функция $f(x)$ принимает нулевые значения:
+\begin{equation}\label{eq:golden1}
+[a, b]
+\end{equation}
+
+Необходимо выбрать две точки $x_1$ и $x_2$ такие, что:
+\begin{equation}\label{eq:golden2}
+\frac{b - a}{b-x_1} = \frac{b-a}{x_2-a}=\varphi = \frac{1 + \sqrt{5}}{2}
+\end{equation}
+
+Где $\varphi$ \eqref{eq:golden2} - пропорция золотого сечения. Таким образом точки $x_1$ \eqref{eq:golden3} и $x_2$ \eqref{eq:golden4} определяются следующим образом:
+\begin{equation}\label{eq:golden3}
+x_1 = b - \frac{(b-a)}{\varphi}
+\end{equation}
+\begin{equation}\label{eq:golden4}
+x_2 = a + \frac{(b-a)}{\varphi}
+\end{equation}
+
+\textbf{Описание алгоритма: }
+Алгоритм почти идентичен алгоритму метода деления отрезка пополам. Отличие заключается в том, что отрезок делится не пополам, а на три части в пропорциях золотого сечения.
+
+Таким образом, в начале проверяется:
+ \begin{itemize}
+ \item Если $|b - a| \leq 2 \times \varepsilon$, то корень $x = \frac{b-a}{2}$ найден
+ \item Иначе находятся значения точек $x_1$ \eqref{eq:golden3} и $x_2$ \eqref{eq:golden4}
+ \end{itemize}
+ 
+ Определим отрезок, на котором функция меняет свой знак:
+\begin{itemize}
+ \item Если условие \eqref{eq:bis3} выполняется на левом отрезке $[a, x_1]$, то, соответственно, корень находится на левом отрезке. Производим замену $b = x_1$ и возвращаемся к предыдущему шагу
+ \item Если условие \eqref{eq:bis3} выполняется на отрезке посередине $[x_1, x_2]$, то, соответственно, корень находится на отрезке посередине. Производим замену $a = x_1$, $b = x_2$ и возвращаемся к предыдущему шагу 
+ \item Если условие \eqref{eq:bis3} выполняется на правом отрезке $[x_2, b]$, то, соответственно, корень находится на правом отрезке. Производим замену $a = x_2$ и возвращаемся к предыдущему шагу
+ \end{itemize}
+
+\textbf{Практическая реализация:}
+\hypertarget{lst:quad}{}
+\lstinputlisting[label = lst:quad,  caption=Методы решения уравнения f(x) = 0, language=Python]{lab4.py}
+
+
+\textbf{Результаты:}
+
+Для тестирования было выбрано уравнение \eqref{eq:testing}, $\varepsilon = 0.001$.
+
+Уравнение \eqref{eq:testing} имеет три корня, для корректного результата выберем три одинаковых <<ветки>>:
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|P{4cm}|P{2.5cm}|P{4cm}|}
+\hline
+[-1.5, 0] & [0, 1.5] & [1.5, 3] \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Ниже приведена таблица результата тестовой программы \hyperlink{lst:quad}{(Листинг 1)} на указанных выше методах:
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|P{4cm}|P{4cm}|P{4cm}|}
+\hline
+Отрезок & Значение & Количество итераций \\
+\hline
+\multicolumn{3}{|c|} {Метод деления отрезка пополам}\\
+\hline
+[-1.5, 0] & -0.999756 & 10  \\
+\hline
+ [0, 1.5] & 0.469482  & 10 \\
+\hline
+[1.5, 3]  & 2.130615 & 10 \\
+\hline
+\multicolumn{3}{|c|} {Метод золотого сечения}\\
+\hline
+[-1.5, 0] & -0.999337 & 7  \\
+\hline
+ [0, 1.5] & 0.468734  & 6 \\
+\hline
+[1.5, 3]  & 2.130709 & 6 \\
+\hline
+\multicolumn{3}{|c|} {Значения, полученные с помощью сервиса WolframAlpha}\\
+\hline
+[-1.5, 0] & -1 & -  \\
+\hline
+ [0, 1.5] & 0.469338  & - \\
+\hline
+[1.5, 3]  & 2.130662 & - \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+\\\\
+
+
+\textbf{Выводы:}
+
+В ходе выполнения лабораторной работы были рассмотрены 2 различных метода нахождения корня нелинейного уравнения: метод деления отрезка пополам и метод золотого сечения. Была написана реализация данных методов на языке программирования Python.
+
+Как видно выше в таблице вычислений, по количеству итераций выигрывает метод золотого сечения, так как он в своей реализации делит отрезок на 3 части и, следовательно, приходит быстрее к результату, однако если сравнивать оба метода по точности вычислений, то ближе к правильным ответам оказался именно метод деления отрезка пополам. Стоит заметить, что при округлении значений с заданной точностью $\varepsilon$ оба методы будут верны, поэтому в данном случае не будет корректным сравнивать эти методы по точности вычислений. Одна из причин, почему метод деления оказался ближе к результату, чем метод золотого сечения, заключается в различном способе нахождения конечного результата. Однако, если целью сравнения будет именно поиск более точного метода, то стоит рассматривать не одно уравнение, а большое их количество.
+
+ 
+ \enddocument

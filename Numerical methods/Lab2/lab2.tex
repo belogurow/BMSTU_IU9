@@ -1,0 +1,238 @@
+% !TEX encoding = UTF-8 Unicode
+\documentclass[a4paper, 12pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[left=20mm, top=15mm, right=15mm, bottom=15mm, nohead, footskip=10mm]{geometry}    
+
+            
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or epsÃÂ§ with pdflatex; use eps in DVI mode
+\usepackage[14pt]{extsizes}
+\usepackage{setspace,amsmath}
+\usepackage{ dsfont }
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{setspace}
+\definecolor{Code}{rgb}{0,0,0}
+\definecolor{Decorators}{rgb}{0.5,0.5,0.5}
+\definecolor{Numbers}{rgb}{0.5,0,0}
+\definecolor{MatchingBrackets}{rgb}{0.25,0.5,0.5}
+\definecolor{Keywords}{rgb}{0,0,1}
+\definecolor{self}{rgb}{0,0,0}
+\definecolor{Strings}{rgb}{0,0.63,0}
+\definecolor{Comments}{rgb}{0,0.63,1}
+\definecolor{Backquotes}{rgb}{0,0,0}
+\definecolor{Classname}{rgb}{0,0,0}
+\definecolor{FunctionName}{rgb}{0,0,0}
+\definecolor{Operators}{rgb}{0,0,0}
+\definecolor{Background}{rgb}{0.98,0.98,0.98}
+\lstdefinelanguage{Python}{
+numbers=left,
+numberstyle=\footnotesize,
+numbersep=1em,
+xleftmargin=0em,
+xrightmargin=-3em,
+framextopmargin=2em,
+framexbottommargin=2em,
+showspaces=false,
+showtabs=false,
+showstringspaces=false,
+frame=l,
+tabsize=2,
+% Basic
+basicstyle=\ttfamily\small\setstretch{1},
+%backgroundcolor=\color{Background},
+% Comments
+commentstyle=\color{Comments}\slshape,
+% Strings
+stringstyle=\color{Strings},
+morecomment=[s][\color{Strings}]{"""}{"""},
+morecomment=[s][\color{Strings}]{'''}{'''},
+% keywords
+morekeywords={import,from,class,def,for,while,if,is,in,elif,else,not,and,or,print,break,continue,return,True,False,None,access,as,,del,except,exec,finally,global,import,lambda,pass,print,raise,try,assert},
+keywordstyle={\color{Keywords}\bfseries},
+% additional keywords
+morekeywords={[2]@invariant,pylab,numpy,np,scipy},
+keywordstyle={[2]\color{Decorators}\slshape},
+emph={self},
+emphstyle={\color{self}\slshape},
+texcl=true,
+%
+}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white} 
+
+
+\usepackage{cmap} % Улучшенный поиск русских слов в полученном pdf-файле
+\usepackage[T2A]{fontenc} % Поддержка русских букв
+\usepackage[utf8]{inputenc} % Кодировка utf8
+\usepackage[english, russian]{babel} % Языки: русский, английский
+
+
+ 
+
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+
+
+\begin{document}
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+\begin{center}
+Федеральное государственное бюджетное образовательное учреждение высшего профессионального образования Московский государственный технический университет имени Н.Э. Баумана
+\end{center}
+
+
+\vfill
+
+\centerline{\large{Лабораторная работа №2}}
+\centerline{\large{<<Метод наименьших квадратов>>}}
+\centerline{\large{по дисциплине}}
+\centerline{\large{<<Численные методы>>}}
+
+\vfill
+
+Студент группы ИУ9-62 \hfill Белогуров А.А.
+
+Преподаватель \hfill Домрачева А.Б.
+\vfill
+
+\centerline{Москва, 2017}
+\clearpage
+\end{titlepage}
+
+\newpage
+\setcounter{page}{2}
+ \textbf{Постановка задачи:}
+ 
+ Функция $y_i = f(x_i),  i = \overline{1,n}$ задана таблично \eqref{tab:1}, исходные данные включают ошибки измерения.
+
+\begin{table}[h]
+\caption{\label{tab:1}}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+$x_1$ & $x_2$ & ... & $x_n$ \\
+\hline
+$y_1$ & $y_2$ & ... & $y_n$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Найти функцию $y_i \approx f(x_i), i = \overline{1,n}$ удовлетворяющую условию \eqref{eq:1}, без учета вычислительной погрешности \eqref{eq:2}:
+
+\begin{equation}\label{eq:1}
+\sum_{i = 1}^{n} (y_i - f(x_i))^2 \to min
+\end{equation}
+
+\begin{equation}\label{eq:2}
+\sum_{i = 1}^{n} (y_i - f(x_i))^2 = 0
+\end{equation}
+\\\\
+
+\textbf{Теоретические сведения:}
+
+В качестве $f(x_i)$ возьмем следующую функцию \eqref{eq:3}:
+
+\begin{equation}\label{eq:3}
+f(a, b, x_i) = f(x_i) = ax_i + b 
+\end{equation}
+\begin{equation*}
+f(a, b, x) = \sum_{i = 1}^n (y_i - ax_i - b)^2 \to min
+\end{equation*}
+
+Задача поиска экстремума заменяется эквивалентной задачей равенства нулю производной исходной функции, так как переменные $a$ и $b$ являются неизвестными \eqref{eq:4} и \eqref{eq:5}:
+
+\begin{equation}\label{eq:4}
+\begin{cases}
+\frac {\partial f(a, b, x)}{\partial a} = 0 
+\\
+\frac {\partial f(a, b, x)}{\partial b} = 0 
+\end{cases}
+\Rightarrow 
+\begin{cases}
+\sum^{n}_{i = 1} (y_i - ax_i - b)x_i = 0 
+\\
+\sum^{n}_{i = 1} (y_i - ax_i - b) = 0 
+\end{cases}
+\Rightarrow 
+\end{equation}
+ 
+\begin{equation}\label{eq:5}
+\Rightarrow
+\begin{cases}
+a\sum^n_{i=1}x^2_i + b\sum^n_{i=1}x_i  = \sum^n_{i=1}x_i y_i 
+\\
+a\sum^n_{i=1}x_i + bn  = \sum^n_{i=1}y_i 
+\end{cases}
+\end{equation}
+
+Подставим замену \eqref{eq:6} в \eqref{eq:5} и получим следующую систему \eqref{eq:7}.
+
+\begin{equation}\label{eq:6}
+A = \sum^n_{i=1}x^2_i, \quad
+B = \sum^n_{i=1}x_i, \quad
+C  = \sum^n_{i=1}x_i y_i, \quad
+D = \sum^n_{i=1}y_i
+\end{equation}
+
+
+\begin{equation}\label{eq:7}
+\begin{cases}
+aA+ bB  = C
+\\
+aB + bn  = D
+\end{cases}
+\end{equation}
+
+Выразим $b$ и подставим в систему \eqref{eq:7} для нахождения $a$ \eqref{eq:8}:
+
+\begin{equation}\label{eq:8}
+b = \frac {D-aB}{n}, \quad
+a = \frac {Cn-DB}{nA-B^2}
+\end{equation}
+
+В качестве исходных данных возьмем функцию $x = y$, для каждой координаты $x$  и $y$ введем погрешность $\varepsilon = 0.1$, $n = 10$.
+\\\\
+
+\textbf{Практическая реализация:}
+\hypertarget{lst:quad}{}
+\lstinputlisting[label = lst:quad,  caption=Метод наименьших квадратов, language=Python]{lab2.py}
+
+
+\textbf{Результаты:}
+
+При каждом запуске программы \hyperlink{lst:quad}{(Листинг 1)} координаты $x$ и $y$ будут разными, так как мы считаем их методом $random$. Ниже приведен один из возможных ответов программы:
+
+\begin{equation*}
+a: 0.9971347394546591
+ \end{equation*}
+\begin{equation*}
+b: 0.0150910246109411
+\end{equation*}
+\\\\
+
+\textbf{Выводы:}
+
+В ходе выполнения лабораторной работы был рассмотрен <<Метод наименьших квадратов>> и разобрана задача, которая является эквивалентной по отношению к исходной задаче. Была написано реализация данного метода на языке программирования Python.
+
+В качестве результатов были получены два рациональных числа $a$ и $b$. Погрешность для этих чисел получилась $\varepsilon = 0.01$, которая обусловлена вычислительной погрешностью и погрешностью метода.
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ \enddocument
+ 
+ 

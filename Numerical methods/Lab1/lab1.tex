@@ -1,0 +1,311 @@
+% !TEX encoding = UTF-8 Unicode
+\documentclass[a4paper, 12pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[left=20mm, top=15mm, right=15mm, bottom=15mm, nohead, footskip=10mm]{geometry}    
+
+            
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or epsÃÂ§ with pdflatex; use eps in DVI mode
+\usepackage[14pt]{extsizes}
+\usepackage{setspace,amsmath}
+\usepackage{ dsfont }
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{setspace}
+\definecolor{Code}{rgb}{0,0,0}
+\definecolor{Decorators}{rgb}{0.5,0.5,0.5}
+\definecolor{Numbers}{rgb}{0.5,0,0}
+\definecolor{MatchingBrackets}{rgb}{0.25,0.5,0.5}
+\definecolor{Keywords}{rgb}{0,0,1}
+\definecolor{self}{rgb}{0,0,0}
+\definecolor{Strings}{rgb}{0,0.63,0}
+\definecolor{Comments}{rgb}{0,0.63,1}
+\definecolor{Backquotes}{rgb}{0,0,0}
+\definecolor{Classname}{rgb}{0,0,0}
+\definecolor{FunctionName}{rgb}{0,0,0}
+\definecolor{Operators}{rgb}{0,0,0}
+\definecolor{Background}{rgb}{0.98,0.98,0.98}
+\lstdefinelanguage{Python}{
+numbers=left,
+numberstyle=\footnotesize,
+numbersep=1em,
+xleftmargin=0em,
+xrightmargin=-3em,
+framextopmargin=2em,
+framexbottommargin=2em,
+showspaces=false,
+showtabs=false,
+showstringspaces=false,
+frame=l,
+tabsize=2,
+% Basic
+basicstyle=\ttfamily\small\setstretch{1},
+%backgroundcolor=\color{Background},
+% Comments
+commentstyle=\color{Comments}\slshape,
+% Strings
+stringstyle=\color{Strings},
+morecomment=[s][\color{Strings}]{"""}{"""},
+morecomment=[s][\color{Strings}]{'''}{'''},
+% keywords
+morekeywords={import,from,class,def,for,while,if,is,in,elif,else,not,and,or,print,break,continue,return,True,False,None,access,as,,del,except,exec,finally,global,import,lambda,pass,print,raise,try,assert},
+keywordstyle={\color{Keywords}\bfseries},
+% additional keywords
+morekeywords={[2]@invariant,pylab,numpy,np,scipy},
+keywordstyle={[2]\color{Decorators}\slshape},
+emph={self},
+emphstyle={\color{self}\slshape},
+texcl=true,
+%
+}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white} 
+
+
+\usepackage{cmap} % Улучшенный поиск русских слов в полученном pdf-файле
+\usepackage[T2A]{fontenc} % Поддержка русских букв
+\usepackage[utf8]{inputenc} % Кодировка utf8
+\usepackage[english, russian]{babel} % Языки: русский, английский
+
+
+ 
+
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+
+
+\begin{document}
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+\begin{center}
+Федеральное государственное бюджетное образовательное учреждение высшего профессионального образования Московский государственный технический университет имени Н.Э. Баумана
+\end{center}
+
+
+\vfill
+
+\centerline{\large{Лабораторная работа №1}}
+\centerline{\large{по дисциплине}}
+\centerline{\large{<<Численные методы>>}}
+
+\vfill
+
+Студент группы ИУ9-62 \hfill Белогуров А.А.
+
+Преподаватель \hfill Домрачева А.Б.
+\vfill
+
+\centerline{Москва, 2017}
+\clearpage
+\end{titlepage}
+
+\newpage
+\setcounter{page}{2}
+ \textbf{Постановка задачи:}
+
+Дано: $A\overline{x}=\overline{d}$, где $A \in \mathds{R}^{n \times n}$ и $ \overline{x},\overline{d} \in \mathds{R}^{n}$. Найти решение СЛАУ с помощью методов: Гаусса и Зейделя. В качестве исходных данных взять следующие матрицы \eqref{eq:0}:
+\begin{equation}\label{eq:0}
+A\overline{x}=\overline{d}
+\quad   \Leftrightarrow \quad
+\left(\begin{array}{cccc} 
+4 & 1 & 0 & 0 \\
+1 & 4 & 1 & 0 \\
+0 & 1 & 4 & 1 \\
+0 & 0 & 1 & 4  
+\end{array}\right)
+\left(\begin{array}{c} 
+x_1 \\
+x_2 \\
+x_3 \\
+x_4 \\
+\end{array}\right)
+ =
+ \left(\begin{array}{c} 
+5 \\
+6 \\
+6 \\
+5 \\
+\end{array}\right)
+\end{equation}
+\\
+
+\textbf{Теоретические сведения:}
+
+Решение СЛАУ методом Гаусса:
+
+\textbf{1.}  Составить расширенную матрицу $(A|d)$ и привести её к ступенчатому виду\eqref{matrixp1}:
+\begin{equation}\label{matrixp1}
+ (\widetilde{A}|\widetilde{d})=\left(\begin{array}{ccccc|c} 
+1 & \widetilde{a_{12}} & \widetilde{a_{13}} & \ldots &\widetilde{a_{1n}} & \widetilde{d_{1}} \\ 
+0 & 1 & \widetilde{a_{23}} & \ldots &\widetilde{a_{2n}} & \widetilde{d_{2}} \\ 
+  \vdots  & \vdots  & \vdots & \ddots & \vdots  & \vdots\\
+ 0 & 0 & 0 & \ldots& 1 & \widetilde{d_{n}} 
+\end{array}\right)
+\end{equation}
+
+
+\textbf{2.} Найти приближенный вектор $\overline{x}^*$. При вычислении $\widetilde{a_{ij}}$ и $\widetilde{d_i}$ с плавающей точкой возникает погрешность $\overline{e}$ \eqref{eq:9}:
+\[
+  \begin{array}{l@{\quad}cr@{}l}
+    && A\overline{x}^* & {}= \overline{d}^* \\
+    \text{--} && A\overline{x} & {}= \overline{d} \\ \cline{2-4}
+    && A(\overline{x}^*-\overline{x}) & {}= (\overline{d}^*-\overline{d})
+  \end{array}
+\]
+или:
+\begin{equation}\label{eq:9}
+ A\overline{e} = \overline{r} \\
+  \quad
+  \Leftrightarrow
+  \quad 
+   \boxed{\overline{e} = A^{-1} \overline{r}} 
+\end{equation}
+
+\textbf{3.} Тогда исходный вектор $ \overline{x} = \overline{x}^* - \overline{e}$.
+\\
+
+Решение СЛАУ методом Зейделя:
+
+\textbf{1.} Преобразовать систему $A\overline{x}=\overline{d}$ к виду $x = B\overline{x} + \overline{c}$, где
+\begin{equation*}
+b_{ij}=-\frac{a_{ij}}{a_{ii}}, b_{ii} = 0, i \neq j
+\end{equation*}
+\begin{equation*}
+c_i = \frac{d_i}{a_{ii}}, a_{ii} \neq 0
+\end{equation*}
+
+\textbf{2.} Задать начальное приближение решения $x^{(0)}$ произвольно, определить $k$ и малое положительное число $\varepsilon$:
+\begin{equation*}
+x^{(0)} = 0, k = 0, \varepsilon = 0.01
+\end{equation*}
+
+\textbf{3.} Произвести расчеты по формуле \eqref{systemp3} и найти $x^{(k+1)}$.
+\begin{equation}\label{systemp3}
+\begin{cases}
+x_{1}^{(k+1)} = b_{12} x_{2}^{(k)} + ... + b_{1n} x_{n}^{(k)} + c_1
+\\
+x_{2}^{(k+1)} = b_{21} x_{1}^{(k+1)} + ... + b_{2n} x_{n}^{(k)} + c_2
+\\
+\vdots
+\\
+x_{n}^{(k+1)} = b_{n1}  x_{1}^{(k+1)} + ... + b_{nn-1} x_{n-1}^{(k+1)} + c_1
+\end{cases}
+\end{equation}
+
+\textbf{4.} Если выполнено условие окончания $\Vert x^{(k-1)} - x^{(k)} \Vert \leq \varepsilon$ \eqref{normp4}, то завершить процесс и в качестве приближенного решения принять $x_{*} \cong x^{(k)}$. Иначе положить $k = k + 1$ и перейти к пункту 3. 
+\begin{equation}\label{normp4}
+\Vert x^{(k-1)} - x^{(k)} \Vert = \sqrt{\sum_{i=1}^{n} (x_{i}^{(k-1)} - x_{i}^{(k)})^2} \leq \varepsilon
+\end{equation}
+\\
+
+
+
+\textbf{Практическая реализация:}
+\hypertarget{lst:gauss}{}
+\lstinputlisting[label = lst:gauss,  caption=Решение СЛАУ методом Гаусса, language=Python]{lab1.py}
+\hypertarget{lst:zeidel}{}
+\lstinputlisting[caption=Решение СЛАУ методом Зейделя, language=python]{lab1_2.py}
+
+
+\textbf{Результаты:}
+
+Решение СЛАУ методом Гаусса.
+
+В качестве исходных данных возьмем матрицы \eqref{eq:0}. Тогда в результате работы программы  \hyperlink{lst:gauss}{(Листинг 1)} получены следующие значения:
+\begin{equation}\label{eq:5}
+e = 
+\left(\begin{array}{c} 
+0 \\
+0 \\
+0 \\
+0 \\
+\end{array}\right)
+\quad
+x =
+ \left(\begin{array}{c} 
+1 \\
+1 \\
+1 \\
+1 \\
+\end{array}\right)
+\end{equation}
+Как видно выше \eqref{eq:5}, не всегда вектор $\overline{e}$ может содержать погрешность. Для того, чтобы вектор $\overline{e}$ был ненулевым, возьмем другие исходные значения\eqref{eq:6} и получим следующие результаты\eqref{eq:7}:
+\begin{equation}\label{eq:6}
+A\overline{x}=\overline{d}
+\quad   \Leftrightarrow \quad
+\left(\begin{array}{cccc} 
+1 & 2 & 0 & 0 \\
+2 & -1 & -1 & 0 \\
+0 & 1 & -1 & 1 \\
+0 & 0 & 1 & 1  
+\end{array}\right)
+\left(\begin{array}{c} 
+x_1 \\
+x_2 \\
+x_3 \\
+x_4 \\
+\end{array}\right)
+ =
+ \left(\begin{array}{c} 
+5 \\
+3 \\
+3 \\
+7 \\
+\end{array}\right)
+\end{equation}
+
+\begin{equation}\label{eq:7}
+e = 
+\left(\begin{array}{c} 
+3.947459643111668e^{-16} \\
+-1.973729821555834e^{-16} \\
+-9.86864910777917e^{-16} \\
+9.86864910777917e^{-16} \\
+\end{array}\right)
+\quad
+x =
+ \left(\begin{array}{c} 
+1 \\
+2 \\
+3 \\
+4 \\
+\end{array}\right)
+\end{equation}
+\\
+
+Решение СЛАУ методом Зейделя.
+
+Для тестирования работы программы \hyperlink{lst:zeidel}{(Листинг 2)} была взята система \eqref{eq:0}. 
+
+Для $\varepsilon = 0.01$ было выполнено 5 итераций. Результаты практически аналогичны методу Гаусса  \eqref{eq:8}:
+\begin{equation}\label{eq:8}
+x =
+ \left(\begin{array}{c} 
+1.0003395080566406 \\
+0.9997768402099609 \\
+1.0000903606414795 \\
+0.9999774098396301 \\
+\end{array}\right)
+\end{equation}
+\\
+
+
+\textbf{Выводы:}
+
+В ходе выполнения лабораторной работы были рассмотрены итерационные методы решения СЛАУ: метод Гаусса и метод Зейделя, так же для каждого из них была написана реализация на языке программирования Python.
+
+Для метода Гаусса можно отметить довольно высокую вычислительную сложность и высокое накопление погрешности в результате приведения матрицы к треугольному виду и преобразование матрицы $A$ к обратной $A^{-1}$.
+
+Для метода Зейделя характерно довольное малое количество итераций для нахождения решения и простота вычислений. Но самое главное то, что данный метод уступает по точности методу Гаууса.
+
+
+
+\end{document}  

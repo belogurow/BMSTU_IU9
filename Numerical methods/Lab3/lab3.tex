@@ -1,0 +1,312 @@
+% !TEX encoding = UTF-8 Unicode
+\documentclass[a4paper, 12pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[left=20mm, top=15mm, right=15mm, bottom=15mm, nohead, footskip=10mm]{geometry}    
+
+            
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or epsÃÂ§ with pdflatex; use eps in DVI mode
+\usepackage[14pt]{extsizes}
+\usepackage{setspace,amsmath}
+\usepackage{ dsfont }
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{setspace}
+\definecolor{Code}{rgb}{0,0,0}
+\definecolor{Decorators}{rgb}{0.5,0.5,0.5}
+\definecolor{Numbers}{rgb}{0.5,0,0}
+\definecolor{MatchingBrackets}{rgb}{0.25,0.5,0.5}
+\definecolor{Keywords}{rgb}{0,0,1}
+\definecolor{self}{rgb}{0,0,0}
+\definecolor{Strings}{rgb}{0,0.63,0}
+\definecolor{Comments}{rgb}{0,0.63,1}
+\definecolor{Backquotes}{rgb}{0,0,0}
+\definecolor{Classname}{rgb}{0,0,0}
+\definecolor{FunctionName}{rgb}{0,0,0}
+\definecolor{Operators}{rgb}{0,0,0}
+\definecolor{Background}{rgb}{0.98,0.98,0.98}
+\lstdefinelanguage{Python}{
+numbers=left,
+numberstyle=\footnotesize,
+numbersep=1em,
+xleftmargin=0em,
+xrightmargin=-3em,
+framextopmargin=2em,
+framexbottommargin=2em,
+showspaces=false,
+showtabs=false,
+showstringspaces=false,
+frame=l,
+tabsize=2,
+% Basic
+basicstyle=\ttfamily\small\setstretch{1},
+%backgroundcolor=\color{Background},
+% Comments
+commentstyle=\color{Comments}\slshape,
+% Strings
+stringstyle=\color{Strings},
+morecomment=[s][\color{Strings}]{"""}{"""},
+morecomment=[s][\color{Strings}]{'''}{'''},
+% keywords
+morekeywords={import,from,class,def,for,while,if,is,in,elif,else,not,and,or,print,break,continue,return,True,False,None,access,as,,del,except,exec,finally,global,import,lambda,pass,print,raise,try,assert},
+keywordstyle={\color{Keywords}\bfseries},
+% additional keywords
+morekeywords={[2]@invariant,pylab,numpy,np,scipy},
+keywordstyle={[2]\color{Decorators}\slshape},
+emph={self},
+emphstyle={\color{self}\slshape},
+texcl=true,
+%
+}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white} 
+
+
+\usepackage{cmap} % Улучшенный поиск русских слов в полученном pdf-файле
+\usepackage[T2A]{fontenc} % Поддержка русских букв
+\usepackage[utf8]{inputenc} % Кодировка utf8
+\usepackage[english, russian]{babel} % Языки: русский, английский
+
+
+ 
+
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+
+
+\begin{document}
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+\begin{center}
+Федеральное государственное бюджетное образовательное учреждение высшего профессионального образования Московский государственный технический университет имени Н.Э. Баумана
+\end{center}
+
+
+\vfill
+
+\centerline{\large{Лабораторная работа №3}}
+\centerline{\large{<<Численное интегрирование>>}}
+\centerline{\large{по дисциплине}}
+\centerline{\large{<<Численные методы>>}}
+
+\vfill
+
+Студент группы ИУ9-62 \hfill Белогуров А.А.
+
+Преподаватель \hfill Домрачева А.Б.
+\vfill
+
+\centerline{Москва, 2017}
+\clearpage
+\end{titlepage}
+
+\newpage
+\setcounter{page}{2}
+
+\textbf{Цель:}
+Сравнительный анализ методов численного интегрирования: 
+\begin{enumerate}
+\item Метод средних прямоугольников.
+\item Метод квадраторных трапеций.
+\item Метод Симпсона.
+\\\\
+\end{enumerate}
+
+
+ 
+ \textbf{Постановка задачи:}
+ 
+ Дан интеграл:
+ $$\int_{a}^{b} f(x)dx$$где $a, b, f(x)$ - известны.
+ 
+ Найти интеграл:
+ $$I \approx I^* $$
+ 
+ Тестовый пример \eqref{eq:testing}:
+ \begin{equation}\label{eq:testing}
+ I = \int_{0}^{1} e^x dx = e^x \Big|_{0}^{1} = e - 1 = 1.718282
+ \end{equation}
+\\\\
+
+\textbf{Теоретические сведения:}
+
+Численное интегрирование — вычисление значения определённого интеграла (как правило, приближённое). Под численным интегрированием понимают набор численных методов для нахождения значения определённого интеграла.
+
+Основная идея большинства методов численного интегрирования состоит в замене подынтегральной функции на более простую, интеграл от которой легко вычисляется аналитически. При этом для оценки значения интеграла получаются формулы вида:
+$$I \approx \sum_{i=1}^{n} w_i f(x_i)$$
+
+При замене подынтегральной функции на полином нулевой, первой и второй степени получаются соответственно методы прямоугольников, трапеций и парабол (Симпсона).
+
+\textbf{1. Метод средних прямоугольников}
+
+Если рассмотреть график подынтегральной функции, то метод будет заключаться в приближённом вычислении площади под графиком суммированием площадей конечного числа прямоугольников, ширина которых будет определяться расстоянием между соответствующими соседними узлами интегрирования, а высота — значением подынтегральной функции в этих узлах.
+
+Положим, что $h = \frac{a-b}{n}$ тогда получим следующее разбиение отрезка $[a, b]$ на $n$ равных частей \eqref{eq:razbienie}:
+
+\begin{equation}\label{eq:razbienie}
+x_0 = a, x_1 = x_0 + h, x_2 = x_1 + h, ..., x_n = x_{n-1} + h
+\end{equation}
+
+
+Тогда приближенное значение интеграла с помощью метода средних прямоугольников будет вычисляться по формуле \eqref{eq:rectangle}:
+
+\begin{equation}\label{eq:rectangle}
+I^* = \sum_{i=1}^{n} I_{i}^{*} =h \sum_{i=1}^{n} f (\frac{x_{i-1} + x_i}{2}) = h \sum_{i=1}^{n} f(a + i * h - \frac{h}{2})
+\end{equation}
+
+\textbf{2. Метод трапеций}
+
+Метод численного интегрирования функции одной переменной, заключающийся в замене на каждом элементарном отрезке подынтегральной функции на многочлен первой степени, то есть линейную функцию. 
+
+Разбиение производится аналогично методу средних прямоугольников \eqref{eq:razbienie}.
+
+Квадраторная формула трапеций будет выглядеть следующим образом \eqref{eq:trapezoid1}, \eqref{eq:trapezoid2}:
+\begin{equation}\label{eq:trapezoid1}
+I^*_i = \frac{f(x_{i-1})+f(x_i)}{2} h
+\end{equation}
+\begin{equation}\label{eq:trapezoid2}
+I^* = \sum_{i=1}^{n} I_{i}^{*} = \frac{h}{2} \sum_{i=1}^{n} (f(x_0) + f(x_1) + ... + f(x_n)) = h (\frac{f(a)+f(b)}{2} + \sum_{i=1}^{n-1} f(x_i))
+\end{equation}
+
+\textbf{3. Метод Симпсона}
+
+Суть метода заключается в приближении подынтегральной функции на отрезке $[a, b]$
+интерполяционным многочленом второй степени $P_2(x)$, то есть приближение графика функции на отрезке параболой.
+
+Разбиение производится аналогично методу средних прямоугольников \eqref{eq:razbienie}.
+
+Парабола Симпсона представлена формулой \eqref{eq:parsimpson}:
+\begin{multline}\label{eq:parsimpson}
+P_2(x) = f(x_{i-0.5}) + \frac{f(x_i) - f(x_{i-1})}{h}(x-x_{i-0.5}) + \\ 
++ \frac{f(x_i) - 2f(x_{i-0.5}) + f(x_{i-1})}{\frac{h^2}{2}}*(x-x_{i-0.5})^2
+\end{multline}
+
+Тогда формула Симпсона выглядит следующим образом\eqref{eq:simpson1}, \eqref{eq:simpson2}:
+\begin{equation}\label{eq:simpson1}
+I^*_i = \int_{x_{i-1}}^{x_i} P_2(x)dx = \frac{h}{6} (f(x_{i-1}) + 4 f(x_{i-0.5}) + f(x_i))
+\end{equation}
+\begin{equation}\label{eq:simpson2}
+I* = \sum_{i=1}^{n} I^*_i = \frac{h}{6} (f(a) + f(b) + 4\sum_{i=1}^n f(x_{i-0.5}) + 2\sum_{i=1}^{n-1}f(x_i))
+\end{equation}
+\\\\
+
+\textbf{Вычисление интегралов с учетом погрешности}
+
+$I = I^* + O(h^k)$, где $k$ - порядок точности метода.
+
+$k = 2$ - для метода средних прямоугольников и трапеций.
+
+$k = 4$ - для метода Симпсона.
+
+$O(h^k) = ch^k$, где $h$ - шаг, $c$ - некоторая константа.
+
+Тогда:
+
+\begin{equation*}
+I \approx I^*_h + ch^k
+\end{equation*}
+
+Считаем, что вычисления проводятся без вычислительной погрешности, тогда можно записать строгое равенство:
+\begin{equation}\label{eq:pogr1}
+I = I^*_h + ch^k
+\end{equation}
+\begin{equation}\label{eq:pogr2}
+I = I^*_\frac{h}{2} + c{(\frac{h}{2})}^k
+\end{equation}
+
+Из равенств \eqref{eq:pogr1} и \eqref{eq:pogr2} следует равенство \eqref{eq:pogr3}:
+\begin{equation}\label{eq:pogr3}
+I^*_h + ch^k = I^*_\frac{h}{2} + c{(\frac{h}{2})}^k
+\end{equation}
+\begin{equation}\label{eq:pogr4}
+c{(\frac{h}{2})}^k = \frac{I^*_h - I^*_\frac{h}{2}}{1-2^k}
+\end{equation}
+
+Подставим \eqref{eq:pogr4} в \eqref{eq:pogr1} и получим значение интеграла с погрешностью\eqref{eq:pogr5}:
+\begin{equation}\label{eq:pogr5}
+I = I^*_\frac{h}{2} + \frac{I^*_h - I^*_\frac{h}{2}}{1-2^k}
+\end{equation}
+
+Где значение $R$ \eqref{eq:pogr6} есть уточнение по Ричардсону:
+ \begin{equation}\label{eq:pogr6}
+R = \frac{I^*_h - I^*_\frac{h}{2}}{1-2^k}
+\end{equation}
+
+\textbf{Практическая реализация:}
+\hypertarget{lst:quad}{}
+\lstinputlisting[label = lst:quad,  caption=Численное интегрирование, language=Python]{lab3.py}
+
+
+\textbf{Результаты:}
+
+Для тестирования был выбран интеграл \eqref{eq:testing}.
+
+В качестве $\varepsilon$ для каждого метода были выбраны следующие значения:
+$$ \varepsilon = 0.1, \varepsilon = 0.01, \varepsilon = 0.001 $$
+
+Ниже приведена таблица результата тестовой программы \hyperlink{lst:quad}{(Листинг 1)} на указанных выше методах:
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|P{4cm}|P{2.5cm}|P{4cm}|P{4cm}|}
+\hline
+Метод & Кол-во итераций & Значение без уточнения по Ричардсону & Значение с уточнением по Ричардсону \\
+\hline
+\multicolumn{4}{|c|}{$\varepsilon = 0.1$} \\
+\hline
+Метод средних прямоугольников & 2 & 1.713815 & 1.718249 \\
+\hline
+Метод трапеций & 2 & 1.727222 & 1.718319 \\
+\hline
+Метод Симпсона & 2 & 1.718284 & 1.718282 \\
+\hline
+\multicolumn{4}{|c|}{$\varepsilon = 0.01$} \\
+\hline
+Метод средних прямоугольников & 2 & 1.713815 & 1.718249 \\
+\hline
+Метод трапеций & 2 & 1.727222 & 1.718319 \\
+\hline
+Метод Симпсона & 2 & 1.718284 & 1.718282 \\
+\hline
+\multicolumn{4}{|c|}{$\varepsilon = 0.001$} \\
+\hline
+Метод средних прямоугольников & 4 & 1.718002 & 1.718282 \\
+\hline
+Метод трапеций & 4 & 1.718841 & 1.718282 \\
+\hline
+Метод Симпсона & 2 & 1.718284 & 1.718282 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+\\\\
+
+
+\textbf{Выводы:}
+
+В ходе выполнения лабораторной работы были рассмотрены различных 3 метода численного интегрирования: метод средних прямоугольников, метод трапеций и метод Симпсона. Была написана реализация данных методов на языке программирования Python.
+
+Как видно выше в таблице вычислений, среди всех методов выигрывает метод Симпсона (он точнее и для вычислений при $\varepsilon = 0.001$ ему понадобилось меньше итераций для получения результата).
+
+Если же сравнивать между собой два остальных метода, то метод средних прямоугольников является точнее метода трапеций. Но в то же время метод трапеций может применяться с произвольным шагом, в отличие от метода средних прямоугольников, который не применим, например, к функциям, заданным в конечном числе точек.
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ \enddocument

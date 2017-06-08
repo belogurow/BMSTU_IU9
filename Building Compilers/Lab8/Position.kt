@@ -1,6 +1,3 @@
-
-import java.awt.SystemColor.text
-
 /**
  * Created by alexbelogurow on 08.06.17.
  */

@@ -1,4 +1,4 @@
-import com.sun.org.apache.bcel.internal.classfile.Unknown
+import kotlin.system.exitProcess
 
 /**
  * Created by alexbelogurow on 08.06.17.
@@ -15,14 +15,14 @@ class Lexer(val program: String) {
                 break
 
             val token = when (position.getCode().toChar()) {
-                '\"' -> readTerm_2(position)
-                in 'A'..'z' -> readTerm_1(position)
-                '[', ']', ':' -> readSpecialToken()
-                else -> readUnknownToken()
+                '[', ']', ':'               -> readSpecialToken()
+                in 'A'..'Z', in 'a'..'z'    -> readTerm_1(position)
+                '\"'                        -> readTerm_2(position)
+                else                        -> readUnknownToken(position)
 
             }
 
-            if (token.tag == DomainTag.Unknown)
+            if (token.tag == DomainTag.Special)
                 position = position.next()
             else
                 position = token.coords.following
@@ -34,9 +34,10 @@ class Lexer(val program: String) {
                 "")
     }
 
-    private fun readUnknownToken(): Token = Token(DomainTag.Unknown,
-            Fragment(position, position),
-            position.getCurSymbol().toString())
+    private fun readUnknownToken(position: Position): Token  {
+        println("ERROR ${Fragment(position, position)}: unrecognized token")
+        exitProcess(0)
+    }
 
     private fun readSpecialToken(): Token = Token(DomainTag.Special,
             Fragment(position, position),
@@ -47,13 +48,12 @@ class Lexer(val program: String) {
         var value = position.getCurSymbol().toString()
         posOfTerm = posOfTerm.next()
 
-        while (posOfTerm.isLetter()) {
+        if (!posOfTerm.isEOF() && posOfTerm.getCurSymbol() == '*') {
             value += posOfTerm.getCurSymbol()
             posOfTerm = posOfTerm.next()
-        }
-        if (posOfTerm.getCurSymbol() == '*') {
-            value += posOfTerm.getCurSymbol()
-            posOfTerm = posOfTerm.next()
+        } else if (!posOfTerm.isEOF() && posOfTerm.isLetter()) {
+            println("ERROR ${Fragment(position, posOfTerm)}: expected symbol, received: ${value + posOfTerm.getCurSymbol()}  ")
+            exitProcess(0)
         }
         return Token(DomainTag.Term_1,
                 Fragment(position, posOfTerm),
@@ -69,16 +69,15 @@ class Lexer(val program: String) {
             value += posOfTerm.getCurSymbol()
             posOfTerm = posOfTerm.next()
         }
-        if (posOfTerm.getCurSymbol() == '\"') {
+        if (!posOfTerm.isEOF() && posOfTerm.getCurSymbol() == '\"') {
             value += posOfTerm.getCurSymbol()
             posOfTerm = posOfTerm.next()
-        } else
-            // TODO ERROR
-            return Token(DomainTag.Unknown,
-                    Fragment(position, posOfTerm),
-                    value)
+        } else {
+            println("ERROR ${Fragment(position, posOfTerm)}: expected \"symbol\", received: ${value + posOfTerm.getCurSymbol()}  ")
+            exitProcess(0)
+        }
 
-        if (position.getCurSymbol() == '*') {
+        if (!posOfTerm.isEOF() && posOfTerm.getCurSymbol() == '*') {
             value += posOfTerm.getCurSymbol()
             posOfTerm = posOfTerm.next()
         }

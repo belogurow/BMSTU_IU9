@@ -8,13 +8,21 @@ fun main(args : Array<String>) {
     val text = File("/Users/alexbelogurow/IdeaProjects/Lab8/src/test.txt").readText()
 
     val lexer = Lexer(text)
+    var tokens = listOf<Token>()
     while (true) {
         val token = lexer.nextToken()
+        tokens = tokens.plusElement(token)
         if (token.tag != DomainTag.EndOfProgram)
-            println(token)
-        else
+
+        else {
+            println("OK")
             break
+        }
     }
+
+    println(tokens.last())
+    val parser = Parser(tokens)
+    parser.parse()
 
 }
 

@@ -15,7 +15,7 @@ class Lexer(val program: String) {
                 break
 
             val token = when (position.getCode().toChar()) {
-                '[', ']', ':'               -> readSpecialToken()
+                '[', ']', ':', '*'          -> readSpecialToken()
                 in 'A'..'Z', in 'a'..'z'    -> readTerm_1(position)
                 '\"'                        -> readTerm_2(position)
                 else                        -> readUnknownToken(position)

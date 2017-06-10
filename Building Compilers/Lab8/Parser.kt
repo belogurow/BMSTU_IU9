@@ -5,13 +5,17 @@ import kotlin.system.exitProcess
  */
 class Parser(val tokens: List<Token>) {
     var curToken = tokens.first()
-    var nterms_left = listOf<Token>()
-    var nterms_right = listOf<Token>()
+    var ntermsLeft = HashSet<String>()
+    var ntermsRight = HashSet<String>()
     var mapRule = HashMap<String, Rule>() // <left, right>
 
     fun parse() {
         parseLines()
-        println(mapRule)
+        mapRule.forEach { key, value -> println("[$key : $value]") }
+        if (!ntermsLeft.containsAll(ntermsRight)) {
+            println("Undefined nonterminal(s)")
+            exit()
+        }
     }
 
     private fun nextToken() {
@@ -37,7 +41,6 @@ class Parser(val tokens: List<Token>) {
             nextToken()
             parseExpr()
             if (curToken.tag == DomainTag.Special && curToken.value == "]") {
-                // TODO OK
                 nextToken()
                 println("end of line")
             }
@@ -53,8 +56,8 @@ class Parser(val tokens: List<Token>) {
         println("Expr")
         val left = curToken.value
         var rule = Rule(RuleTag.Token, null)
-
         if (curToken.tag == DomainTag.Term_1) {
+            ntermsLeft.add(curToken.value)
             nextToken()
             // TODO parseRight(rule)
             parseRight(rule)
@@ -89,7 +92,7 @@ class Parser(val tokens: List<Token>) {
     private fun parseVar(rule: Rule) {
         println("Var")
         if (curToken.tag == DomainTag.Special && curToken.value == "[") {
-            var newRule = Rule(RuleTag.Normal, null)
+            val newRule = Rule(RuleTag.Normal, null)
             newRule.addAlternatives()
             nextToken()
             parseAlt(newRule)
@@ -128,6 +131,8 @@ class Parser(val tokens: List<Token>) {
     private fun parseTerm(rule: Rule) {
         println("Term")
         if (curToken.tag == DomainTag.Term_1 || curToken.tag == DomainTag.Term_2) {
+            if (curToken.tag == DomainTag.Term_1)
+                ntermsRight.add(curToken.value)
             val tok = curToken
             nextToken()
             var isStar = false

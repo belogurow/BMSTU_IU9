@@ -3,7 +3,8 @@
  */
 enum class RuleTag {
     Token,
+    TokenStar,
     Normal,
-    Star,
+    NormalStar,
     Error
 }

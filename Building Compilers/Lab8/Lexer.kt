@@ -48,13 +48,6 @@ class Lexer(val program: String) {
         var value = position.getCurSymbol().toString()
         posOfTerm = posOfTerm.next()
 
-        if (!posOfTerm.isEOF() && posOfTerm.getCurSymbol() == '*') {
-            value += posOfTerm.getCurSymbol()
-            posOfTerm = posOfTerm.next()
-        } else if (!posOfTerm.isEOF() && posOfTerm.isLetter()) {
-            println("ERROR ${Fragment(position, posOfTerm)}: expected symbol, received: ${value + posOfTerm.getCurSymbol()}  ")
-            exitProcess(0)
-        }
         return Token(DomainTag.Term_1,
                 Fragment(position, posOfTerm),
                 value)
@@ -77,10 +70,6 @@ class Lexer(val program: String) {
             exitProcess(0)
         }
 
-        if (!posOfTerm.isEOF() && posOfTerm.getCurSymbol() == '*') {
-            value += posOfTerm.getCurSymbol()
-            posOfTerm = posOfTerm.next()
-        }
         return Token(DomainTag.Term_2,
                 Fragment(position, posOfTerm),
                 value)

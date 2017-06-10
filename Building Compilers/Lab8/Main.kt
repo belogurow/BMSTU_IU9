@@ -20,7 +20,10 @@ fun main(args : Array<String>) {
         }
     }
 
-    println(tokens.last())
+    /*
+    tokens.forEach {
+        println(it)
+    }*/
     val parser = Parser(tokens)
     parser.parse()
 

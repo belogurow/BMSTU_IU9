@@ -5,9 +5,8 @@ import java.io.File
  */
 
 fun main(args : Array<String>) {
-    val text = File("/Users/alexbelogurow/IdeaProjects/Lab8/src/test.txt").readText()
-
-    val lexer = Lexer(text)
+    val file = File(args[0])
+    val lexer = Lexer(file.readText())
     var tokens = listOf<Token>()
     while (true) {
         val token = lexer.nextToken()
@@ -19,14 +18,11 @@ fun main(args : Array<String>) {
             break
         }
     }
-
-    /*
-    tokens.forEach {
-        println(it)
-    }*/
     val parser = Parser(tokens)
     parser.parse()
-
+    val first = First(parser.mapRule)
+    first.setFirst()
+    first.printFirst()
 }
 
 

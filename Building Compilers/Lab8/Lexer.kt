@@ -3,7 +3,7 @@ import kotlin.system.exitProcess
 /**
  * Created by alexbelogurow on 08.06.17.
  */
-class Lexer(val program: String) {
+class Lexer(program: String) {
     private var position = Position(program)
 
     fun nextToken(): Token {

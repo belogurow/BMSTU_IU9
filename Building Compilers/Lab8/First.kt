@@ -3,12 +3,12 @@
  */
 class First(val rules: HashMap<String, Rule>) {
     var first = HashMap<String, HashSet<String>>()
-    var set: HashSet<String>? = null
+    //var set: HashSet<String>? = null
 
 
     fun f(rule: Rule): HashSet<String>? {
         var altSet: HashSet<String>? = null
-        set = HashSet<String>()
+        val set = HashSet<String>()
         for (ruleList in rule.alternatives) {
             altSet = HashSet<String>()
             var hashSet: HashSet<String>? = HashSet<String>()
@@ -40,7 +40,7 @@ class First(val rules: HashMap<String, Rule>) {
                 altSet.remove("ε")
                 hashSet?.forEach { altSet?.add(it) }
             }
-            altSet.forEach { set?.add(it) }
+            altSet.forEach { set.add(it) }
         }
         return set
     }

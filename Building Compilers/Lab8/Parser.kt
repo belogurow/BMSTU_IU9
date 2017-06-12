@@ -120,7 +120,7 @@ class Parser(val tokens: List<Token>) {
             parseRight(rule)
     }
 
-    // Term = Term_1 | Term_2
+    // Term = (Term_1 | Term_2) ["*"]
     private fun parseTerm(rule: Rule) {
         //println("Term")
         if (curToken.tag == DomainTag.Term_1 || curToken.tag == DomainTag.Term_2) {

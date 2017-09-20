@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lab2</string>
+    <string name="city">Город</string>
+    <string name="show_weather">Показать погоду</string>
+    <string name="update">Обновить</string>
+    <string name="en">Английский</string>
+    <string name="ru">Русский</string>
+</resources>

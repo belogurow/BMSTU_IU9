@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Lab2</string>
+
+    <string name="city">City</string>
+    <string name="show_weather">Show weather</string>
+    <string name="update">Update</string>
+    <string name="en">English</string>
+    <string name="ru">Russian</string>
+</resources>

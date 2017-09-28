@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/text_from_explicit_intent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_from_explicit_intent"
+        android:layout_margin="5dp"/>
+
+    <Button
+        android:id="@+id/button_open_explicit_intent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/open_explicit_intent"
+        android:layout_margin="5dp"/>
+
+    <Button
+        android:id="@+id/button_open_map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/open_map"
+        android:layout_margin="5dp"/>
+
+    <Button
+        android:id="@+id/button_open_web"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/open_web"
+        android:layout_margin="5dp"/>
+
+    <Button
+        android:id="@+id/button_open_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/open_phone"
+        android:layout_margin="5dp"/>
+
+    <Button
+        android:id="@+id/button_open_mail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/open_mail"
+        android:layout_margin="5dp"/>
+</LinearLayout>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Lab4</string>
+    <string name="open_explicit_intent">Open explicit intent</string>
+    <string name="text_from_explicit_intent">Text from explicit intent</string>
+    <string name="input_your_text">Input your text</string>
+    <string name="send_text_for_prev_activity">Send text for prev activity</string>
+    <string name="open_map">Open Map</string>
+    <string name="open_web">Open Web</string>
+    <string name="open_phone">Open Phone</string>
+    <string name="open_mail">Open Mail</string>
+</resources>

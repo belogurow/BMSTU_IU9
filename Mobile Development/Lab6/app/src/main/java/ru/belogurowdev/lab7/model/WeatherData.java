@@ -1,5 +1,5 @@
 
-package ru.belogurowdev.lab6.model;
+package ru.belogurowdev.lab7.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -20,7 +20,7 @@ public class WeatherData {
     private Integer cnt;
     @SerializedName("list")
     @Expose
-    private java.util.List<ru.belogurowdev.lab6.model.List> list = null;
+    private java.util.List<ru.belogurowdev.lab7.model.List> list = null;
 
     public City getCity() {
         return city;
@@ -54,11 +54,11 @@ public class WeatherData {
         this.cnt = cnt;
     }
 
-    public java.util.List<ru.belogurowdev.lab6.model.List> getList() {
+    public java.util.List<ru.belogurowdev.lab7.model.List> getList() {
         return list;
     }
 
-    public void setList(java.util.List<ru.belogurowdev.lab6.model.List> list) {
+    public void setList(java.util.List<ru.belogurowdev.lab7.model.List> list) {
         this.list = list;
     }
 

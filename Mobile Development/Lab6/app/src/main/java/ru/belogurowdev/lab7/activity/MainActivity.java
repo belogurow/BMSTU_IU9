@@ -1,4 +1,4 @@
-package ru.belogurowdev.lab6.activity;
+package ru.belogurowdev.lab7.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,21 +10,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.reactivestreams.Subscriber;
-
 import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import ru.belogurowdev.lab6.R;
-import ru.belogurowdev.lab6.adapter.WeatherAdapter;
-import ru.belogurowdev.lab6.api.WeatherApi;
-import ru.belogurowdev.lab6.model.WeatherData;
-import ru.belogurowdev.lab6.util.App;
+import ru.belogurowdev.lab7.R;
+import ru.belogurowdev.lab7.adapter.WeatherAdapter;
+import ru.belogurowdev.lab7.api.WeatherApi;
+import ru.belogurowdev.lab7.model.WeatherData;
+import ru.belogurowdev.lab7.util.App;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         initializeFields();
 
-        Observable<WeatherData> weatherData = mWeatherApi.getWeatherByCity("Moscow", "16", KEY, CELSIUS);
+        Observable<WeatherData> weatherData = mWeatherApi.getWeatherByCity("Москва", "10", KEY, CELSIUS);
         weatherData
                 .subscribeOn(Schedulers.io())                 // Subscribe выполняется в отдельном потоке
                 .observeOn(AndroidSchedulers.mainThread())    // Observe выполняется в главном потоке

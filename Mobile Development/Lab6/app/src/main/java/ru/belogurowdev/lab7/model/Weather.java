@@ -1,5 +1,5 @@
 
-package ru.belogurowdev.lab6.model;
+package ru.belogurowdev.lab7.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

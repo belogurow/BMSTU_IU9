@@ -1,4 +1,4 @@
-package ru.belogurowdev.lab6.adapter;
+package ru.belogurowdev.lab7.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,16 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
-import ru.belogurowdev.lab6.R;
-import ru.belogurowdev.lab6.model.List;
-import ru.belogurowdev.lab6.model.Temp;
-import ru.belogurowdev.lab6.model.Weather;
+import ru.belogurowdev.lab7.R;
+import ru.belogurowdev.lab7.model.List;
+import ru.belogurowdev.lab7.model.Temp;
 
 /**
  * Created by alexbelogurow on 08.10.2017.
@@ -25,7 +20,7 @@ import ru.belogurowdev.lab6.model.Weather;
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder> {
 
     private Context mContext;
-    private java.util.List<ru.belogurowdev.lab6.model.List> mWeatherList;
+    private java.util.List<ru.belogurowdev.lab7.model.List> mWeatherList;
 
     public WeatherAdapter(Context context) {
         mContext = context;

@@ -1,10 +1,10 @@
-package ru.belogurowdev.lab6.api;
+package ru.belogurowdev.lab7.api;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import ru.belogurowdev.lab6.model.WeatherData;
+import ru.belogurowdev.lab7.model.WeatherData;
 
 /**
  * Created by alexbelogurow on 08.10.2017.

@@ -1,11 +1,11 @@
-package ru.belogurowdev.lab6.util;
+package ru.belogurowdev.lab7.util;
 
 import android.app.Application;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.belogurowdev.lab6.api.WeatherApi;
+import ru.belogurowdev.lab7.api.WeatherApi;
 
 /**
  * Created by alexbelogurow on 08.10.2017.

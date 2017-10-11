@@ -1,4 +1,4 @@
-package ru.belogurowdev.lab6;
+package ru.belogurowdev.lab7;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

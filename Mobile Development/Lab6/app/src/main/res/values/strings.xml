@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Lab6</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_check_key">check box</string>
+    <string name="pref_title_switch">Wi-Fi</string>
+    <string name="pref_switch_title">Wi-Fi</string>
+    <string name="pref_switch_description">Wi-Fi network name</string>
+    <string name="pref_edit_default">1234566</string>
+    <string name="pref_edit_title">Password</string>
+    <string name="pref_list_title">Ваша реклама</string>
+    <string name="pref_check_title">Disable Wi-Fi while screen off</string>
+    <string name="settings">settings</string>
+    <string name="pref_switch_key">switch</string>
+    <string name="pref_edit_key">edit</string>
+    <string name="pref_list_key">list</string>
+
+
+    <string-array name="pref_list_titles">
+        <item>100р</item>
+        <item>300р</item>
+        <item>500р</item>
+    </string-array>
+    <string-array name="pref_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+</resources>

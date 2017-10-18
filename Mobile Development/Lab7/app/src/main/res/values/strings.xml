@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Lab6</string>
+    <string name="app_name">Lab7</string>
+    <string name="query">Input your place</string>
+    <string name="send_request">Go</string>
+    <string name="open_settings">Open settings</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_check_title_open_now">Open now</string>
+    <string name="pref_check_key_open_now">open now</string>
+    <string name="pref_list_title_lang">Result lang</string>
+    <string name="pref_list_key_lang">1</string>
 </resources>

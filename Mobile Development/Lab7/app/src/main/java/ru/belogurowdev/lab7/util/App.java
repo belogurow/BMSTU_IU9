@@ -5,28 +5,30 @@ import android.app.Application;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.belogurowdev.lab7.api.WeatherApi;
+import ru.belogurowdev.lab7.api.GooglePlacesApi;
+import ru.belogurowdev.lab7.model.PlacesList;
 
 /**
- * Created by alexbelogurow on 08.10.2017.
+ * Created by alexbelogurow on 18.10.2017.
  */
 
 public class App extends Application {
 
-    private static final String WEATHER_BASE_URL = "http://api.openweathermap.org";
+    // https://maps.googleapis.com/maps/api/place/textsearch/json?query=bmstu&key=AIzaSyAuJIEnY4TcR-G67YJSgS2CNbPJNABzs3s
 
-    public static WeatherApi mWeatherApi;
+    private static final String BASE_URL = "https://maps.googleapis.com";
+    public static GooglePlacesApi mGooglePlacesApi;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(WEATHER_BASE_URL)
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
-        mWeatherApi = retrofit.create(WeatherApi.class);
+        mGooglePlacesApi = retrofit.create(GooglePlacesApi.class);
     }
 }

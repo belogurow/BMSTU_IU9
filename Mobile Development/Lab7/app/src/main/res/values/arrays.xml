@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_list_titles">
+        <item>Russian</item>
+        <item>English</item>
+        <item>Spanish</item>
+        <item>Italian</item>
+        <item>France</item>
+    </string-array>
+    <string-array name="pref_list_values">
+        <item>ru</item>
+        <item>en</item>
+        <item>es</item>
+        <item>it</item>
+        <item>fr</item>
+    </string-array>
+</resources>

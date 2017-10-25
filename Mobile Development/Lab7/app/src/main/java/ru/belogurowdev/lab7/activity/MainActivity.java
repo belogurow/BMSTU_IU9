@@ -17,13 +17,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import ru.belogurowdev.lab7.R;
 import ru.belogurowdev.lab7.adapter.PlacesAdapter;
 import ru.belogurowdev.lab7.api.GooglePlacesApi;
-import ru.belogurowdev.lab7.model.PlacesList;
+import ru.belogurowdev.lab7.model.placesList.PlacesList;
 import ru.belogurowdev.lab7.util.App;
 
 public class MainActivity extends AppCompatActivity {
@@ -63,9 +62,18 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String lang = sharedPreferences.getString(getString(R.string.pref_list_key_lang), "en");
+        Boolean openNow = sharedPreferences.getBoolean(getString(R.string.pref_check_key_open_now), false);
+        Log.d(TAG, openNow.toString());
 
-        Observable<PlacesList> placesListObservable = mGooglePlacesApi.
-                getPlacesBySearch(mEditTextQuery.getText().toString(), API_KEY, lang);
+        Observable<PlacesList> placesListObservable;
+        if (openNow) {
+            placesListObservable = mGooglePlacesApi.
+                    getPlacesBySearchWithOpen(mEditTextQuery.getText().toString(), API_KEY, lang);
+        } else {
+            placesListObservable = mGooglePlacesApi.
+                    getPlacesBySearch(mEditTextQuery.getText().toString(), API_KEY, lang);
+        }
+
         placesListObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -73,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
                         places -> {
                             hideLoad();
                             mAdapter.setPlacesList(places.getResults());
-                            Log.d(TAG, places.toString());
                         },
                         error -> {
                             hideLoad();
@@ -96,6 +103,13 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        sendRequest();
     }
 
     @Override

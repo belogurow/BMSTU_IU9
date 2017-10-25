@@ -1,6 +1,7 @@
 package ru.belogurowdev.lab7.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import ru.belogurowdev.lab7.R;
-import ru.belogurowdev.lab7.model.Result;
+import ru.belogurowdev.lab7.activity.PlaceInfoActivity;
+import ru.belogurowdev.lab7.model.placesList.Result;
 
 /**
  * Created by alexbelogurow on 18.10.2017.
@@ -21,6 +23,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
 
     private Context mContext;
     private List<Result> mPlacesList;
+    private static final String EXTRA_PLACE_ID = "ru.belogurowdev.extras.PLACE_ID";
 
     public PlacesAdapter(Context context) {
         mContext = context;
@@ -68,6 +71,12 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
             holder.mTextViewRating.setTextColor(mContext.getResources().getColor(R.color.accent_material_light));
             holder.mRatingBar.setRating(place.getRating().floatValue());
         }
+
+        holder.itemView.setOnClickListener(view -> {
+            Intent placeInfoIntent = new Intent(mContext, PlaceInfoActivity.class);
+            placeInfoIntent.putExtra(EXTRA_PLACE_ID, place.getPlaceId());
+            mContext.startActivity(placeInfoIntent);
+        });
     }
 
     @Override

@@ -1,5 +1,5 @@
 
-package ru.belogurowdev.lab7.model;
+package ru.belogurowdev.lab7.model.placesList;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;

@@ -1,10 +1,10 @@
 
-package ru.belogurowdev.lab7.model;
+package ru.belogurowdev.lab7.model.placeInfo;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Southwest {
+public class Location {
 
     @SerializedName("lat")
     @Expose
@@ -29,12 +29,4 @@ public class Southwest {
         this.lng = lng;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Southwest{");
-        sb.append("lat=").append(lat);
-        sb.append(", lng=").append(lng);
-        sb.append('}');
-        return sb.toString();
-    }
 }

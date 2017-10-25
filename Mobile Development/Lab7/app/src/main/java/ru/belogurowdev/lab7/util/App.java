@@ -6,7 +6,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.belogurowdev.lab7.api.GooglePlacesApi;
-import ru.belogurowdev.lab7.model.PlacesList;
 
 /**
  * Created by alexbelogurow on 18.10.2017.

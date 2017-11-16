@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.TextView
 import org.json.JSONException
 import org.json.JSONObject
 import ru.belogurowdev.lab3.R
@@ -35,9 +36,12 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<String> 
     private var mRecyclerView: RecyclerView? = null
     private var mButtonUpdate: Button? = null
     private var mProgress: ProgressBar? = null
+    private var mTextLifeCycle: TextView? = null
 
     private var adapter: WeatherAdapter? = null
     private var context: Context = this
+
+    private var resultList: ArrayList<Weather>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +53,29 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<String> 
             //getRequest()
             initLoader()
         }
+
+        updateTextLifeCycle("onCreate()")
+        Log.d(TAG, "onCreate()")
     }
 
     private fun initViews() {
         mRecyclerView = findViewById(R.id.recycler_weather)
         mButtonUpdate = findViewById(R.id.button_update)
         mProgress = findViewById(R.id.progress)
+        mTextLifeCycle = findViewById(R.id.text_life_cycle)
+
+        resultList = ArrayList()
+        adapter = WeatherAdapter(this, resultList!!)
+        mRecyclerView?.adapter = adapter
 
         mRecyclerView?.layoutManager = LinearLayoutManager(this)
 
-
+//        val bundle = intent.extras
+//        resultList = if (bundle == null) {
+//            ArrayList()
+//        } else {
+//            bundle.getParcelableArrayList("resultList")
+//        }
     }
 
     private fun initLoader() {
@@ -133,7 +150,7 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<String> 
             val weatherList = jsonObject.getJSONArray("list")
 
             var i = 0
-            val resultList = arrayListOf<Weather>()
+            //val resultList = arrayListOf<Weather>()
             while (i < weatherList?.length()!!) {
                 val item = weatherList.get(i) as JSONObject
                 val weather = item.getJSONArray("weather").get(0) as JSONObject
@@ -142,12 +159,13 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<String> 
                 val temp = item.getJSONObject("temp").getString("day")
                 Log.d(TAG, temp.toString())
 
-                resultList.add(Weather("", temp, main))
+                resultList?.add(Weather("", temp, main))
                 //resultList.plusElement(Weather(city, temp, ""))
                 i++
             }
-            adapter = WeatherAdapter(context, resultList)
-            mRecyclerView?.adapter = adapter
+            //adapter = WeatherAdapter(context, resultList!!)
+            adapter?.updateList(resultList!!)
+//            mRecyclerView?.adapter = adapter
         } catch (e: JSONException) {
             e.printStackTrace();
         }
@@ -170,5 +188,64 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<String> 
 
         }, mProgress).execute(url)
 
+    }
+
+    private fun updateTextLifeCycle(text: String) {
+        mTextLifeCycle?.text = "${mTextLifeCycle?.text} \n$text"
+    }
+
+    override fun onStart() {
+        super.onStart()
+        updateTextLifeCycle("onStart()")
+        Log.d(TAG, "onStart()")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateTextLifeCycle("onResume()")
+        Log.d(TAG, "onResume()")
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        updateTextLifeCycle("onPause()")
+        Log.d(TAG, "onPause()")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        updateTextLifeCycle("onStop")
+        Log.d(TAG, "onStop()")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        updateTextLifeCycle("onRestart()")
+        Log.d(TAG, "onRestart()")
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        updateTextLifeCycle("onDestroy()")
+        Log.d(TAG, "onDestroy()")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        Log.d(TAG, "onSaveInstanceState()")
+        super.onSaveInstanceState(outState)
+        outState?.putParcelableArrayList("resultList", resultList)
+
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onRestoreInstanceState()")
+        super.onRestoreInstanceState(savedInstanceState)
+
+
+        if (savedInstanceState != null) {
+            resultList = savedInstanceState.getParcelableArrayList("resultList")
+            adapter?.updateList(resultList!!)
+//            adapter = WeatherAdapter(context, resultList!!)
+        }
     }
 }

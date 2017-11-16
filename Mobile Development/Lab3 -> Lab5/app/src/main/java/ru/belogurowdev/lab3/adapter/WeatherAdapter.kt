@@ -26,6 +26,11 @@ class WeatherAdapter(private var context: Context,
         }
     }
 
+     fun updateList(weatherList: ArrayList<Weather>) {
+        this.weatherList = weatherList
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): WeatherViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_weather, parent,false)
         return WeatherViewHolder(view)

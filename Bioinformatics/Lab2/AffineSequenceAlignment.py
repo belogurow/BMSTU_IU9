@@ -69,7 +69,7 @@ if __name__ == '__main__':
 			                     Constant.GAP_START + Constant.GAP_EXTEND + matrix_B[i - 1][j],
 			                     Constant.GAP_EXTEND + matrix_C[i - 1][j])
 
-			matrix_A[i][j] =  + max(compare(seq_1[i - 1], seq_2[j - 1]) + matrix_A[i - 1, j - 1],
+			matrix_A[i][j] = max(compare(seq_1[i - 1], seq_2[j - 1]) + matrix_A[i - 1, j - 1],
 			                                                           matrix_B[i, j],
 			                                                           matrix_C[i, j])
 	# начинаем идти с нижней правой ячейки

@@ -10,13 +10,26 @@
 ```python
 # python3
 python Main.py input.fasta
+```
 
-'''
+```python
 Введите цифру алгоритма, который необходимо воспроизвести:
-		1. SmithWaterman
-		2. NeedlemanWunsch
-		3. AffineSequenceAlignment
-		'''
+	1. SmithWaterman
+	2. NeedlemanWunsch
+	3. AffineSequenceAlignment
+
+1
+
+Введите значения для MATCH MISMATCH GAP_PENALTY (10 -5 -5)
+10 -5 -5
+
+Calculating...
+
+CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGAC--CGTGGAATAAACGATCGAGTGAATCCGGA
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGACAAC--AGAATATATGATCGAGTGAATCTGGA
+
+...
 ```
 
 

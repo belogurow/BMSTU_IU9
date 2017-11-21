@@ -1,15 +1,22 @@
-# Реализация алгоритма [Needleman–Wunsch](https://en.wikipedia.org/wiki/Needleman–Wunsch_algorithm) c аффинным штрафом
+# Реализация алгоритмов выравнивания последовательностей
 
-**Пример**
+1. [Smith–Waterman](https://en.wikipedia.org/wiki/Smith–Waterman_algorithm)
+2. [Needleman–Wunsch](https://en.wikipedia.org/wiki/Needleman–Wunsch_algorithm)
+3. [Needleman–Wunsch](https://en.wikipedia.org/wiki/Needleman–Wunsch_algorithm) c аффинным штрафом
 
+## Пример
+
+   На вход подается имя файла *.fasta, который содержит последовательности
 ```python
 # python3
-python AffineSequenceAlignment.py input.fasta MATCH MISMATCH GAP_START GAP_EXTEND
-```
+python Main.py input.fasta
 
-```python
-# python3
-python AffineSequenceAlignment.py input.fasta 4 -1 -10 -2
+'''
+Введите цифру алгоритма, который необходимо воспроизвести:
+		1. SmithWaterman
+		2. NeedlemanWunsch
+		3. AffineSequenceAlignment
+		'''
 ```
 
 

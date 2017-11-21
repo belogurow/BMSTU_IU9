@@ -14,9 +14,9 @@ python Main.py input.fasta
 
 ```
 Введите цифру алгоритма, который необходимо воспроизвести:
-	1. SmithWaterman
-	2. NeedlemanWunsch
-	3. AffineSequenceAlignment
+	1. Smith-Waterman
+	2. Needleman-Wunsch
+	3. Needleman-Wunsch Affine
 
 1
 

@@ -1,7 +1,9 @@
 package ru.belogurowdev.lab10.adapter;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +21,15 @@ import ru.belogurowdev.lab10.model.Employee;
 public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.EmployeeViewHolder> {
 
     private Context mContext;
-    private List<Employee> mEmployeeList;
+    private Cursor mCursor;
 
-    public EmployeeAdapter(Context context, List<Employee> employeeList) {
+    public EmployeeAdapter(Context context) {
         mContext = context;
-        mEmployeeList = employeeList;
+    }
+
+    public void setEmployers(Cursor cursor) {
+        mCursor = cursor;
+        notifyDataSetChanged();
     }
 
     public class EmployeeViewHolder extends RecyclerView.ViewHolder {
@@ -46,14 +52,20 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
 
     @Override
     public void onBindViewHolder(EmployeeViewHolder holder, int position) {
-        Employee employee = mEmployeeList.get(position);
+        if (mCursor.moveToPosition(position)) {
 
-        holder.mTextName.setText(employee.getFullName());
-        holder.mTextAge.setText(employee.getAge().toString());
+            holder.mTextName.setText(mCursor.getString(
+                    mCursor.getColumnIndexOrThrow(Employee.COLUMN_FULL_NAME)));
+
+            holder.mTextAge.setText(mCursor.getString(
+                    mCursor.getColumnIndexOrThrow(Employee.COLUMN_AGE)));
+
+            Log.d("employee", String.valueOf(mCursor.getLong(mCursor.getColumnIndexOrThrow(Employee.COLUMN_ID))));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mEmployeeList.size();
+        return mCursor == null ? 0 : mCursor.getCount();
     }
 }

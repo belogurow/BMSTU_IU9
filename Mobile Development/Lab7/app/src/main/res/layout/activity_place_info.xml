@@ -10,11 +10,7 @@
 
     <ProgressBar
         android:id="@+id/progress_place_info"
-        style="?android:attr/progressBarStyle"
-        android:padding="4dp"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/ProgressBarStyle"
         />
 
 
@@ -29,33 +25,23 @@
         android:orientation="horizontal">
 
         <ImageView
+            style="@style/IconImageViewStyle"
             android:id="@+id/icon_call"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
             android:src="@drawable/ic_call"/>
 
         <ImageView
+            style="@style/IconImageViewStyle"
             android:id="@+id/icon_web"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
             android:src="@drawable/ic_web"/>
 
         <ImageView
+            style="@style/IconImageViewStyle"
             android:id="@+id/icon_map"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
             android:src="@drawable/ic_place"/>
     </LinearLayout>
 
     <TextView
+        style="@style/TitleTextViewStyle"
         android:id="@+id/place_info_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Place name"
-        android:textColor="@color/colorPrimary"
-        android:textSize="30sp"/>
+        tools:text="Place name"/>
 </LinearLayout>

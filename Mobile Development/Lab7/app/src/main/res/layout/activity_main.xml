@@ -9,24 +9,20 @@
     tools:context="ru.belogurowdev.lab7.activity.MainActivity">
 
     <EditText
-        android:layout_margin="10dp"
+        style="@style/EditTextStyle"
         android:id="@+id/edit_query_places"
         android:hint="@string/query"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        />
 
     <ProgressBar
-        android:visibility="gone"
+        style="@style/RecyclerViewStyle"
         android:id="@+id/progress"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        />
 
 
     <android.support.v7.widget.RecyclerView
+        style="@style/RecyclerViewStyle"
         android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         />
 
 </LinearLayout>

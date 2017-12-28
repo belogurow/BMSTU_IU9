@@ -1,15 +1,16 @@
 import numpy
 import Util
+import BlosumReader
 
 
 # задаем значения
 class Constants:
-	def __init__(self, MATCH, MISMATCH, GAP_PENALTY, seq_1, seq_2):
-		self.MATCH = MATCH
-		self.MISMATCH = MISMATCH
+	def __init__(self, GAP_PENALTY, BLOSUM_MATRIX, dic, seq_1, seq_2):
 		self.GAP_PENALTY = GAP_PENALTY
 		self.LEN_SEQ_1 = len(seq_1) + 1
 		self.LEN_SEQ_2 = len(seq_2) + 1
+		self.BLOSUM_MATRIX = BLOSUM_MATRIX
+		self.LETTER_DICT = dic
 
 
 class Direction:
@@ -21,15 +22,21 @@ class Direction:
 
 # сравниваем две буквы
 def compare(letter_1, letter_2, constants):
-	if letter_1 == letter_2:
-		return constants.MATCH
-	else:
-		return constants.MISMATCH
+	index_i = constants.LETTER_DICT[letter_1]
+	index_j = constants.LETTER_DICT[letter_2]
+	return constants.BLOSUM_MATRIX[index_i][index_j]
+	#
+	# if letter_1 == letter_2:
+	# 	return constants.MATCH
+	# else:
+	# 	return constants.MISMATCH
 
 
 def calculate(seq_1, seq_2):
-	const_input = input("\nВведите значения для MATCH MISMATCH GAP_PENALTY (10 -5 -5)\n").split(" ")
-	constants = Constants(int(const_input[0]), int(const_input[1]), int(const_input[2]), seq_1, seq_2)
+	const_input = input("\nВведите значения для GAP_PENALTY (-5)\n").split(" ")
+
+	blosum, dic = BlosumReader.load_matrix()
+	constants = Constants(int(const_input[0]), blosum, dic, seq_1, seq_2)
 	print("\nCalculating...\n")
 
 	# создаем табличку для значений ячеек
@@ -67,6 +74,11 @@ def calculate(seq_1, seq_2):
 
 	align1, align2 = '', ''
 	i, j = max_i, max_j
+	score = score_grid[i][j]
+
+	# print(score_grid)
+	# print(trace_grid.max())
+
 
 	# находим ответ
 	while trace_grid[i][j] != Direction.END:
@@ -88,3 +100,4 @@ def calculate(seq_1, seq_2):
 	# print(align2[::-1])
 
 	Util.print_sequences(align1[::-1], align2[::-1])
+	print("\tScore: " + str(score))

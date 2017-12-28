@@ -1,28 +1,36 @@
 import numpy
+
+import BlosumReader
 import Util
 
 
 # задаем значения
 class Constants:
-	def __init__(self, MATCH, MISMATCH, GAP_PENALTY, seq_1, seq_2):
-		self.MATCH = MATCH
-		self.MISMATCH = MISMATCH
+	def __init__(self, GAP_PENALTY, BLOSUM_MATRIX, dic, seq_1, seq_2):
 		self.GAP_PENALTY = GAP_PENALTY
 		self.LEN_SEQ_1 = len(seq_1) + 1
 		self.LEN_SEQ_2 = len(seq_2) + 1
+		self.BLOSUM_MATRIX = BLOSUM_MATRIX
+		self.LETTER_DICT = dic
 
 
 # сравниваем две буквы
 def compare(letter_1, letter_2, constants):
-	if letter_1 == letter_2:
-		return constants.MATCH
-	else:
-		return constants.MISMATCH
+	index_i = constants.LETTER_DICT[letter_1]
+	index_j = constants.LETTER_DICT[letter_2]
+	return constants.BLOSUM_MATRIX[index_i][index_j]
+
+	# if letter_1 == letter_2:
+	# 	return constants.MATCH
+	# else:
+	# 	return constants.MISMATCH
 
 
 def calculate(seq_1, seq_2):
-	const_input = input("\nВведите значения для MATCH MISMATCH GAP_PENALTY (1 -1 -5)\n").split(" ")
-	constants = Constants(int(const_input[0]), int(const_input[1]), int(const_input[2]), seq_1, seq_2)
+	const_input = input("\nВведите значения для GAP_PENALTY (-5)\n").split(" ")
+
+	blosum, dic = BlosumReader.load_matrix()
+	constants = Constants(int(const_input[0]), blosum, dic, seq_1, seq_2)
 	print("\nCalculating...\n")
 
 	# создаем табличку, которая заполнена нулями
@@ -45,6 +53,8 @@ def calculate(seq_1, seq_2):
 	# начинаем идти с нижней правой ячейки
 	i, j = len(seq_1), len(seq_2)
 	score = -float("inf")
+
+	# print(score_grid)
 
 	while i > 0 and j > 0:
 		if score == -float("inf"):

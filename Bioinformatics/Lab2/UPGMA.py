@@ -188,4 +188,6 @@ def calculate(sequences):
 		current_clusters.remove(closest_cluster_two)
 		current_clusters.append(new_cluster_name)
 
-	print(new_cluster_seq)
+	for cluster in new_cluster_seq:
+		print(cluster)
+	# print(new_cluster_seq)

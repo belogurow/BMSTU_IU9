@@ -1,7 +1,6 @@
 # coding=utf-8
-import numpy as np
-from numpy import linalg as lg
 import math
+import argparse
 from Util import *
 
 alpha = (1 + math.sqrt(17)) / 8
@@ -186,26 +185,41 @@ def find_ldl(matrix, method=bunch_parlett):
     result_matrix_t = calc_result_diagonal_matrix(blocks)
     result_matrix_p = calc_result_matrix_p(matrixes_p, source_matrix_size)
 
-    print(np.dot(np.dot(np.dot(np.dot(lg.inv(result_matrix_p), source_matrix_l), result_matrix_t), source_matrix_l.T), lg.inv(result_matrix_p.T)))
+    # print(np.dot(np.dot(np.dot(np.dot(lg.inv(result_matrix_p), source_matrix_l), result_matrix_t), source_matrix_l.T), lg.inv(result_matrix_p.T)))
 
     return source_matrix, result_matrix_p, result_matrix_t, source_matrix_l
 
 
 if __name__ == '__main__':
-    matrix = np.matrix([[6, 12, 3, -6],
-                        [12, -8, -13, 4],
-                        [3, -13, -7, 1],
-                        [-6, 4, 1, 6]])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('method_name', help='Name of LTL-method: \'Bunch-Kaufman\' or \'Bunch-Parlett\'')
+    parser.add_argument('matrix_a', help='Name of file where exists symmetry matrix A')
+    parser.add_argument('matrix_b', help='Name of file where exists matrix B')
 
-    size = 10
+    method_name = parser.parse_args().method_name
+    assert method_name != 'Bunch-Parlett' or method_name != 'Bunch-Kaufman', 'Method must be \'Bunch-Kaufman\' or \'Bunch-parlett\'!'
 
-    matrix = np.random.random_integers(-50, 50, size=(size, size))
-    matrix = (matrix + matrix.T)
+    if method_name == 'Bunch-Parlett':
+        method = bunch_parlett
+    else:
+        method = bunch_kaufman
 
-    matrix_b = np.random.random_integers(-50, 50, size=(size, 1))
+    matrix_a = np.asmatrix(np.loadtxt(parser.parse_args().matrix_a, delimiter=' '))
+    assert (matrix_a.T == matrix_a).all(), 'Matrix A must be symmetric!'
 
-    (matrix_a, matrix_p, matrix_t, matrix_l) = find_ldl(matrix, bunch_parlett)
-    # (matrix_a, matrix_p, matrix_t, matrix_l) = find_ldl(matrix, method_name="bunch-parlett")
-    print(matrix_p)
+    matrix_b = np.asmatrix(np.loadtxt(parser.parse_args().matrix_b, delimiter=' ')).T
+    assert len(matrix_a) == len(matrix_b), 'Matrixes A and B must be the same size!'
+
+    random_matrixes = False
+    if random_matrixes:
+        size = 4
+
+        matrix_a = np.random.random_integers(-50, 50, size=(size, size))
+        matrix_a = (matrix_a + matrix_a.T)
+
+        matrix_b = np.random.random_integers(-50, 50, size=(size, 1))
+
+
+    (matrix_a, matrix_p, matrix_t, matrix_l) = find_ldl(matrix_a, method)
     print("my - solution\n", solve_linear_system(matrix_b, matrix_l, matrix_p, matrix_t))
-    print("\nsolution\n", lg.solve(matrix, matrix_b))
+    print("\nsolution\n", lg.solve(matrix_a, matrix_b))

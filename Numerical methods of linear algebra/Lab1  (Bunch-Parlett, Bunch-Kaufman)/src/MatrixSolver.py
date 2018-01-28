@@ -2,6 +2,7 @@
 import numpy as np
 from numpy import linalg as lg
 import math
+from Util import *
 
 alpha = (1 + math.sqrt(17)) / 8
 n = [0]
@@ -11,7 +12,77 @@ matrixes_p = []
 
 
 def bunch_kaufman(k, matrix):
-    return None
+    # matrix_size - размерность матрицы
+    matrix_size = len(matrix)
+
+    # max_diag_element - max диагональый элемент по модулю матрицы A
+    # idx_max_diag_element - его индекс
+    (max_diag_element, idx_max_diag_element) = (None, None)
+
+    # 1 шаг - ищем наибольший диагональный элемент,
+    # и при необходимости перемещаем его на позицию [0, 0]
+    for i in range(matrix_size):
+        if max_diag_element is None or max_diag_element < abs(matrix[i, i]):
+            (max_diag_element, idx_max_diag_element) = (abs(matrix[i, i]), (i, i))
+
+    if idx_max_diag_element != (0, 0):
+        p = np.eye(matrix_size)
+
+        swap_columns(p, 0, idx_max_diag_element[0])
+
+        matrix = np.dot(p, matrix)
+        matrix = np.dot(matrix, p.T)
+
+        idx_max_diag_element = (0, 0)
+
+    # 2 шаг - находим наибольший элемент в первом столбце
+    (elem_lambda, idx_elem_lambda) = (None, None)
+
+    for i in range(matrix_size):
+        if elem_lambda is None or elem_lambda < abs(matrix[i, 0]):
+            (elem_lambda, idx_elem_lambda) = (abs(matrix[i, 0]), (i, 0))
+
+    # 3 шаг - определяем размерность блока n[k] и матрицу перестановок P
+    if k > 1:
+        row_index = m[k - 1] - calc_block_size(blocks)
+    else:
+        row_index = m[k - 1]
+
+    if max_diag_element >= alpha * elem_lambda:
+        # n[k] = 1
+        n.append(1)
+        swap_numbers = [(0, 0)]
+    else:
+        (elem_sigma, idx_elem_sigma) = (None, None)
+
+        for i in range(1, matrix_size):
+            if elem_sigma is None or elem_sigma < abs(matrix[i, 0]):
+                (elem_sigma, idx_elem_sigma) = (abs(matrix[i, 0]), (i, 0))
+
+        if elem_sigma * max_diag_element >= alpha * (elem_lambda ** 2):
+            # n[k] = 1
+            n.append(1)
+            swap_numbers = [(0, 0)]
+        else:
+            if max_diag_element >= alpha * elem_sigma:
+                # n[k] = 1
+                n.append(1)
+                swap_numbers = [(row_index, idx_max_diag_element[0])]
+            else:
+                # n[k] = 2
+                n.append(2)
+                swap_numbers = [(row_index + 1, idx_max_diag_element[0]), (row_index, idx_max_diag_element[1])]
+
+    p = np.eye(len(matrix))
+    while len(swap_numbers) != 0:
+        numbers = swap_numbers.pop(0)
+
+        p_new = np.eye(len(matrix))
+        swap_columns(p_new, numbers[0], numbers[1])
+
+        p = np.dot(p, p_new)
+
+    return p
 
 
 def bunch_parlett(k, matrix):
@@ -39,7 +110,7 @@ def bunch_parlett(k, matrix):
     # print(max_element, idx_max_element)
     # print(max_diag_element, idx_max_diag_element)
 
-    # 2 шаг - опрделеяем размерность диагонального блока n_k[i]: 1x1 или 2x2
+    # 2 шаг - опрделеяем размерность блока n[k] и матрицу перастановок P
     if k > 1:
         row_index = m[k - 1] - calc_block_size(blocks)
     else:
@@ -66,15 +137,10 @@ def bunch_parlett(k, matrix):
     return p
 
 
-def find_ldl(matrix, method_name='bunch-parlett'):
+def find_ldl(matrix, method=bunch_parlett):
     source_matrix_size = len(matrix)
     source_matrix = matrix
     source_matrix_l = np.eye(source_matrix_size)
-
-    if method_name == 'bunch-parlett':
-        method = bunch_parlett
-    else:
-        method = bunch_kaufman
 
     # k - шаг алгоритма, начинаем с 1
     k = 1
@@ -94,10 +160,7 @@ def find_ldl(matrix, method_name='bunch-parlett'):
         matrix = np.dot(matrix_p, matrix)
         matrix = np.dot(matrix, matrix_p.T)
 
-        # print(matrix)
-
         m.append(m[k - 1] + n[k])
-        block_size = source_matrix_size - m[k]
 
         matrix_t = get_matrix_t(matrix, n[k])
         matrix_b = get_matrix_b(matrix, n[k])
@@ -120,97 +183,12 @@ def find_ldl(matrix, method_name='bunch-parlett'):
 
     blocks.append(matrix)
 
-    print(blocks)
-    t = calc_result_diagonal_matrix(blocks)
-    p = calc_reuslt_matrix_p(matrixes_p, source_matrix_size)
-    print("T\n", t)
-    print("L\n", source_matrix_l)
-    print("P\n", p)
+    result_matrix_t = calc_result_diagonal_matrix(blocks)
+    result_matrix_p = calc_result_matrix_p(matrixes_p, source_matrix_size)
 
-    print(np.dot(np.dot(np.dot(np.dot(lg.inv(p), source_matrix_l), t), source_matrix_l.T), lg.inv(p.T)))
+    print(np.dot(np.dot(np.dot(np.dot(lg.inv(result_matrix_p), source_matrix_l), result_matrix_t), source_matrix_l.T), lg.inv(result_matrix_p.T)))
 
-
-# solve_linear_system(np.array([0, 2]), source_matrix_l, np.eye(len(source_matrix_l)), calc_diagonal_matrix(blocks))
-
-
-def swap_columns(matrix, idx1, idx2):
-    if idx1 == idx2:
-        return
-    matrix[:, [idx1, idx2]] = matrix[:, [idx2, idx1]]
-
-
-def swap_rows(matrix, idx1, idx2):
-    if idx1 == idx2:
-        return
-    matrix[[idx1, idx2]] = matrix[[idx2, idx1]]
-
-
-def get_matrix_t(matrix, n_k):
-    return matrix[0:n_k, 0:n_k]
-
-
-def get_matrix_b(matrix, n_k):
-    # assert len(matrix) - block_size == block_size, 'Проблема с размерностью матрицы TAT\''
-    return matrix[n_k:len(matrix), 0:n_k]
-
-
-def calculate_matrix_l(matrix, matrix_t, matrix_b, n_k):
-    # assert len(matrix) - block_size == block_size, 'Проблема с размерностью матрицы TAT\''
-    matrix_l = np.eye(len(matrix))
-
-    matrix_t = np.asmatrix(matrix_t)
-    matrix_b = np.asmatrix(matrix_b)
-
-    temp = np.dot(matrix_b, lg.inv(matrix_t))
-
-    matrix_l[n_k:len(matrix), 0:n_k] = temp
-    return matrix_l
-
-
-def calc_block_size(blocks):
-    size = 0
-    for block in blocks:
-        size += len(block)
-
-    return size
-
-
-def calc_result_diagonal_matrix(blocks):
-    blocks_size = calc_block_size(blocks)
-    matrix = np.zeros((blocks_size, blocks_size))
-
-    start_index = 0
-    end_index = 0
-
-    for block in blocks:
-        end_index += len(block)
-
-        matrix[start_index:end_index, start_index:end_index] = block
-        start_index += len(block)
-
-    return matrix
-
-
-def calc_reuslt_matrix_p(matrixes_p, size):
-    p = np.eye(size)
-
-    while len(matrixes_p) != 0:
-        p_new = matrixes_p.pop()
-        p = np.dot(p, p_new)
-
-    return p
-
-
-def solve_linear_system(b_matrix, l_matrix, p_matrix, d_matrix):
-    z_matrix = lg.inv(l_matrix).dot(np.asarray(p_matrix).transpose()).dot(b_matrix)
-    w_matrix = lg.inv(d_matrix).dot(z_matrix)
-    y_matrix = lg.inv(np.asarray(l_matrix).transpose()).dot(w_matrix)
-    x_matrix = np.asarray(p_matrix).dot(y_matrix)
-
-    # print(z_matrix, w_matrix, y_matrix, x_matrix, sep="\n")
-    print(x_matrix)
-    return x_matrix
-
+    return source_matrix, result_matrix_p, result_matrix_t, source_matrix_l
 
 
 if __name__ == '__main__':
@@ -219,21 +197,15 @@ if __name__ == '__main__':
                         [3, -13, -7, 1],
                         [-6, 4, 1, 6]])
 
-    # matrix = np.array([[2, -1, 0], [-1, 2, -1], [0, -1, 1]])
+    size = 10
 
-    # matrix = np.array([[4, 1], [1, 2]])
-
-    # matrix = np.matrix([[1, 2], [3, 4]])
-
-    matrix = np.random.random_integers(-50, 50, size=(7, 7))
+    matrix = np.random.random_integers(-50, 50, size=(size, size))
     matrix = (matrix + matrix.T)
 
-    print(matrix)
-    find_ldl(matrix)
+    matrix_b = np.random.random_integers(-50, 50, size=(size, 1))
 
-    # l = np.dot(np.matrix([[1, 0, 0, 0], [0, 1, 0, 0], [-0.39, -0.13, 1, 0], [1.16, 0.38, 0, 1]]), np.matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 1.09, 1]]))
-    # p = np.dot(np.matrix([[0, 1, 0, 0], [0, 0, 1, 0], [1, 0, 0, 0], [0, 0, 0, 1]]), np.matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0]]))
-    # t = calc_diagonal_matrix(blocks)
-    #
-    # result = np.dot(np.dot(np.dot(np.dot(p, l), t), l.T), p.T)
-
+    (matrix_a, matrix_p, matrix_t, matrix_l) = find_ldl(matrix, bunch_parlett)
+    # (matrix_a, matrix_p, matrix_t, matrix_l) = find_ldl(matrix, method_name="bunch-parlett")
+    print(matrix_p)
+    print("my - solution\n", solve_linear_system(matrix_b, matrix_l, matrix_p, matrix_t))
+    print("\nsolution\n", lg.solve(matrix, matrix_b))

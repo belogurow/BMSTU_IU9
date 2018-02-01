@@ -74,5 +74,5 @@ def solve_linear_system(b_matrix, l_matrix, p_matrix, t_matrix):
     y_matrix = lg.inv(np.asarray(l_matrix.T)).dot(w_matrix)
     x_matrix = np.asarray(p_matrix).dot(y_matrix)
 
-    return x_matrix
+    return np.asmatrix(x_matrix)
 

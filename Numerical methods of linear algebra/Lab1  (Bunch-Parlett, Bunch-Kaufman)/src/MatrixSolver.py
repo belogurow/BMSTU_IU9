@@ -212,12 +212,14 @@ if __name__ == '__main__':
 
     random_matrixes = False
     if random_matrixes:
-        size = 4
+        size = 100
 
         matrix_a = np.random.random_integers(-50, 50, size=(size, size))
         matrix_a = (matrix_a + matrix_a.T)
 
         matrix_b = np.random.random_integers(-50, 50, size=(size, 1))
+
+        method = bunch_parlett
 
 
     (matrix_a, matrix_p, matrix_t, matrix_l) = find_ldl(matrix_a, method)

@@ -1,0 +1,485 @@
+%% It is just an empty TeX file.
+%% Write your code here.
+% !TEX encoding = UTF-8 Unicode
+\documentclass[a4paper, 12pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[left=20mm, top=15mm, right=10mm, bottom=15mm]{geometry}    
+
+            
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or epsÃÂ§ with pdflatex; use eps in DVI mode
+\usepackage[14pt]{extsizes}
+\usepackage{setspace,amsmath}
+\usepackage{ dsfont }
+\usepackage{amsmath,amssymb}
+\usepackage[unicode]{hyperref}
+
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{minted}
+\usepackage{caption}
+
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{cmap} % Улучшенный поиск русских слов в полученном pdf-файле
+\usepackage[T2A]{fontenc} % Поддержка русских букв
+\usepackage[utf8]{inputenc} % Кодировка utf8
+\usepackage[english, russian]{babel} % Языки: русский, английский
+
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+\begin{document}
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+\begin{center}
+Федеральное государственное бюджетное образовательное учреждение высшего профессионального образования Московский государственный технический университет имени Н.Э. Баумана
+\end{center}
+
+
+\vfill
+
+\centerline{\large{Лабораторная работа}}
+
+\centerline{\large{«Реализация методов Банча-Парлетта и Банча-Кауфмана}} 
+\centerline{\large{для решения системы $Ax = b$»}}
+
+\centerline{\large{по курсу}}
+\centerline{\large{«Вычислительные методы линейной алгебры»}}
+
+
+\vfill
+
+Студент группы ИУ9-72 \hfill Белогуров А.А.
+
+Преподаватель \hfill Голубков A.Ю.
+\vfill
+
+\centerline{Москва, 2017}
+\clearpage
+\end{titlepage}
+
+\newpage
+\setcounter{page}{2}
+
+\tableofcontents
+
+\newpage
+
+\section{Постановка задачи}
+
+
+Дано: $Ax=b$, где $A \in M_n(\mathds{C})$ является {\it самосопряженной} матрицей (т.е. $A = A^*$) и $x, b \in \mathds{C}^n$. В вещественном случае понятие {\it самосопряженной} эквивалентно понятию {\it симметрической} матрицы (т.е. $A = A^t$). 
+
+Реализовать методы Банча-Парлетта и Банча-Кауфмана для решения системы $Ax = b$ и построение с их помощью разложения $PAP^t = LTL$.
+
+\newpage
+
+\section{Теоретические сведения}
+
+Алгоритмы Банча-Парлетта и Банча-Кауфмана предполагают построение на базе матрицы $A = A^* = A^{(0)}$ матриц $A^{(1)},...,A^{(m)}$, где последняя матрица $T = A^{(m)}$ является трёхдиагональной матрицей блочно-диагональной структуры $T = diag(T_1,...,T_m)$, где каждый блок $T_i$ имеет размер $n_i \times n_i \in  \{1, 2\}$. Матрица $A^{(k)}$ может быть представлена как блочно-диагональная матрица вида $A^{(k)} = diag(T_1,...,T_k, \widetilde{A}^{(k)})$, где $\widetilde{A}^{(k)}$ - ведущая подматрица размера $(n-m_k) \times (n-m_k)$, $m_k = n_1 + ... + n_k$, $\widetilde{A}^{(k)} = (a_{ij}^{(k)})_{i,j = m_k +1}^{n}$. На $k$-ом шаге переход $A^{(k-1)} \rightarrow A^{(k)}$ выполняется по следующему правилу: в соответствии с некоторой стратегией выбирается матрица перестановка $\widetilde{P}_{(k)}$ и размер $n_k$ нового невырожденного диагонального блока $T_k$, где 
+\begin{equation*}\label{part1}
+ \widetilde{P}_k \widetilde{A}^{(k-1)} \widetilde{P}_k^t =
+ \left(\begin{array}{cc} 
+T_k & B_k^* \\ 
+B_k & C_k  
+\end{array}\right)
+\end{equation*}
+и блок $C_k = C_k^*$ имеет размер $(n-m_k) \times (n-m_k)$, $m_k = m_{k-1} + n_k$. Заетм, полагая 
+\begin{equation*}\label{part2}
+ \widetilde{L}_k =
+ \left(\begin{array}{cc} 
+E_{n_k} & 0 \\ 
+-B_kT_k^{-1} & E_{n-m_k}  
+\end{array}\right),
+\end{equation*}
+мы выполняем блочное преобразование
+\begin{equation*}\label{part3}
+ \widetilde{L}_k \widetilde{P}_k \widetilde{A}^{(k-1)} \widetilde{P}_k^t \widetilde{L}_k^* =
+ \left(\begin{array}{cc} 
+T_k & 0 \\ 
+0 & C_k-B_k T_k^{-1} B_k^* 
+\end{array}\right)
+=
+\left(\begin{array}{cc} 
+T_k & 0 \\ 
+0 &  \widetilde{A}^{(k)}
+\end{array}\right).
+\end{equation*}
+Иначе говоря, осуществляемая процедура может быть записана как
+\begin{equation*}\label{part4}
+ A^{(k)} = diag(T_1,...,T_k, \widetilde{A}^{(k)}) = L_k P_k A^{(k-1)} P_k^t L_k^*,
+\end{equation*}
+где $P_k = diag(E_{m_{k-1}}, \widetilde{P}_k)$ и $L_k = diag(E_{m_{k-1}}, \widetilde{L}_k)$. Результатом выполнения является представление $A = PLTL^*P^t$ \cite{Golubkov}. 
+
+Далее необходимо рассмотреть стратегии выбора $\widetilde{P}_k$ и $n_k$ на $k$-ом шаге в алгоритмах Банча-Парлетта и Банча-Кауфмана.
+
+\textbf{Банч-Парлетт:}
+\begin{enumerate}
+    \item действуя в рамках ведущей подматрицы $\widetilde{A}^{(k-1)}$, находим 
+    \begin{equation*}\label{part5}
+        \mu_0(k) = \max_{i,j = m_{k-1} + 1,..., n} | a_{ij}^{(k-1)}|, \quad \mu_1(k)= \max_{i = m_{k-1} + 1,..., n} | a_{ii}^{(k-1)}|
+    \end{equation*}
+
+    \item если $\mu_1(k) \geq \alpha \mu_0(k)$, где выбор параметра $0 < \alpha < 1$ оговаривается дополнительно, тогда мы полагаем $n_k=1$ и подбираем $\widetilde{P}_k$ таким образом, что
+    \begin{equation*}\label{part6}
+        |(\widetilde{P}_k \widetilde{A}^{(k-1)} \widetilde{P}_k^t)_{m_{k-1}+1 m_{k-1}+1}| = \mu_1(k),
+    \end{equation*}
+    т.е. если $a_{i_k i_k}^{(k-1)}$ - элемент диагонали матрицы $\widetilde{A}^{(k-1)}$ с наибольшим модулем, то $P_k = P_{m_{k-1}+1i_k}$; в противном случае $n_k = 2$ и матрица $\widetilde{P}_k$ подбирается с тем, чтобы
+    \begin{equation*}\label{part7}
+        |(\widetilde{P}_k \widetilde{A}^{(k-1)} \widetilde{P}_k^t)_{m_{k-1}+2 m_{k-1}+1}| = \mu_0(k),
+    \end{equation*}
+    точнее в данном случае наибольший по модулю элемент $a_{i_k j_k}^{(k-1)}$ матрицы $\widetilde{A}^{(k-1)}$ лежит вне диагонали (можно считать, что $j_k < i_k$) и для того, чтобы его перевести на позицию $(m_{k-1} + 2, m_{k-1} + 1)$ достаточно взять $P_k = P_{m_{k-1}+2i_k} P_{m_{k-1}+1j_k}$.
+\end{enumerate} 
+
+\textbf{Банч-Кауфман:}
+\begin{enumerate}
+    \item будем считать, что элемент $a_{m_{k-1}+1m_{k-1}+1}^{(k-1)}$ матрицы $\widetilde{A}^{(k-1)}$ имеет наибольший модуль среди всех её диагональных элементов (при необходимости этого можно добиться сопряжением (подобием) с подходящей матрицей перестановок);
+
+    \item находим элемент $\lambda$ с наибольшим модулем в первом столбце подматрицы $\widetilde{A}^{(k-1)}$, т.е. определим $i_k$, $m_{k-1} + 1 \leq i_k \leq n$,
+    \begin{equation*}\label{part8}
+        \lambda = |a_{i_k m_{k-1}+1}^{(k-1)}| = \max_{i = m_{k-1} + 1,..., n} | a_{i m_{k-1}+1}^{(k-1)}|
+    \end{equation*}
+    (для простоты предполагаем, что матрица невырождена и $\lambda > 0$);
+    
+    \item если $|a_{m_{k-1}+1m_{k-1}+1}^{(k-1)}| \geq \alpha \lambda$, то полагаем $n_k=1$ и $P_k = E$; в противном случае мы находим $j_k$, $m_{k-1} + 1 \leq j_k \leq n$,
+    \begin{equation*}\label{part9}
+        \sigma = |a_{j_k i_k}^{(k-1)}| = \max_{j = m_{k-1} + 1,...,n, \quad j \neq i_k} |a_{j i_k}^{(k-1)}|
+    \end{equation*}
+    (наибольший по модулю внедиагональный элемент $i_k$-столбца матрицы $\widetilde{A}^{(k-1)}$), и в ситуации $\sigma|a_{m_{k-1}+1m_{k-1}+1}^{(k-1)}| \geq \alpha \lambda^2$ вновь полагаем $n_k = 1$ и $P_k = E$, а иначе
+    
+    \begin{itemize}
+        \item при $|a_{i_k i_k}^{(k-1)}| \geq \alpha \sigma$ положим $n_k=1$ и возьмём $P_k = P_{m_{(k-1)}+1 i_k}$, обеспечив тем самым перестановку первого и $i_k$-го столбцов матрицы $\widetilde{A}^{(k-1)}$ и вместе с тем перемещение её $i_k$-го диагонального элемента на первую позицию:
+        \begin{equation*}\label{part10}
+            (\widetilde{P}_k \widetilde{A}^{(k-1)} \widetilde{P}_k^t)_{m_{k-1}+1 m_{k-1}+1} = a_{i_k i_k}^{(k-1)};
+        \end{equation*}
+        
+        \item при $|a_{i_k i_k}^{(k-1)}| < \alpha \sigma$ положим $n_k=2$ и возьмём $P_k = P_{m_{k-1}+2 i_k} P_{m_{k-1}+1 j_k}$, что даёт 
+        \begin{equation*}\label{part11}
+            (\widetilde{P}_k \widetilde{A}^{(k-1)} \widetilde{P}_k^t)_{m_{k-1}+2 m_{k-1}+1} = a_{i_k j_k}^{(k-1)} = a_{j_k i_k}^{(k-1)};
+        \end{equation*}
+    \end{itemize}
+\end{enumerate}
+
+Исходя из соображений уменьшения оценки роста модулей в $L$-составляющей получаемых разложений, в обоих алгоритмах предполагается использовать $\alpha = (1 + \sqrt{17})/8$.
+
+Построив разложение $A = PLTL^*P^t$ или $P^tAP = LTL^*$ можно свести линейную систему $Ax = b$ к системам
+\begin{equation*}\label{part12}
+    \begin{cases}
+        Lz &= P^t b \\
+        Tw &= z \\
+        L^* &= w \\
+        x &= Py
+    \end{cases}
+    \quad \Leftrightarrow \quad
+    \begin{cases}
+        z &= L^{-1} P^t b \\
+        w &= T^{-1} z \\
+        y &= {(L^*)}^{-1} w \\
+        x &= Py
+    \end{cases}
+\end{equation*}
+
+\newpage
+
+\section{Практическая реализация}
+
+Программа написана на языке программирования Python3 с использованием библиотек {\it numpy, math} для работы с матрицами и {\it argparse} для работы с аргументами командной строки. Далее преполагается, что все матрицы осуществляют операции только с вещественными числами.
+
+На вход подаётся имя метода (в данном случае {\it 'Bunch-Parlett'} или {\it 'Bunch-Kaufman'}) и два файла текстового типа с матрицами. Первый из них {\it 'matrix\_a'} - содержит симметричную матрицу $A$, элементы которой разделены пробелами, а каждая строка матрицы записывается в новой строке файла, и второй {\it 'matrix\_b'} - содержит матрицу $b$. Также можно посмотреть эти параметры при запуске скрипта с флагом {\it -h} \hyperlink{lst:bash_help}{(Листинг 1)}.
+
+\hypertarget{lst:bash_help}{}
+\inputminted[frame=single,framesep=10pt, fontsize = \small, linenos=true, breaklines]{bash}{bash_help.sh}
+
+Выше были описаны два метода для выбора $\widetilde{P}_k$ и $n_k$ на $k$-ом шаге алгоритма, они соответственны представлены в методах {\it 'bucnh-parlett()'} \hyperlink{lst:bucnh-parlett}{(Листинг 2)} и {\it 'bucnh-kaufman()'} \hyperlink{lst:bucnh-kaufman}{(Листинг 3)}.
+
+
+%\caption{Example of a listing.}
+%\label{lst:example}
+\hypertarget{lst:bucnh-parlett}{}
+\inputminted[frame=single,framesep=10pt, fontsize = \small, linenos=true, breaklines]{python}{Bunch-Parlett.py}
+
+\hypertarget{lst:bucnh-kaufman}{}
+\inputminted[frame=single,framesep=10pt, fontsize = \small, linenos=true, breaklines]{python}{Bunch-Kaufman.py}
+
+Нахождение разложения $PAP^t = LTL^*$ выполняется методом {\it find\_ltl()} \hyperlink{lst:find-ldl}{(Листинг 4)}.
+
+\hypertarget{lst:find-ldl}{}
+\inputminted[frame=single,framesep=10pt, fontsize = \small, linenos=true, breaklines]{python}{Find_ldl.py}
+
+Кроме основного файла есть файл {\it Util.py} в котором реализованы методы для вычисления побочных матриц на этапе построения разложения $PAP^t = LTL^*$ и вычисление матрицы $b$ системы $Ax = b$.
+
+\newpage
+
+\section{Тестирование}
+
+\subsection{Матрица 4x4}
+В качестве первого теста были взяты следующие матрицы $A$ и $b$:
+\begin{equation*}
+    A = 
+    \left(\begin{array}{cccc} 
+    6  & 12 & 3  & -6 \\ 
+    12 & -8 & -13 & 4 \\ 
+    3 & -13 & -7 & 1 \\ 
+    -6 & 4 & 1 & 6  
+    \end{array}\right),
+    \quad 
+    b = 
+    \left(\begin{array}{c}
+    2 \\
+    4 \\
+    10 \\
+    -5
+     \end{array}\right).
+\end{equation*}
+Методом Банча-Парлетта былы найдены матрицы разложения:
+\begin{equation*}
+    P = 
+    \left(\begin{array}{cccc} 
+    0 & 0 & 0 & 1 \\ 
+    1 & 0 & 0 & 0 \\ 
+    0 & 1 & 0 & 0 \\ 
+    0 & 0 & 1 & 0  
+    \end{array}\right),
+    \quad 
+    T = 
+    \left(\begin{array}{cccc} 
+    -8 & -13 & 0 & 0 \\ 
+    -13 & -7 & 0 & 0 \\ 
+    0 & 0 & 5.8584 & 0 \\ 
+    0 & 0 & 0 & -2.3202  
+    \end{array}\right),
+\end{equation*}
+\begin{equation*}
+    L = 
+    \left(\begin{array}{cccc} 
+    1 & 0 & 0 & 0 \\ 
+    0 & 1 & 0 & 0 \\ 
+    0.1327 & -0.3893 & 1 & 0 \\ 
+    0.3982 & -1.1681 & -1.0967 & 1
+    \end{array}\right).
+\end{equation*}
+Аналогично для метода Банча-Кауфмана:
+\begin{equation*}
+    P = 
+    \left(\begin{array}{cccc} 
+    0 & 1 & 0 & 0 \\ 
+    1 & 0 & 0 & 0 \\ 
+    0 & 0 & 1 & 0 \\ 
+    0 & 0 & 0 & 1  
+    \end{array}\right),
+    \quad 
+    T = 
+    \left(\begin{array}{cccc} 
+    -8 & 12 & 0 & 0 \\ 
+    12 & 6 & 0 & 0 \\ 
+    0 & 0 & 2.7812 & 0 \\ 
+    0 & 0 & 0 & -2.8764  
+    \end{array}\right),
+\end{equation*}
+\begin{equation*}
+    L = 
+    \left(\begin{array}{cccc} 
+    1 & 0 & 0 & 0 \\ 
+    0 & 1 & 0 & 0 \\ 
+    0.5938 & -0.6875 & 1 & 0 \\ 
+    -0.5 & 0 & -1.9775 & 1
+    \end{array}\right).
+\end{equation*}
+Соответственно была найдена неизвестная матрица $x$, которая для каждого из методов оказалась одинаковой:
+\begin{equation*}
+    x = 
+    \left(\begin{array}{c}
+    -4.4361 \\
+    1.5469 \\
+    -6.9375 \\
+    -5.1445
+     \end{array}\right)
+\end{equation*}
+При проверке соотношений $Ax=b$ и $PAP^t = LTL^*$ приведённые выше матрицы показали правильные результаты. Кроме прочего они совпали с вычислениями, произведёнными вручную.
+
+\subsection{Матрица 7х7}
+Для второго теста были сгенерированы симметричная матрица $A$ и матрица $b$, элементами которых являются числа в интервале $[-100, 100]$:
+\begin{equation*}
+    A = 
+    \left(\begin{array}{ccccccc} 
+    -94 &  78 &  -72 &  21 &  -21 &  -10 &  21 \\
+    78 &  20 &  -12 &  19 &  -55 &  -22 &  37 \\
+    -72 &  -12 &  -42 &  -33 &  -11 &  -20 &  83 \\
+    21 &  19 &  -33 &  -2 &  43 &  94 &  -33 \\
+    -21 &  -55 &  -11 &  43 &  20 &  0 &  -29 \\
+    -10 &  -22 &  -20 &  94 &  0 &  22 &  -66 \\
+    21 &  37 &  83 &  -33 &  -29 &  -66 &  2 
+    \end{array}\right),
+    \quad 
+    b = 
+    \left(\begin{array}{c}
+    -6 \\
+    5 \\
+    4 \\
+    -13 \\
+    -27 \\
+    -46 \\
+    31 
+     \end{array}\right).
+\end{equation*}
+Методом Банча-Парлетта былы найдены матрицы разложения:
+\begin{equation*}
+    P = 
+    \left(\begin{array}{ccccccc} 
+    1 &  0 &  0 &  0 &  0 &  0 &  0 \\
+    0 &  1 &  0 &  0 &  0 &  0 &  0 \\
+    0 &  0 &  1 &  0 &  0 &  0 &  0 \\
+    0 &  0 &  0 &  0 &  1 &  0 &  0 \\
+    0 &  0 &  0 &  0 &  0 &  0 &  1 \\
+    0 &  0 &  0 &  0 &  0 &  1 &  0 \\
+    0 &  0 &  0 &  1 &  0 &  0 &  0 
+    \end{array}\right),
+\end{equation*}
+\begin{equation*}
+    T = 
+    \left(\begin{array}{ccccccc} 
+    -94 &  0 &  0 &  0 &  0 &  0 &  0 \\
+    0 &  84.7234 &  0 &  0 &  0 &  0 &  0 \\
+    0 &  0 &  -47.6052 &  113.003 &  0 &  0 &  0 \\
+    0 &  0 &  113.003 &  -28.2709 &  0 &  0 &  0 \\
+    0 &  0 &  0 &  0 &  -43.5929 &  0 &  0 \\
+    0 &  0 &  0 &  0 &  0 &  57.02392 &  0 \\
+    0 &  0 &  0 &  0 &  0 &  0 &  7.3826
+    \end{array}\right),
+\end{equation*}
+\begin{equation*}
+    L = 
+    \left(\begin{array}{ccccccc} 
+    1 &  0 &  0 &  0 &  0 &  0 &  0 \\
+    -0.8298 &  1 &  0 &  0 &  0 &  0 &  0 \\
+    0.7660 &  -0.8468 &  1 &  0 &  0 &  0 &  0 \\
+    -0.2234 &  0.6424 &  0 &  1 &  0 &  0 &  0 \\
+    -0.2234 &  0.4299 &  -0.5566 &  -0.3959 &  1 &  0 &  0 \\
+    0.1064 &  -0.3576 &  -0.5765 &  -0.5791 &  -1.4757 &  1 &  0 \\
+    0.2234 &  -0.8548 &  -0.0122 &  -0.5029 &  -0.9914 &  0.2652 &  1 
+    \end{array}\right).
+\end{equation*}
+Аналогично для метода Банча-Кауфмана:
+\begin{equation*}
+    P = 
+    \left(\begin{array}{ccccccc} 
+    1 &  0 &  0 &  0 &  0 &  0 &  0 \\
+    0 &  1 &  0 &  0 &  0 &  0 &  0 \\
+    0 &  0 &  0 &  1 &  0 &  0 &  0 \\
+    0 &  0 &  1 &  0 &  0 &  0 &  0 \\
+    0 &  0 &  0 &  0 &  1 &  0 &  0 \\
+    0 &  0 &  0 &  0 &  0 &  1 &  0 \\
+    0 &  0 &  0 &  0 &  0 &  0 &  1 
+    \end{array}\right),
+\end{equation*}
+\begin{equation*}
+    T = 
+    \left(\begin{array}{ccccccc} 
+    -94 &  0 &  0 &  0 &  0 &  0 &  0 \\
+    0 &  84.7234 &  0 &  0 &  0 &  0 &  0 \\
+    0 &  0 &  -12.9691 &  -18.2396 &  0 &  0 &  0 \\
+    0 &  0 &  -18.2396 &  -47.6052 &  0 &  0 &  0 \\
+    0 &  0 &  0 &  0 &  1413.7443 &  0 &  0 \\
+    0 &  0 &  0 &  0 &  0 &  36.9549 &  0 \\
+    0 &  0 &  0 &  0 &  0 &  0 &  14.0942 \\
+    \end{array}\right),
+\end{equation*}
+\begin{equation*}
+    L = 
+    \left(\begin{array}{ccccccc} 
+    1 &  0 &  0 &  0 &  0 &  0 &  0 \\
+    -0.8298 &  1 &  0 &  0 &  0 &  0 &  0 \\
+    -0.2234 &  0.4299 &  1 &  0 &  0 &  0 &  0 \\
+    0.7660 &  -0.8468 &  0 &  1 &  0 &  0 &  0 \\
+    0.2234 &  -0.8548 &  -15.2149 &  7.0110 &  1 &  0 &  0 \\
+    0.1064 &  -0.3576 &  -19.9557 &  8.4441 &  1.2995 &  1 &  0 \\
+    -0.2234 &  0.6424 &  15.88498 &  -8.4500 &  -1.1078 &  0.0096 &  1 \\
+    \end{array}\right).
+\end{equation*}
+Стоит сразу отметить, что для удобства читаемости элементы всех матриц записаны как числа с 4 знаками после запятой. Сама программа оперирует числами с 16 знаками после запятой. Далее было найдено решение системы $Ax=b$, где 
+\begin{equation*}
+    x = 
+    \left(\begin{array}{c}
+    0.0846 \\
+    -0.0363 \\
+    -0.2863 \\
+    -0.8244 \\
+    -0.4279 \\
+    -0.2372 \\
+    -0.4702 \\
+     \end{array}\right).
+\end{equation*}
+Так как становится проблематичным проверять матрицы большой размерности, то далее для проверки результатов будет использоваться библиотека {\it numpy}. В данном случае вычисления показали правильные результаты.
+
+
+
+\subsection{Матрицы больших размеров}
+Далее будут сгенерированы несколько матриц разного размера, а также будет проанализировано время в секундах работы каждого из алгоритмов.
+\\\\
+\\\\
+
+\begin{table}[h]
+    \begin{center}
+        \begin{tabular}{|P{2cm}|P{6cm}|P{6cm}|}
+            \hline
+            Шаг & Метода Банча-Парлетта (сек) & Метод Банча-Кауфмана (сек) \\
+            \hline
+            \multicolumn{3}{|c|} {Матрица размера 17x17}\\
+            \hline
+            1 & 0.0080 & 0.0070  \\
+            \hline
+             2 & 0.0065 & 0.0065 \\
+            \hline
+            3  & 0.0075 & 0.0070 \\
+            \hline
+            \multicolumn{3}{|c|} {Матрица размера 100x100}\\
+            \hline
+            1 & 0.4081 & 0.1885  \\
+            \hline
+            2 & 0.3571 & 0.1965 \\
+            \hline
+            3  & 0.3376 & 0.1960 \\
+            \hline
+            \multicolumn{3}{|c|} {Матрица размера 500x500}\\
+            \hline
+            1 & 80.0489 & 62.0738  \\
+            \hline
+            2 & 70.4752 & 59.2997 \\
+            \hline
+            3  & 69.9380 & 47.3335 \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+Оба алгоритма имееют вычислительную сложность: $n^3/3 + O(n^2)$, но в случае метода Банча-Парлетта к этому времени добавляется еще от $n^3/6$ до $n^3/12$ операций сравнений, необходимых для выбора диагонального блока. В случае метода Банча-Кауфмана алгоритм при выборе нового диагонального блока оперирует не со всей ведущей подматрицей, а лишь с её диагональю и двумя столбцами. Собственно, эта разница во времени видна выше в таблице.
+
+
+\newpage
+\section{Вывод}
+В ходе выполнения лабораторной работы были изучены два алгоритма для нахождения разложения $PAP^t = LTL^*$: метод Банча-Кауфмана и метод Банча-Парлетта, и было найдено решение системы $Ax = b$ c помощью данного разложения, для этого реализована программа на языке Python3. Кроме этого была проанализирована работа этих методов на матрицах разного размера.  
+
+
+\newpage
+
+\bibliographystyle{utf8gost705u}  %% стилевой файл для оформления по ГОСТу
+\bibliography{biblio} 
+\addcontentsline{toc}{section}{Список литературы}
+
+\end{document} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

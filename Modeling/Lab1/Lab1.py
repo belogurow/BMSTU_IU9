@@ -1,12 +1,11 @@
 import math
-from matplotlib import pyplot as plt
 
 radius = 0.05
 density = 11340
 air_density = 1.29
-v_0 = 30
+v_0 = 50
 g = 9.81
-alpha = 45
+alpha = 30
 
 
 def calc_mass(radius, density):
@@ -91,8 +90,6 @@ def newton_model(speed, radius, density, angle, h=0.01, is_betta_need=True):
 
 		coordinates.append((cur_coord_x, cur_coord_y))
 
-	# for coord in coordinates:
-	# 	print(coord[1])
 	return coordinates[-1][0]
 
 

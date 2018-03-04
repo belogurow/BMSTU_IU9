@@ -17,17 +17,19 @@
 </head>
 <body>
 
-<script src="model/triangle.js"></script>
-<script type="text/javascript" src="../library/three.js"></script>
-<script src="../library/STLLoader.js"></script>
-<script src="../library/STLExporter.js"></script>
+<script src="Rib.js"></script>
+<script src="Triangle.js"></script>
+<script src="Point.js"></script>
+<script src="Triangulation.js"></script>
+<script src="DynamicCache.js"></script>
+<script src="Util.js"></script>
+<script src="Vector.js"></script>
+
+<script src="../library/three.js"></script>
 <script src="../library/OrbitControls.js"></script>
-<script src="../library/DragControls.js"></script>
-<script src="../library/TrackballControls.js"></script>
-<script type="text/javascript" src="../library/dat.gui.min.js"></script>
+<script src="../library/dat.gui.min.js"></script>
 <script src="../library/Detector.js"></script>
 <script src="../library/stats_min.js"></script>
-<script src="../library/THREE.CSG.js"></script>
 
 <script type="text/javascript">
     var container, stats;
@@ -38,19 +40,17 @@
     var triangles = [];
     var NUMBER_OF_POINTS = 9;
 
-    class Triangle {
+    var maxX = 250;
+    // var maxX = 300;
+    var minX = 0;
+    // var minX = -300;
 
-        // observe there is no "function" keyword
-        // also, the word "constructor" is used, not "Person"
-        constructor(points) {
+    var maxY = 250;
+    // var maxY = 300;
+    var minY = 0;
+    // var minY = -300;
 
-            // this represents the new object being
-            // created and initialized
-            this.points = points;
-            this.triangles = [];
-
-        }
-    }
+    var geometry;
 
     if (!Detector.webgl) Detector.addGetWebGLMessage();
 
@@ -59,64 +59,113 @@
     addGrid();
     addPoints();
     calcTriangulation();
+    drawPoints(points)
 
     function addGrid() {
-        var grid = new THREE.GridHelper(20, 20, 0x888888, 0x888888);
-        grid.position.set(0, 0, 0);
+        var grid = new THREE.GridHelper(250, 250, 0x888888, 0x888888);
+        grid.position.set(125, 125, 0);
         grid.geometry.rotateX( Math.PI / 2 );
         meshesGroup.add(grid)
     }
 
     function addPoints() {
+        // points.push(new Point(211, 138))
+        // points.push(new Point(190, 138))
+
+        // points.push(new Point(203.49, 147.977))
+        // points.push(new Point(129.51, 101.122))
+
+        for(var i = 0; i < NUMBER_OF_POINTS; i++) {
+            x = (Math.random() * maxX);
+            y = (Math.random() * maxY);
+            // z = (Math.random() * 50)
+            z = 0;
+
+            var point = new Point(x, y, z);
+            points.push(point)
+        }
+
+        // points.push(new Point(minX + 1, minY + 1))
+        // points.push(new Point(maxX - 1, maxY - 1))
+        // points.push(new Point(minX + 1, maxY - 1))
+        // points.push(new Point(maxX - 1, minY + 1))
+        // points.push(new Point(142, -103))
+        // points.push(new Point(197, -25))
+        // points.push(new Point(-162, -288))
+        // points.push(new Point(-148, 277))
+        // points.push(new Point(-299, -198))
+        // console.log(points)
+    }
+
+    function calcTriangulation() {
+        var triangulation = new Triangulation(new Point(minX, minY), new Point(maxX, maxY), points)
+        console.log(triangulation)
+
+        drawTriangles(triangulation.triangles)
+    }
+
+    function drawPoints(points) {
         var tmaterial = new THREE.PointsMaterial({
             color: 0xff0000,
-            size: 0.1
+            size: 3
         });
 
         var tgeometry = new THREE.Geometry();
         var pointCloud = new THREE.Points(tgeometry, tmaterial);
         meshesGroup.add(pointCloud);
 
+        points.forEach(function (point) {
+            var vert = createThreePoint(point);
+            tgeometry.vertices.push(vert);
+        })
 
 
-        for(var i = 0; i < NUMBER_OF_POINTS; i++) {
-            x = (Math.random() * 20) - 10;
-            y = (Math.random() * 20) - 10;
-            z = 0;
-            var point = new THREE.Vector3(x, y, z)
-
-            tgeometry.vertices.push(point);
-
-            points.push(point)
-            // triangles.push(new Triangle(point));
-        }
     }
 
-    function calcTriangulation() {
-        if (points.length < 3) {
-            alert("Need more than " + points.length + " point(s)")
-        }
-
-        // rectangle
-        drawRectangle()
-
-        // first triangle
-        var currentTriangle = new Triangle([points[0], points[1], points[2]])
-        triangles.push(currentTriangle);
-        // drawTriangle(currentTriangle)
-
-        for(var i = 0; i < points.length; i++) {
-
-        }
-    }
-
-    function drawTriangle(triangle) {
+    function drawTriangles(triangles) {
         var geometry = new THREE.Geometry();
         var material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
 
+        triangles.forEach(function (triangle) {
+            drawTriangle(triangle, geometry, material)
+        })
+        // drawTriangle(triangles[0], geometry, material)
+        // // drawTriangle(triangles[1], geometry, material)
+        // // drawTriangle(triangles[2], geometry, material)
+        // drawTriangle(triangles[3], geometry, material)
+        // drawTriangle(triangles[4], geometry, material)
+
+
+    }
+
+    function drawTriangle(triangle, geometry, material) {
+        geometry = new THREE.Geometry();
+
+        var vert1, vert2
+        var point1, point2;
         for (var i = 0; i < 3; i++) {
-            geometry.vertices.push(triangle.points[i % 3]);
-            geometry.vertices.push(triangle.points[(i + 1) % 3]);
+            vert1 = triangle.verticies[i % 3];
+            point1 = createThreePoint(vert1)
+
+            vert2 = triangle.verticies[(i + 1) % 3];
+            point2 = createThreePoint(vert2)
+
+
+            if (equals(vert1, new Point(minX, minY)) ||
+                equals(vert1, new Point(minX, maxY)) ||
+                equals(vert1, new Point(maxX, minY)) ||
+                equals(vert1, new Point(maxX, maxY)) ||
+                equals(vert2, new Point(minX, minY)) ||
+                equals(vert2, new Point(minX, maxY)) ||
+                equals(vert2, new Point(maxX, minY)) ||
+                equals(vert2, new Point(maxX, maxY))) {
+                break;
+            }
+
+
+
+            geometry.vertices.push(point1, point2);
+            // geometry.vertices.push(triangle.verticies[(i + 1) % 3]);
             var line = new THREE.Line(geometry, material);
 
             scene.add(line)
@@ -186,10 +235,10 @@
         // camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 1, 15 );
         // camera.position.set( 3, 0.15, 3 );
 
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 100);
-        camera.position.set(0, 0, 15);
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 500);
+        camera.position.set(125, 125, 250);
 
-        cameraTarget = new THREE.Vector3(0, 0, 0);
+        cameraTarget = new THREE.Vector3(125, 125, 0);
 
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0x72645b);
@@ -266,6 +315,17 @@
         camera.lookAt(cameraTarget);
         renderer.render(scene, camera);
 
+    }
+
+    function drawLines(points) {
+        var geometry = new THREE.Geometry();
+        var material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+
+        points.forEach(function (value) {
+            geometry.vertices.push(value)
+        })
+        var line = new THREE.Line(geometry, material);
+        scene.add(line)
     }
 
 </script>

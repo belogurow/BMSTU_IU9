@@ -1,0 +1,404 @@
+%% It is just an empty TeX file.
+%% Write your code here.
+% !TEX encoding = UTF-8 Unicode
+\documentclass[a4paper, 12pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[left=20mm, top=15mm, right=10mm, bottom=15mm]{geometry}    
+
+            
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or epsÃÂ§ with pdflatex; use eps in DVI mode
+\usepackage[14pt]{extsizes}
+\usepackage{setspace,amsmath}
+\usepackage{mathtools}
+\usepackage{ dsfont }
+\usepackage{amsmath,amssymb}
+\usepackage[unicode]{hyperref}
+
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{minted}
+\usepackage{caption}
+
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{cmap} % Улучшенный поиск русских слов в полученном pdf-файле
+\usepackage[T2A]{fontenc} % Поддержка русских букв
+\usepackage[utf8]{inputenc} % Кодировка utf8
+\usepackage[english, russian]{babel} % Языки: русский, английский
+
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+\begin{document}
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+\begin{center}
+Федеральное государственное бюджетное образовательное учреждение высшего профессионального образования Московский государственный технический университет имени Н.Э. Баумана
+\end{center}
+
+
+\vfill
+
+\centerline{\large{Лабораторная работа №2}}
+
+\centerline{\large{«Необходимые и достаточные условия}} 
+\centerline{\large{cуществования безусловного  экстремума»}}
+
+\centerline{\large{по курсу}}
+\centerline{\large{«Методы оптимизации»}}
+
+
+\vfill
+
+Студент группы ИУ9-82 \hfill Белогуров А.А.
+
+Преподаватель \hfill Каганов Ю.T. 
+\vfill
+
+\centerline{Москва, 2018}
+\clearpage
+\end{titlepage}
+
+\newpage
+\setcounter{page}{2}
+
+\tableofcontents
+
+\newpage
+
+\section{Цель работы}
+\subsection{Задача 2.1}
+\begin{enumerate}
+    \item Исследование необходимых и достаточных условий существования экстремума функции без учета ограничений (безусловный экстремум).
+    \item Вычисление экстремумов функции. 
+\end{enumerate}
+
+\subsection{Задача 2.2}
+\begin{enumerate}
+    \item Исследование необходимых и достаточных условий существования экстремума функции c учетом ограничений (условный экстремум). 
+    \item Вычисление экстремумов функции. 
+\end{enumerate}
+
+\newpage
+
+\section{Постановка задачи}
+\subsection{Задача 2.1}
+    \textbf {Дано}: Дважды непрерывно дифференцируемая функция 
+    \begin{equation}
+        f(x) = x^3_1 + x^2_2 - 3x_1 + x_2 x_1 - 6x_2 + 2,
+    \end{equation}
+    определенная на множестве $X \in R^n$. Требуется исследовать функцию  $f(x)$ на экстремум, т.е. определить точки $x^e \in R^n$ её локальных минимумов и максимумов на $R^n$:
+    
+    \begin{equation}
+        f(x^e) = \min_{x \in R^n} f(x); \quad f(x^e) = \max_{x \in R^n} f(x).
+    \end{equation}
+    
+    C помощью заданного алгоритма решить поставленную задачу:
+    \begin{enumerate}
+        \item Записать необходимые условия экстремума первого порядка в форме $\nabla f(x^e) = 0$ и найти стационарные точки $x^e$ в результате решения системы $n$ в общем случае нелинейных алгебраических уравнений с $n$ неизвестными. Для численного решения могут быть использованы методы простой итерации - Зейделя или Ньютона.
+        \item В найденных стационарных точках $x^e$ проверить выполнение достаточных, а если они не выполняются, то необходимых условий второго порядка с помощью одного из двух способов.
+        \item Вычислить значения $f(x^e)$ в точках экстремума.
+    \end{enumerate} 
+    
+\subsection{Задача 2.2}
+    \textbf {Дано}: система
+    % extrema {(x_1^3 - 2)^2 + x_2^2}, { x_1^2 + x_2^2 - 1 <= 0, -x_1 <= 0}
+    \begin{equation}
+        \begin{dcases*}
+            f(x) = (x^3_1 - 2)^2 + x^2_2 \rightarrow extr\\
+            g_1(x) = x^2_1 + x^2_2 - 1 \leq 0 \\
+            g_2(x) = -x_1 \leq 0
+        \end{dcases*}
+    \end{equation}
+    
+    Необходимо:
+    \begin{enumerate}
+        \item Составить обобщенную функцию Лагранжа.
+        \item Записать необходимые условия экстремума первого порядка.
+        \item Решить систему уравнений для двух случаев $\lambda_0 = 0$ и $\lambda \neq 0$. В результате находится точка $x^e$.
+        \item Для таких точек проверить достаточные и необходимые условия экстремума второго порядка.
+        \item Вычислить значения функции $f(x)$ в точках экстремума $x^e_k$.
+
+    \end{enumerate}
+
+\newpage
+\section{Исследование}
+\subsection{Задача 2.1}
+
+\subsubsection{Шаг 1}
+    Необходимо найти стационарные точки функции:
+    \begin{equation}
+        f(x) = x^3_1 + x^2_2 - 3x_1 + x_2 x_1 - 6x_2 + 2, \quad x_i \in [-3, 15].
+    \end{equation}
+    
+    \begin{itemize}
+        \item \textbf{Необходимые условия экстремума первого порядка}
+        
+        Пусть точка $x^e \in R^n$ - точка локального минимума (максимума) функции $f(x)$ на множестве $R^n$ и $f(x)$ дважды дифференцируема в точке $x^e$. Тогда градиент функции $f(x)$ в точке $x^e$ равен нулю т.е. $\nabla f(x^e) = 0$. 		
+    \end{itemize}
+    
+    \begin{equation}
+        \nabla f(x) = 
+        \left[
+        \begin{array}{l}
+            f^{\prime}_{x_1}(x) \\
+            f^{\prime}_{x_2}(x)
+        \end{array}
+        \right]
+        =
+        \left[
+        \begin{array}{l}
+            3x^2_1 - 3 + x_2 \\
+            2x_2 + x_1 - 6
+        \end{array}
+        \right]
+        =
+        \left[
+        \begin{array}{l}
+            0 \\
+            0
+        \end{array}
+        \right]
+    \end{equation}
+    
+    В результате решения системы были получены две стационарные точки - $(0, 3)$, $(\frac{1}{6}, \frac{35}{12})$.
+
+\subsubsection{Шаг 2}
+    Нужно проверить выполнение необходимых и достаточных условий второго порядка для всех стационарных точек. 
+    
+    \begin{itemize}
+        \item \textbf{Необходимое условие экстремума второго порядка}
+        
+        Пусть точка $x^e \in R^n$ точка локального минимума (максимума) функции  $f(x)$ на множестве $R^n$ и $f(x)$ дважды дифференцируема в точке $x^e$. Тогда матрица Гессе $H(x^e)$ функции $f(x)$, вычисленной в точке $x^e$ является положительно полуопределенной (отрицательно полуопределенной) т.е. 
+        \begin{equation*}
+            H(x^e) \geq 0, \quad (H(x^e) \leq 0).
+        \end{equation*}
+        
+        \item \textbf{Достаточные условия экстремума}
+        
+        Пусть функция $f(x)$ в точке $x^e \in R^n$ дважды дифференцируема, её градиент равен нулю, а матрица Гессе является положительно определенной (отрицательно определенной) т.е. 
+		\begin{equation*}
+		    \nabla f(x^e) = 0 \text{ и } H(x^e) > 0, \quad (H(x^e) < 0)
+		\end{equation*}
+        Тогда точка $x^e \in R^n$ есть точка локального минимума (максимума) функции $f(x)$ на множестве $R^n$.
+    \end{itemize}
+
+    Запишем матрицу Гессе для фукнции $f(x)$:
+    \begin{equation}
+        H(f) = 
+        \left(
+        \begin{array}{c c}
+            6x_1 & 1\\
+            1 & 2
+        \end{array}
+        \right)
+    \end{equation}
+    
+    Тогда для для точки $(x_1, x_2)$ = $(\frac{1}{6}, \frac{35}{12})$:
+    \begin{equation}
+        H(f(x_1, x_2)) = 
+        \left(
+        \begin{array}{c c}
+            1 & 1\\
+            1 & 2
+        \end{array}
+        \right) 
+        > 0,
+    \end{equation} 
+    матрица Гессе является положительно определенной, следовательно точка $(\frac{1}{6}, \frac{35}{12})$ является точкной локального минимума.
+    
+    Аналогично для точки $(x_1, x_2)$ = $(0, 3)$:
+    \begin{equation}
+        H(f(x_1, x_2)) = 
+        \left(
+        \begin{array}{c c}
+            0 & 1\\
+            1 & 2
+        \end{array}
+        \right),
+    \end{equation}
+    в этом случае невозможно определить знак матрицы Гессе с помощью угловых и гравных миноров. Поэтому попробуем определить экстремум с помощью собственных значений матрицы Гессе:
+    
+    \begin{equation}
+        |H(f(x_1, x_2)) - \lambda E |= 
+        \left|
+        \begin{array}{c c}
+            -\lambda & 1\\
+            1 & 2-\lambda
+        \end{array}
+        \right|
+        = 0 
+    \end{equation}
+    
+    Найдём решение квадратичного уравнения:
+    \begin{equation}
+        \lambda^2 - 2\lambda - 1 = 0 
+        \Leftrightarrow
+        \begin{dcases*}
+            \lambda = 1 + \sqrt{2} \\
+            \lambda = 1 - \sqrt{2}
+        \end{dcases*}
+    \end{equation}
+    
+    Так как собственные значения имеют разные знаки, то можно сказать, что точка $(x_1, x_2)$ = $(0, 3)$ является седловой точкой.
+    
+    
+\subsubsection{Шаг 3}
+    Необходимо вычислить значения функции 
+    \begin{equation}
+        f(x) = x^3_1 + x^2_2 - 3x_1 + x_2 x_1 - 6x_2 + 2
+    \end{equation}
+    в точках экстремума.
+    
+    $f(x) = -7$ в точке локального минимума $(\frac{1}{6}, \frac{35}{12})$.
+
+\subsection{Задача 2.2}
+\subsubsection{Шаг 1}
+    Обобщённая функция Лагранжа будет иметь вид:
+    \begin{equation}
+        L(x, \lambda_0, \lambda) = \lambda_0((x^3_1 - 2)^2 + x^2_2) + \lambda_1(x^2_1 + x^2_2 - 1) - \lambda_2 x_1
+    \end{equation}
+    
+\subsubsection{Шаг 2}
+    Запишем необходимые условия экстремума первого порядка:
+    
+    \textbf{А)} Условие стационарности обобщенной функции Лагранжа по x:
+    \begin{equation}
+        \frac{\partial L(x^e, \lambda_0^e, \lambda^e)}{\partial x_1} = 6 \lambda_0 (x_1^3 - 2)x_1^2 + 2 \lambda_1 x_1 - \lambda_2
+    \end{equation}
+    \begin{equation}
+        \frac{\partial L(x^e, \lambda_0^e, \lambda^e)}{\partial x_2} = 2 \lambda_0 x_2 + 2 \lambda_1 x_2
+    \end{equation}
+    
+    \textbf{Б)} Условие допустимости решения:
+    \begin{equation}
+        \begin{dcases*}
+            g_1(x) = x^2_1 + x^2_2 - 1 \leq 0 \\
+            g_2(x) = -x_1 \leq 0
+        \end{dcases*}
+    \end{equation}
+    
+    \textbf{В)} Условия неотрицательности (неположительности) для условного минимума (максимума):
+    \begin{equation}
+        \lambda_j^e \geq 0 \quad (\lambda_j^e \leq 0) \quad j = 1, 2
+    \end{equation}
+     
+    \textbf{Г)} Условие дополняющей нежесткости:
+    \begin{equation}
+        \lambda_1^e g_1(x^e) = \lambda_1^e(x^2_1 + x^2_2 - 1) = 0,
+    \end{equation}
+    \begin{equation}
+        \lambda_2^e g_2(x^e) = -\lambda_2^e x_1 = 0.
+    \end{equation}
+    
+\subsubsection{Шаг 3}
+    Решим систему при $\lambda_0^e = 0$ c помощью сервиса WolframAlpha.com:
+    % {2 l_1 x_1 - l_2 = 0, 2l_1x_2 = 0, l_1(x_1^2 + x_2^2 - 1) = 0, -l_2 x_1 = 0}
+    % {6 l_0 (x_1^3 - 2)x_1^2 + 2 l_1 x_1 - l_2 = 0, 2 l_0 x_2 + 2l_1x_2 = 0, l_1(x_1^2 + x_2^2 - 1) = 0, -l_2 x_1 = 0, l_0 = 0}
+    \begin{equation}
+        \begin{dcases*}
+            2 \lambda_1^e x_1 - \lambda_2^e = 0, \\
+            2 \lambda_1^e x_2 = 0, \\
+            \lambda_1^e(x^2_1 + x^2_2 - 1) = 0, \\
+           -\lambda_2^e x_1 = 0.
+        \end{dcases*}
+    \end{equation}
+    
+    Все решения системы содержат $\lambda_1^e = \lambda_2^e = 0$, что невозможно, так как в этом случае значения всех $x_i$ могут быть любыми.
+    
+    Аналогично решим систему при $\lambda_0^e \neq 0 \quad (\lambda_0^e = 1)$:
+    % {6 (x_1^3 - 2)x_1^2 + 2 l_1 x_1 - l_2 = 0, 2 x_2 + 2l_1x_2 = 0, l_1(x_1^2 + x_2^2 - 1) = 0, -l_2 x_1 = 0}
+    % {6 l_0 (x_1^3 - 2)x_1^2 + 2 l_1 x_1 - l_2 = 0, 2 l_0 x_2 + 2l_1x_2 = 0, l_1(x_1^2 + x_2^2 - 1) = 0, -l_2 x_1 = 0, l_0 = 1}
+    \begin{equation}
+        \begin{dcases*}
+            6 (x_1^3 - 2)x_1^2 + 2 \lambda_1^e x_1 - \lambda_2^e = 0, \\
+            2 x_2 + 2 \lambda_1^e x_2 = 0, \\
+            \lambda_1^e(x^2_1 + x^2_2 - 1) = 0, \\
+           -\lambda_2^e x_1 = 0.
+        \end{dcases*}
+    \end{equation}
+    
+    Были получены следующие значения:
+    \begin{itemize}
+        \item $\lambda_1 = -9, \lambda_2 = 0, x_1 = -1, x_2 = 0$
+        \item $\lambda_1 = -1, \lambda_2 = 0, x_1 = 0, x_2 = -1$
+        \item $\lambda_1 = -1, \lambda_2 = 0, x_1 = 0, x_2 = 1$
+    \end{itemize}
+    
+    Следовательно точки $(0, -1)$, $(0, 1)$ удовлетворяют поставленным условиям и являются регулярными точками. А так же они будут локальными максимумами, так как в них $\lambda_j^e \leq 0$ для $j = 1, 2$.
+
+\subsubsection{Шаг 4}
+    Нужно для полученных точек на предыдущем шаге проверить достаточные условия экстремума. Для этого запишем матрицу Гессе:
+    % Hessian matrix l_0((x_1^3 - 2)^2 + x_2^2) + l_1(x_1^2 + x_2^2 - 1) - l_2 x_1
+    \begin{equation}
+        H = 
+        \left(
+        \begin{array}{c c}
+        \frac{\partial^2 L(x_1, x_2)}{\partial x_1^2} & \frac{\partial^2 L(x_1, x_2)}{\partial x_1 \partial x_2 } \\
+        \frac{\partial^2 L(x_1, x_2)}{\partial x_2 \partial x_1 } & \frac{\partial^2 L(x_1, x_2)}{\partial x_2^2}
+        \end{array}
+        \right)
+    \end{equation}
+    
+    \begin{equation}
+        H = 
+        \left(
+        \begin{array}{c c}
+            18 \lambda_0 x_1^4 + 12 \lambda_0 x_1 (x_1^3 - 2) + 2 \lambda_1 & 0\\
+            0 & 2 \lambda_0 + 2 \lambda_1
+        \end{array}
+        \right)
+    \end{equation}
+    
+    Для случая $\lambda_0 = 0$ матрица Гессе будет иметь вид:
+    \begin{equation}
+        H = 
+        \left(
+        \begin{array}{c c}
+            2 \lambda_1 & 0\\
+            0 & 2 \lambda_1
+        \end{array}
+        \right)
+    \end{equation}
+    
+    Второй дифференциал функции Лагранжа в найденной регулярной точке $x^e = (0, -1)$ равен:
+    \begin{equation}
+        d^2 L(x^e, \lambda^e) = \sum^{n}_{i=1} \sum^{n}_{j=1}{\frac{\partial^2 L(x, \lambda)}{\partial x_1 \partial x_2 } dx_i dx_j} = 2 \lambda_1 dx_1^2 + 2 \lambda_1 dx_2^2 = 0
+    \end{equation}
+    
+    Проверим условия, накладываемые на первые дифференциалы активных в точке $x^e$ ограничений-неравенств.
+    \begin{equation}
+        dg_1(x^e) = \sum^{n}_{i=1}{\frac{\partial g_1}{\partial g_i} dx_i} = 2x_1 dx_1 + 2x_2 dx_2 = 0
+    \end{equation}
+    
+    \begin{equation}
+        dg_2(x^e) = \sum^{n}_{i=1}{\frac{\partial g_2}{\partial g_i} dx_i} = -dx_1 = 0
+    \end{equation}
+    
+    Следовательно, точка $x^e = (0, -1)$ является седловой точкой.
+    
+    Аналогично посчитаем дифференциал функции Лагранжа в точке $x^e = (0, 1)$:
+    \begin{equation}
+        d^2 L(x^e, \lambda^e) = \sum^{n}_{i=1} \sum^{n}_{j=1}{\frac{\partial^2 L(x, \lambda)}{\partial x_1 \partial x_2 } dx_i dx_j} = 2 \lambda_1 dx_1^2 + 2 \lambda_1 dx_2^2 = 0
+    \end{equation}
+    
+    Условия будут такими же, как и в случае с предыдущей точкой (25), (26). Поэтому точка $x^e = (0, 1)$ - тоже является седловой.
+    
+    
+
+\subsubsection{Шаг 5}
+    Необходимо вычислить значения функции 
+    \begin{equation}
+        f(x) = (x^3_1 - 2)^2 + x^2_2 
+    \end{equation}
+    в точках экстремума.
+    
+    $f(x) = 5$ в стационарных точках $(0, -1)$, $(0, 1)$.
+
+
+
+
+\end{document} 

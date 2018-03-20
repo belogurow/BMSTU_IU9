@@ -1,0 +1,235 @@
+%% It is just an empty TeX file.
+%% Write your code here.
+% !TEX encoding = UTF-8 Unicode
+\documentclass[a4paper, 12pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[left=20mm, top=15mm, right=10mm, bottom=15mm]{geometry}    
+
+            
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or epsÃÂ§ with pdflatex; use eps in DVI mode
+\usepackage[14pt]{extsizes}
+\usepackage{setspace,amsmath}
+\usepackage{ dsfont }
+\usepackage{graphicx}
+\renewcommand{\labelenumii}{\theenumii}
+\renewcommand{\theenumii}{\theenumi.\arabic{enumii}.}
+\usepackage{amsmath,amssymb}
+\usepackage[unicode]{hyperref}
+
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{minted}
+\usepackage{caption}
+
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{cmap} % Улучшенный поиск русских слов в полученном pdf-файле
+\usepackage[T2A]{fontenc} % Поддержка русских букв
+\usepackage[utf8]{inputenc} % Кодировка utf8
+\usepackage[english, russian]{babel} % Языки: русский, английский
+
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+\begin{document}
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+\begin{center}
+Федеральное государственное бюджетное образовательное учреждение высшего профессионального образования Московский государственный технический университет имени Н.Э. Баумана
+\end{center}
+
+
+\vfill
+
+\centerline{\large{Лабораторная работа №3}}
+
+\centerline{\large{«Имитационное моделирование системы массового обслуживания}} 
+\centerline{\large{в среде GPSS»}}
+
+\centerline{\large{по курсу}}
+\centerline{\large{«Моделирование»}}
+
+
+\vfill
+
+Студент группы ИУ9-82 \hfill Белогуров А.А.
+
+Преподаватель \hfill Домрачева А.Б.
+\vfill
+
+\centerline{Москва, 2018}
+\clearpage
+\end{titlepage}
+
+\newpage
+\setcounter{page}{2}
+
+\tableofcontents
+
+\newpage
+
+\section{Постановка задачи}
+    Изучение основ имитационного моделирования в среде GPSS World на примере простейших одноканальных систем массового обслуживания (СМО) с неограниченной очередью.
+    
+    Смоделировать работу простейшей СМО на примере поступления заявок на бронирование номеров в отеле без ограничения длины очереди для $N = 700$ зявок. Поток поступления заявок на электронную почту распределен по закону Пуассона с интенсивностью $L = 2.15$ заявки на бронирование каждые 10 минут, а время обработки заявки администратором отеля распределено экспоненциально со средней интенсивностью обработки $M=2.45$ заявки каждые 10 минут.
+    
+    Описать модель с помощью терминов систем массового обслуживания.
+    
+    Определить следующие характеристики системы:
+    \begin{enumerate}
+        \item коэффициент загрузки устройства (в \text{\%});
+        \item среднее число находящихся в очереди заявок;
+        \item среднее продолжительность пребывания заявки в очереди.
+    \end{enumerate}
+    
+    Сравнить их со значениями, определенными аналитически по формулам:
+    \begin{enumerate}
+        \item $r = \frac{L}{M}$
+        \item $avgNumber = \frac{r^2}{1 - r}$
+        \item $avgQueue = \frac{r^2}{L(1-r)}$
+    \end{enumerate}
+
+\newpage
+
+\section{Теоретические сведения}
+    \textit{\textbf{\underline{Определение 1.}} Система массового обслуживания (СМО) — система, которая производит обслуживание поступающих в неё требований. Обслуживание требований в СМО выполняется обслуживающими приборами. }
+    
+    \subsection{Основные определения СМО.}
+    
+        \textit{\textbf{\underline{Определение 2.}} Требование (заявка) — запрос на обслуживание. }
+        
+        \noindent\textit{\textbf{\underline{Определение 3.}} Входящий поток требований — совокупность требований, поступающих в СМО. }
+        
+        \noindent\textit{\textbf{\underline{Определение 4.}} Время обслуживания — период времени, в течение которого обслуживается требование. }
+        
+        \noindent\textit{\textbf{\underline{Определение 5.}} Математическая модель СМО — это совокупность математических выражений, описывающих входящий поток требований, процесс обслуживания и их взаимосвязь.. }
+    
+    \subsection{Определение текущей задачи в терминах СМО.}
+        \begin{itemize}
+            \item Заявкой является письмо на электронную почту с просьбой запронировать номер в отеле на определенный период времеини;
+            \item Входящим потоком требований является ограничение на обработку 7000 заявок.
+            \item Время обслуживания - среднее время обработки заявки на бронироание.
+            \item Математическая модель СМО является программой, написанной на языке моделирования GPSS.
+        \end{itemize}
+    
+
+\newpage
+
+\section{Практическая реализация}
+
+\textbf{Листинг 1.} Описание имитационной модели на языке моделирования GPSS.
+\begin{minted}[frame=single, framesep=10pt, fontsize = \footnotesize, linenos=true, breaklines]{text}
+OPERATOR STORAGE 1                ; количество администраторов
+
+GENERATE .465,FN$EXPON,,7000      ; поступление заявок(2.15 заявок каждый 10 минут), всего 7000 заявок
+
+QUEUE ocher                       ; занятие очереди на обработку заявки
+
+ENTER OPERATOR                    ; поступление заявки на электронную почту
+
+DEPART ocher                      ; уход заказа из очереди
+
+ADVANCE .408,FN$EXPON             ; время обработки заявки(2.45 заявок каждые 10 минут)
+
+LEAVE OPERATOR                    ; завершение обработки заявки на бронирование номера
+
+TERMINATE
+
+GENERATE 3300
+
+TERMINATE 1
+
+EXPON FUNCTION RN2,C24            ;описание функции EXPON
+0,0/0.1,0.104/0.2,0.222/0.3,0.355/0.4,0.509
+0.5,0.69/0.6,0.915/0.7,1.2/0.75,1.38/.8,1.6
+.84,1.83/.88,2.12/.9,2.3/.92,2.52/.94,2.81
+.95,2.99/.96,3.2/.97,3.5/.98,3.9/.99,4.6
+.995,5.3/.998,6.2/.999,7/.9998,8
+\end{minted}
+
+\newpage
+\section{Результаты}
+    Ниже приведен результат работы программы из \textbf{Листинга 1}.
+    
+    \noindent\textbf{Листинг 2.} Описание модели на языке GPSS.
+\begin{minted}[frame=single, framesep=6pt, fontsize = \footnotesize, linenos=true, breaklines]{text}
+              GPSS World Simulation Report - Untitled Model 1.1.1
+
+
+                   Tuesday, March 20, 2018 10:35:58  
+
+           START TIME           END TIME  BLOCKS  FACILITIES  STORAGES
+                0.000           3300.000     9        0          1
+
+
+              NAME                       VALUE  
+          EXPON                       10001.000
+          OCHER                       10002.000
+          OPERATOR                    10000.000
+
+
+ LABEL              LOC  BLOCK TYPE     ENTRY COUNT CURRENT COUNT RETRY
+                    1    GENERATE          7000             0       0
+                    2    QUEUE             7000             0       0
+                    3    ENTER             7000             0       0
+                    4    DEPART            7000             0       0
+                    5    ADVANCE           7000             0       0
+                    6    LEAVE             7000             0       0
+                    7    TERMINATE         7000             0       0
+                    8    GENERATE             1             0       0
+                    9    TERMINATE            1             0       0
+
+
+QUEUE              MAX CONT. ENTRY ENTRY(0) AVE.CONT. AVE.TIME   AVE.(-0) RETRY
+ OCHER              40    0   7000    884     5.414      2.552      2.921   0
+
+
+STORAGE            CAP. REM. MIN. MAX.  ENTRIES AVL.  AVE.C. UTIL. RETRY DELAY
+ OPERATOR            1    1   0     1     7000   1    0.871  0.871    0    0
+
+
+FEC XN   PRI         BDT      ASSEM  CURRENT  NEXT  PARAMETER    VALUE
+  7002    0        6600.000   7002      0      8
+\end{minted}
+    
+
+    \textbf{Анализ результата моделирования}:
+    \begin{enumerate}
+        \item коэффициент загрузки устройства $= 87.1 \%$
+        \item среднее число находящихся в очереди заявок $= 5.4$ заявки;
+        \item средняя продолжительность пребывания заявки в очереди $= 2.6 * 10$ мин $= 20.6$ мин 
+    \end{enumerate}
+    
+    \textbf{Аналитические значения}:
+    \begin{enumerate}
+        \item $r = \frac{L}{M} = 87.7 \%$
+        \item $avgNumber = \frac{r^2}{1 - r} = 6.2$
+        \item $avgQueue = \frac{r^2}{L(1-r)} = 2.8$
+    \end{enumerate}
+
+
+\newpage
+\section{Вывод}
+    В ходе лабораторной работы был изучен язык моделирования GPSS, который использовался для реализации системы массового обслуживания, а в данном случае для моделирования бронирования номеров в отеле.
+    
+    Стоит отметить, что с помощью данного языка возможно моделировать большое количество различных ситуаций производства, а одна программа может успешно использоваться для разных сфер деятельности.
+
+
+\end{document} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

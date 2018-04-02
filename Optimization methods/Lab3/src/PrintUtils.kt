@@ -19,9 +19,15 @@ class PrintUtils {
             println()
         }
 
+        fun printInfoEndFunction(iterations: Int, timeExecution: Long, xValue: Float, function: (x: Float) -> Float) {
+            this.printCommonInfoEnd(iterations, timeExecution)
+            println("\t f($xValue) = ${function(xValue)}")
+            println()
+        }
+
         private fun printCommonInfoEnd(iterations: Int, timeExecution: Long) {
             println("\t Iteration(s): $iterations")
-            println("\t Time: ${TimeUnit.MILLISECONDS.toMillis(timeExecution)} ms")
+//            println("\t Time: ${TimeUnit.MILLISECONDS.toMillis(timeExecution)} ms")
         }
     }
 }

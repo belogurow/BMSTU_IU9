@@ -1,4 +1,3 @@
-import java.util.*
 import kotlin.math.absoluteValue
 import kotlin.math.min
 import kotlin.math.pow
@@ -165,7 +164,7 @@ class ExtremaSearch {
         }
 
 
-        fun powellMethod(eps: Float, delta: Float, xStart: Float, stepSize: Float, function: (x: Float) -> Float): Float {
+        fun quadraticInterpolation(eps: Float, delta: Float, xStart: Float, stepSize: Float, function: (x: Float) -> Float): Float {
             PrintUtils.printInfoStart("Powell method")
 
             var a1 = xStart
@@ -204,11 +203,6 @@ class ExtremaSearch {
                     // Step 7
                     var det = 2 * ((a2 - a3) * f1 + (a3 - a1) * f2 + (a1 - a2) *f3)
                     if (det == 0f) {
-//                        if ((a1 - a2).absoluteValue < delta && (a2 - a3).absoluteValue < delta) {
-//                            PrintUtils.printInfoEndFunction(k, 0, a1, function)
-//                            return a1;
-//                        }
-
                         a1 = aMin;
                     } else {
                         var a = ((a2.pow(2) - a3.pow(2)) * f1 + (a3.pow(2) - a1.pow(2)) * f2 + (a1.pow(2) - a2.pow(2)) * f3 ) / det;

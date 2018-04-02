@@ -25,5 +25,5 @@ fun main(args: Array<String>) {
     ExtremaSearch.fibonacciMethod(epsilon, interval.copy(), curFunction)
 
     stepSize = 0.01
-    ExtremaSearch.powellMethod(epsilon.toFloat(), delta.toFloat(), xStart.toFloat(), stepSize.toFloat(), ::myFunction2)
+    ExtremaSearch.quadraticInterpolation(epsilon.toFloat(), delta.toFloat(), xStart.toFloat(), stepSize.toFloat(), ::myFunction2)
 }

@@ -13,12 +13,6 @@ class PrintUtils {
             println()
         }
 
-        fun printInfoEndFunction(iterations: Int, timeExecution: Long, xValue: Double, function: (x: Double) -> Double) {
-            this.printCommonInfoEnd(iterations, timeExecution)
-            println("\t f($xValue) = ${function(xValue)}")
-            println()
-        }
-
         fun printInfoEndFunction(iterations: Int, timeExecution: Long, xValue: Float, function: (x: Float) -> Float) {
             this.printCommonInfoEnd(iterations, timeExecution)
             println("\t f($xValue) = ${function(xValue)}")

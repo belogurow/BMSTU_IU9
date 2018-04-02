@@ -6,7 +6,7 @@ import kotlin.system.measureTimeMillis
 
 class ExtremaSearch {
     companion object {
-        fun svannMethod(xStart: Double, stepSize: Double, function: (x: Double) -> Double): Interval {
+        fun svannMethod(xStart: Float, stepSize: Float, function: (x: Float) -> Float): Interval {
             PrintUtils.printInfoStart("Svann Method")
 
             var k = 0
@@ -30,7 +30,7 @@ class ExtremaSearch {
                     throw Exception("Interval can't be found, choose another xStart ($xStart) variable!")
 
                 } else {    // step 4
-                    var delta = 0.0
+                    var delta = 0.0f
                     k += 1
 
                     if (funResultWithoutStepSize >= funResultOnStart && funResultOnStart >= funResultWithStepSize) {  // step 4.a
@@ -46,7 +46,7 @@ class ExtremaSearch {
                     }
 
                     while (true) {
-                        xValues.add(k + 1, xValues[k] + 2.0.pow(k) * delta)     // step 5
+                        xValues.add(k + 1, (xValues[k] + 2.0.pow(k) * delta).toFloat())     // step 5
 
                         if (function(xValues[k + 1]) >= function(xValues[k])) {
                             if (delta > 0) {
@@ -74,7 +74,7 @@ class ExtremaSearch {
             return interval
         }
 
-        fun bisectionMethod(epsilon: Double, interval: Interval, function: (x: Double) -> Double): Double {
+        fun bisectionMethod(epsilon: Float, interval: Interval, function: (x: Float) -> Float): Float {
             PrintUtils.printInfoStart("Bisection method")
 
             var k = 0
@@ -85,15 +85,19 @@ class ExtremaSearch {
                     val xLeftMiddle = interval.xStart + interval.getLength() / 4
                     val xRightMiddle = interval.xEnd - interval.getLength() / 4
 
-                    if (function(xLeftMiddle) < function(xMiddle)) {
-                        interval.xEnd = xMiddle
-                        xMiddle = xLeftMiddle
-                    } else if (function(xRightMiddle) < function(xMiddle)) {
-                        interval.xStart = xMiddle
-                        xMiddle = xRightMiddle
-                    } else {
-                        interval.xStart = xLeftMiddle
-                        interval.xEnd = xRightMiddle
+                    when {
+                        function(xLeftMiddle) < function(xMiddle) -> {
+                            interval.xEnd = xMiddle
+                            xMiddle = xLeftMiddle
+                        }
+                        function(xRightMiddle) < function(xMiddle) -> {
+                            interval.xStart = xMiddle
+                            xMiddle = xRightMiddle
+                        }
+                        else -> {
+                            interval.xStart = xLeftMiddle
+                            interval.xEnd = xRightMiddle
+                        }
                     }
 
                     k += 1
@@ -104,7 +108,7 @@ class ExtremaSearch {
             return xMiddle
         }
 
-        fun goldenSectionMethod(epsilon: Double, interval: Interval, function: (x: Double) -> Double): Double {
+        fun goldenSectionMethod(epsilon: Float, interval: Interval, function: (x: Float) -> Float): Float {
             PrintUtils.printInfoStart("Golden Section method")
 
             var k = 0
@@ -113,8 +117,8 @@ class ExtremaSearch {
                 val phi = (1 + Math.sqrt(5.0)) / 2
 
                 while (interval.getLength() > epsilon) {
-                    val z = interval.xEnd - (interval.xEnd - interval.xStart) / phi
-                    val y = interval.xStart + (interval.xEnd - interval.xStart) / phi
+                    val z = (interval.xEnd - (interval.xEnd - interval.xStart) / phi).toFloat()
+                    val y = (interval.xStart + (interval.xEnd - interval.xStart) / phi).toFloat()
                     if (function(y) <= function(z)) {
                         interval.xStart = z
                     } else {
@@ -129,15 +133,15 @@ class ExtremaSearch {
             return interval.getCenter()
         }
 
-        fun fibonacciMethod(eps: Double, interval: Interval, function: (x: Double) -> Double): Double {
+        fun fibonacciMethod(eps: Float, interval: Interval, function: (x: Float) -> Float): Float {
             PrintUtils.printInfoStart("Fibonacci method")
 
             var k = 0
             val timeExecution = measureTimeMillis {
 
-                var y: Double
-                var z: Double
-                var N = 3
+                var y: Float
+                var z: Float
+                var n = 3
                 val fibArr = arrayListOf(1.0, 1.0, 2.0, 3.0)
                 var f1 = 2.0
                 var f2 = 3.0
@@ -145,11 +149,11 @@ class ExtremaSearch {
                     fibArr.add(f1 + f2)
                     f1 = f2
                     f2 = fibArr[fibArr.size - 1]
-                    ++N
+                    ++n
                 }
-                for (i in 1 until N - 3) {
-                    y = interval.xStart + fibArr[N - i - 1] / fibArr[N - i + 1] * (interval.xEnd - interval.xStart)
-                    z = interval.xStart + fibArr[N - i] / fibArr[N - i + 1] * (interval.xEnd - interval.xStart)
+                for (i in 1 until n - 3) {
+                    y = (interval.xStart + fibArr[n - i - 1] / fibArr[n - i + 1] * (interval.xEnd - interval.xStart)).toFloat()
+                    z = (interval.xStart + fibArr[n - i] / fibArr[n - i + 1] * (interval.xEnd - interval.xStart)).toFloat()
                     if (function(y) <= function(z))
                         interval.xEnd = z
                     else
@@ -175,8 +179,8 @@ class ExtremaSearch {
                 var a2 = a1 + stepSize
 
                 // Step 3
-                var f1 = function(a1)
-                var f2 = function(a2)
+                val f1 = function(a1)
+                val f2 = function(a2)
 
                 // Step 4
                 var a3 = if (f1 > f2) {
@@ -189,11 +193,11 @@ class ExtremaSearch {
                     k += 1
 
                     // Step 5
-                    var f3 = function(a3)
+                    val f3 = function(a3)
 
                     // Step 6
-                    var fMin = min(f1, min(f2, f3))
-                    var aMin = when (fMin) {
+                    val fMin = min(f1, min(f2, f3))
+                    val aMin = when (fMin) {
                         f1 -> a1
                         f2 -> a2
                         f3 -> a3
@@ -201,123 +205,33 @@ class ExtremaSearch {
                     }
 
                     // Step 7
-                    var det = 2 * ((a2 - a3) * f1 + (a3 - a1) * f2 + (a1 - a2) *f3)
+                    val det = 2 * ((a2 - a3) * f1 + (a3 - a1) * f2 + (a1 - a2) * f3)
                     if (det == 0f) {
-                        a1 = aMin;
+                        a1 = aMin
                     } else {
-                        var a = ((a2.pow(2) - a3.pow(2)) * f1 + (a3.pow(2) - a1.pow(2)) * f2 + (a1.pow(2) - a2.pow(2)) * f3 ) / det;
+                        val a = ((a2.pow(2) - a3.pow(2)) * f1 + (a3.pow(2) - a1.pow(2)) * f2 + (a1.pow(2) - a2.pow(2)) * f3) / det
 
                         // Step 8
-                        var aBool = ((fMin - function(a)) / function(a)).absoluteValue < eps;
-                        var bBool = ((aMin - a) / a).absoluteValue < delta;
-                        if (aBool && bBool) { // а)
+                        if (((fMin - function(a)) / function(a)).absoluteValue < eps && ((aMin - a) / a).absoluteValue < delta) { // a)
                             PrintUtils.printInfoEndFunction(k, 0, a1, function)
-                            return a;
+                            return a
                         } else {
-                            if (a in a1..a3) { // б)
+                            if (a in a1..a3) { // b)
                                 if (a < a2) {
-                                    a3 = a2;
-                                    a2 = a;
+                                    a3 = a2
+                                    a2 = a
                                 } else {
-                                    a1 = a2;
-                                    a2 = a;
+                                    a1 = a2
+                                    a2 = a
                                 }
-                            } else { // в)
-//                                a1 = a3 + 2 * stepSize;
+                            } else { // c)
                                 a1 = a
-                                break;
+                                break
                             }
                         }
                     }
-                } // Step 5
+                }
             }
         }
     }
-
-//    double powell(float a1, double h0, double delta, double eps, int &k) {
-//        k = 0;
-//        while (true) {
-//            // Шаг 2
-//            float a2 = a1 + h0;
-//            // Шаг 3
-//            double f1 = f(a1);
-//            double f2 = f(a2);
-//            // Шаг 4
-//            float a3 =  a1 + 2 * h0;
-//
-//            if (f1 <= f2) {
-//                a3 = a1 - 2 * h0;
-//            }
-//            while (true) {
-//                // Расположить в естественном порядке
-//                if (a3 < a1) {
-//                    std::swap(a1, a3);
-//                }
-//                if (a2 < a1) {
-//                    std::swap(a2, a1);
-//                }
-//                if (a3 < a2) {
-//                    std::swap(a3, a2);
-//                }
-//                k++;
-//                // Шаг 5
-//                double f3 = f(a3);
-//                f1 = f(a1);
-//                f2 = f(a2);
-//                // Шаг 6
-//                double f_min = FLT_MAX;
-//                double a_min = FLT_MAX;
-//
-//                if (f_min > f1) {
-//                    f_min = f1;
-//                    a_min = a1;
-//                }
-//
-//                if (f_min > f2) {
-//                    f_min = f2;
-//                    a_min = a2;
-//                }
-//
-//                if (f_min > f3) {
-//                    f_min = f3;
-//                    a_min = a3;
-//                }
-//                // Шаг 7
-////            std::cout << "a1=" << a1 << ", a2=" << a2 << ", a3=" << a3 << ", a_min=" << a_min;
-//                double det = 2 * ((a2 - a3) *f1 + (a3 - a1)*f2 + (a1-a2)*f3);
-//                if (det == 0) {
-//                    if (fabs(a1 - a2) < delta && fabs(a2 - a3) < delta) return a1;
-//                    a1 = a_min;
-////                std::cout << ", a1=a_min" << std::endl;
-//                } else {
-//                    double a = (  (a2 * a2 - a3 * a3) * f1
-//                            + (a3 * a3 - a1 * a1) * f2
-//                            + (a1 * a1 - a2 * a2) * f3 )
-//                    / det;
-////                std::cout << ", a=" << a << std::endl;
-//                    // Шаг 8
-//                    bool a_bool = fabs((f_min - f(a)) / f(a)) < eps;
-//                    bool b_bool = fabs((a_min - a) / a) < delta;
-//                    if (a_bool && b_bool) { // а)
-//                        return a;
-//                    } else {
-//                        if (a >= a1 && a <= a3) { // б)
-//                            if (a < a2) {
-//                                a3 = a2;
-//                                a2 = a;
-//                            } else {
-//                                a1 = a2;
-//                                a2 = a;
-//                            }
-//                        } else { // в)
-////                        std::cout << "a1=a" << std::endl;
-////                        a1  = a;
-//                            a1 = a3 + 2*h0;
-//                            break;
-//                        }
-//                    }
-//                }
-//            } // Шаг 5
-//        }
-//    }
 }

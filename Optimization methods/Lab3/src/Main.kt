@@ -5,7 +5,7 @@ import kotlin.math.pow
 private fun myFunction(x: Float) = 12 * x.pow(2) - 2 * x + (x - 3).absoluteValue
 
 // F'(x)
-private fun myDFunction(x: Double) = (x - 3) / (x - 3).absoluteValue + 24 * x - 2
+private fun myDerivativeFunction(x: Float) = (x - 3) / (x - 3).absoluteValue + 24 * x - 2
 
 
 fun main(args: Array<String>) {
@@ -14,6 +14,7 @@ fun main(args: Array<String>) {
     val epsilon = 0.01f
     val delta = 0.01f
     val curFunction = ::myFunction
+    val curDerivativeFunction = ::myDerivativeFunction
 
     val interval = ExtremaSearch.svannMethod(xStart, stepSize, curFunction)
 
@@ -23,4 +24,5 @@ fun main(args: Array<String>) {
 
     stepSize = 0.01f
     ExtremaSearch.quadraticInterpolation(epsilon, delta, xStart, stepSize, curFunction)
+    ExtremaSearch.cubicInterpolation(epsilon, delta, xStart, stepSize, curFunction, curDerivativeFunction)
 }

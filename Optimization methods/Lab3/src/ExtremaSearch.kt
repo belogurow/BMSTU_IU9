@@ -2,7 +2,6 @@ import kotlin.math.absoluteValue
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.system.measureTimeMillis
-import Nastya.f
 import kotlin.math.sqrt
 
 

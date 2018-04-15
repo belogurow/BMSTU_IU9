@@ -37,6 +37,8 @@ dependencies {
 
 //    compile group: "golem", name:"golem-backend-mtj", version: "0.7"
 //    compile group: "golem", name:"golem-core", version:"0.7"
+
+//    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6'
 }
 
 compileKotlin {

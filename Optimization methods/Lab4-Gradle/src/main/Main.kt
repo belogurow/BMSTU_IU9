@@ -41,7 +41,6 @@ private fun hessian(xValues: Matrix<Double>) = create(arrayOf(
 fun main(args: Array<String>) {
     val xStart = listOf(1.0, 0.0)
     val epsilon = 0.0001
-    val delta = listOf(1.0, 1.0)
     val lambda = 1.0
     val betta = 1.5
     val curFunction = ::myFunction

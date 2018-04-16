@@ -1,10 +1,8 @@
 import koma.*
-import koma.end
 import koma.extensions.*
 import koma.matrix.Matrix
-import koma.ndarray.NDArray
 import main.Interval
-import java.util.*
+import java.security.Principal
 import kotlin.math.absoluteValue
 
 fun functionHelpValue(g: Double,
@@ -23,7 +21,7 @@ fun divArrays(array1: DoubleArray, array2: DoubleArray) = array1.zip(array2, Dou
 class ExtremaSearch {
     companion object {
         private const val maxIterations = 10000
-        private const val maxIterationsNedlerMead = 24
+        private const val maxIterationsNedlerMead = 23
 
         fun svannMethod(xStart: Double,
                         stepSize: Double,
@@ -309,7 +307,6 @@ class ExtremaSearch {
                     return
                 }
 
-
                 val t = goldenSectionMethod(eps, Interval(0.0, 0.0), xk, gradientMat, function, ::functionHelpValue)
 
                 val xkNew = xk - t * gradientMat
@@ -319,36 +316,9 @@ class ExtremaSearch {
                     return
                 } else {
                     k += 1
-//                    println("XK IS $xk")
                     xk = xkNew
                 }
             }
-
-//            var xk = create(xStart.toDoubleArray())
-//            var xkNew = create(xStart.toDoubleArray())
-//            var k = 0
-//
-//            while (true) {
-//                val gradientMat = gradient(xk)
-//
-//                if (gradientMat.normF() < eps || k >= maxIterations) {
-//                    PrintUtils.printInfoEndFunction(k, 0, xk, function)
-//                    return
-//                }
-//
-//                val interval = svannMethod(0.0, 0.01, xk, gradientMat, function, ::functionHelpValue)
-//                val gamma = goldenSectionMethod(0.01, interval, xk, gradientMat, function, ::functionHelpValue)
-//
-//                xkNew = xk - gamma * gradientMat
-//                if ((xkNew - xk).normF() < eps) {
-//                    PrintUtils.printInfoEndFunction(k, 0, xk, function)
-//                    return
-//                } else {
-//                    k += 1
-////                    println("XK IS $xk")
-//                    xk = xkNew
-//                }
-//            }
         }
 
         fun flatherRivz(xStart: List<Double>,
@@ -418,8 +388,8 @@ class ExtremaSearch {
                                   gradient: (xValues: Matrix<Double>) -> Matrix<Double>) {
             PrintUtils.printInfoStart("Davidon-Flatcher-Powell")
 
-
-            return flatherRivz(xStart, eps * 10, function, gradient, false)
+//            PrintUtils.printInfoEnd()
+            return flatherRivz(xStart, eps / 100, function, gradient, false)
 
             var xk = create(xStart.toDoubleArray())
             var xkOld = create(xStart.toDoubleArray())
@@ -464,81 +434,12 @@ class ExtremaSearch {
                     PrintUtils.printInfoEndFunction(k, 0, xk, function)
                 } else {
                     k += 1
-//                    print("XK IS {}".format(xk))
                     xkOld = xk
                     xk = xkNew
                 }
             }
 
         }
-
-//        fun davidonFlatcherPowell2(xStart: List<Double>,
-//                                  eps: Double,
-//                                  function: (xValues: RealVector) -> Double,
-//                                  gradient: (xValues: RealVector) -> RealVector) {
-//            PrintUtils.printInfoStart("Davidon-Flatcher-Powell2")
-//
-//            var xk = MatrixUtils.createRealVector(xStart.toDoubleArray())
-//            var xkOld = MatrixUtils.createRealVector(xStart.toDoubleArray())
-//            var xkNew = MatrixUtils.createRealVector(xStart.toDoubleArray())
-//
-//            var k = 0
-//            var A = MatrixUtils.createRealIdentityMatrix(2)
-//            while (true) {
-//                val gradientMat = gradient(xk)
-//
-//                if (gradientMat.norm < eps || k >= maxIterations) {
-//                    println("iterations $k f($xk) = ${function(xk)}" )
-////                    PrintUtils.printInfoEndFunction(k, 0, xk, function)
-//                    return
-//                }
-//
-//                if (k != 0) {
-//                    val deltaG = Array2DRowRealMatrix(
-//                            arrayOf(gradient(xk).subtract(gradient(xkOld)).toArray()))
-//
-//                    val deltaX = Array2DRowRealMatrix(
-//                                    arrayOf(xk.subtract(xkOld).toArray()))
-//
-//                    var num1 = deltaX.multiply(deltaX.transpose())
-//                    var den1 = deltaX.transpose().multiply(deltaG)
-//
-//
-//                    var test = 1
-//
-////                    var A_C = (deltaX * deltaX.T).elementSum() / (deltaX.T * deltaG).elementSum()
-////                    A_C -= (multiplyMatrices(A, deltaG) * multiplyMatrices(A.T, deltaG.T)).elementSum() / (multiplyMatrices(deltaG.T, A) * deltaG).elementSum()
-////
-////                    A += A_C
-//                }
-//
-//                var t = 0.001
-//                var i = 0.0
-////                var minValueFun = function(xk - t * multiplyMatrices(A, gradientMat))
-//                var minValueFun = function(xk.subtract(A.preMultiply(gradientMat).mapMultiplyToSelf(t)))
-//                do {
-//                    i += t
-//
-////                    val funValue = function(xk - t * multiplyMatrices(A, gradientMat))
-//                    val funValue = function(xk.subtract(A.preMultiply(gradientMat).mapMultiplyToSelf(t)))
-//                    if (funValue < minValueFun) {
-//                        minValueFun = funValue
-//                        t = i
-//                    }
-//                } while (i < 1.0)
-////
-////                xkNew = xk - t * multiplyMatrices(A, gradientMat)
-////                if ((xkNew - xk).normF() < eps && (function(xkNew) - function(xk)).absoluteValue < eps) {
-////                    PrintUtils.printInfoEndFunction(k, 0, xk, function)
-////                } else {
-////                    k += 1
-////                    print("XK IS {}".format(xk))
-////                    xkOld = xk
-////                    xk = xkNew
-////                }
-//            }
-//
-//        }
 
         fun levenbergMarkvardt(xStart: List<Double>,
                                   eps: Double,

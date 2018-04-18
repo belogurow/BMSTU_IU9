@@ -1,7 +1,6 @@
 package main
 
 import koma.*
-import koma.extensions.get
 import koma.extensions.set
 import koma.extensions.times
 import koma.matrix.Matrix
@@ -89,9 +88,9 @@ class ExtremaSearch {
             }
         }
 
-        fun condFunctionCut(index: Int,
-                            xValues: Matrix<Double>,
-                            condFunctions: (xValues: Matrix<Double>) -> List<Double>): Double {
+        fun maxCondFunctions(index: Int,
+                             xValues: Matrix<Double>,
+                             condFunctions: (xValues: Matrix<Double>) -> List<Double>): Double {
             return max(0.0, condFunctions(xValues)[index])
         }
 
@@ -113,7 +112,7 @@ class ExtremaSearch {
                 fun penaltyFun(xValues: Matrix<Double>): Double {
                     var functionValue = 0.0
                     for (i in 0 until 3) {
-                        functionValue += currentPenaltyCoef / 2.0 * condFunctionCut(i, xValues, condFunctions).pow(2)
+                        functionValue += currentPenaltyCoef / 2.0 * maxCondFunctions(i, xValues, condFunctions).pow(2)
                     }
                     return functionValue
                 }
@@ -121,7 +120,7 @@ class ExtremaSearch {
                 fun penaltyFun2(xValues: Matrix<Double>): Double {
                     var functionValue = function(xValues)
                     for (i in 0 until 3) {
-                        functionValue += currentPenaltyCoef / 2.0 * condFunctionCut(i, xValues, condFunctions).pow(2)
+                        functionValue += currentPenaltyCoef / 2.0 * maxCondFunctions(i, xValues, condFunctions).pow(2)
                     }
                     return functionValue
                 }
@@ -159,7 +158,7 @@ class ExtremaSearch {
                 fun barrierFun(xValues: Matrix<Double>): Double {
                     var functionValue = 0.0
                     for (i in 0 until 3) {
-                        functionValue -= currentPenaltyCoef / condFunctionCut(i, xValues, condFunctions)
+                        functionValue -= currentPenaltyCoef / maxCondFunctions(i, xValues, condFunctions)
                     }
                     return functionValue
                 }
@@ -167,7 +166,7 @@ class ExtremaSearch {
                 fun barrierFun2(xValues: Matrix<Double>): Double {
                     var functionValue = function(xValues)
                     for (i in 0 until 3) {
-                        functionValue += currentPenaltyCoef / condFunctionCut(i, xValues, condFunctions)
+                        functionValue += currentPenaltyCoef / maxCondFunctions(i, xValues, condFunctions)
                     }
                     return functionValue
                 }
@@ -207,7 +206,7 @@ class ExtremaSearch {
                 fun lagrangeFun(xValues: Matrix<Double>): Double {
                     var funValue = function(xValues)
                     for (i in 0 until 3) {
-                        funValue += 1 / 2 / currentPenaltyCoef * ((max(0.0, condFunctions(lagrangeMu)[i] + currentPenaltyCoef * condFunctionCut(i, xValues, condFunctions))).pow(2) - condFunctions(lagrangeMu)[i].pow(2))
+                        funValue += 1 / 2 / currentPenaltyCoef * ((max(0.0, condFunctions(lagrangeMu)[i] + currentPenaltyCoef * maxCondFunctions(i, xValues, condFunctions))).pow(2) - condFunctions(lagrangeMu)[i].pow(2))
                     }
                     return funValue
                 }
@@ -215,7 +214,7 @@ class ExtremaSearch {
                 fun lagrangeFun1(xValues: Matrix<Double>): Double {
                     var funValue = 0.0
                     for (i in 0 until 3) {
-                        funValue += 1 / 2 / currentPenaltyCoef * ((max(0.0, condFunctions(lagrangeMu)[i] + currentPenaltyCoef * condFunctionCut(i, xValues, condFunctions))).pow(2) - condFunctions(lagrangeMu)[i].pow(2))
+                        funValue += 1 / 2 / currentPenaltyCoef * ((max(0.0, condFunctions(lagrangeMu)[i] + currentPenaltyCoef * maxCondFunctions(i, xValues, condFunctions))).pow(2) - condFunctions(lagrangeMu)[i].pow(2))
                     }
                     return funValue
                 }

@@ -15,8 +15,8 @@
       <file leaf-file-name="TriangulationUI.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/triangulation/TriangulationUI.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="350" column="37" lean-forward="true" selection-start-line="350" selection-start-column="37" selection-end-line="350" selection-end-column="37" />
+            <state relative-caret-position="495">
+              <caret line="354" column="8" selection-start-line="354" selection-start-column="8" selection-end-line="354" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -24,8 +24,17 @@
       <file leaf-file-name="data.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/triangulation/data.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54630">
+            <state relative-caret-position="227">
               <caret line="3642" column="49" selection-start-line="3642" selection-start-column="49" selection-end-line="3642" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="down.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/triangulation/down.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="667">
+              <caret line="3446" column="55" selection-start-line="3446" selection-start-column="55" selection-end-line="3446" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -34,7 +43,7 @@
         <entry file="file://$PROJECT_DIR$/src/triangulation/ConvexHull.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="15">
-              <caret line="1" column="13" lean-forward="true" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
+              <caret line="1" column="13" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -51,7 +60,7 @@
       <file leaf-file-name="Point.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/triangulation/Point.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="139">
+            <state relative-caret-position="165">
               <caret line="11" selection-start-line="11" selection-end-line="11" />
             </state>
           </provider>
@@ -69,8 +78,8 @@
       <file leaf-file-name="Triangle.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/triangulation/Triangle.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-137">
-              <caret line="183" column="33" lean-forward="true" selection-start-line="183" selection-start-column="4" selection-end-line="183" selection-end-column="33" />
+            <state relative-caret-position="2745">
+              <caret line="183" column="33" selection-start-line="183" selection-start-column="4" selection-end-line="183" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -78,7 +87,7 @@
       <file leaf-file-name="Triangulation.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/triangulation/Triangulation.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="645">
+            <state relative-caret-position="-3844">
               <caret line="99" column="9" selection-start-line="99" selection-start-column="9" selection-end-line="99" selection-end-column="9" />
             </state>
           </provider>
@@ -89,15 +98,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="750">
               <caret line="50" selection-start-line="50" selection-end-line="50" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Rib.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/triangulation/Rib.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="585">
-              <caret line="39" column="4" selection-start-line="39" selection-start-column="4" selection-end-line="39" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -140,6 +140,7 @@
         <option value="$PROJECT_DIR$/src/triangulation/Triangulation.js" />
         <option value="$PROJECT_DIR$/src/triangulation/data.txt" />
         <option value="$PROJECT_DIR$/src/triangulation/TriangulationUI.html" />
+        <option value="$PROJECT_DIR$/src/triangulation/down.txt" />
       </list>
     </option>
   </component>
@@ -335,6 +336,7 @@
       <workItem from="1520020915652" duration="235000" />
       <workItem from="1520055930846" duration="6471000" />
       <workItem from="1522923916306" duration="1520000" />
+      <workItem from="1524053875698" duration="721000" />
     </task>
     <task id="LOCAL-00001" summary="Added project">
       <created>1519896698360</created>
@@ -354,7 +356,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62979000" />
+    <option name="totallyTimeSpent" value="63700000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -376,27 +378,27 @@
       <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5015625" side_tool="true" weight="0.59365326" />
       <window_info anchor="right" id="Maven Projects" order="3" />
-      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27705976" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.28109854" />
       <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32965517" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
       <window_info anchor="right" id="Theme Preview" order="3" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4984375" weight="0.0" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4984375" weight="0.5241379" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -418,11 +420,10 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/triangulation/TriangulationUI.html</url>
           <line>354</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="59" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="60" />
+      <option name="time" value="61" />
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
@@ -475,6 +476,48 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/triangulation/Point.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/triangulation/Util.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="585">
+          <caret line="39" column="13" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/triangulation/Triangle.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2745">
+          <caret line="183" column="33" lean-forward="true" selection-start-line="183" selection-start-column="4" selection-end-line="183" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/triangulation/Triangulation.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1485">
+          <caret line="99" column="9" selection-start-line="99" selection-start-column="9" selection-end-line="99" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/triangulation/DynamicCache.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="750">
+          <caret line="50" selection-start-line="50" selection-end-line="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/triangulation/Rib.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="585">
+          <caret line="39" column="4" selection-start-line="39" selection-start-column="4" selection-end-line="39" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/triangulation/Util.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1575">
@@ -509,9 +552,6 @@
           <caret line="41" column="35" selection-start-line="41" selection-start-column="35" selection-end-line="41" selection-end-column="35" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/triangulation/TriangulationUI.html">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/triangulation/Vector.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -561,9 +601,6 @@
           <caret line="41" column="35" selection-start-line="41" selection-start-column="35" selection-end-line="41" selection-end-column="35" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/triangulation/TriangulationUI.html">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/triangulation/Vector.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -628,9 +665,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/triangulation/Triangulation.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/triangulation/Triangle.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -644,9 +678,6 @@
           <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/triangulation/Rib.js">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/triangulation/TriangulationUI.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -662,17 +693,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/triangulation/TriangulationUI.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/triangulation/model/triangle.js" />
-    <entry file="file://$PROJECT_DIR$/src/triangulation/TriangulationUI.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/triangulation/model/triangle.js" />
-    <entry file="file://$PROJECT_DIR$/src/triangulation/TriangulationUI.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/triangulation/model/triangle.js" />
     <entry file="file://$PROJECT_DIR$/src/triangulation/TriangulationUI.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -690,9 +712,6 @@
           <caret line="44800" column="4" selection-start-line="44800" selection-start-column="4" selection-end-line="44800" selection-end-column="4" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Lab2.iml">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/triangulation/Rib.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -718,7 +737,7 @@
     <entry file="file://$PROJECT_DIR$/src/triangulation/ConvexHull.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
-          <caret line="1" column="13" lean-forward="true" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
+          <caret line="1" column="13" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -729,38 +748,48 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/triangulation/data.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54630">
-          <caret line="3642" column="49" selection-start-line="3642" selection-start-column="49" selection-end-line="3642" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/triangulation/Triangulation.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="645">
-          <caret line="99" column="9" selection-start-line="99" selection-start-column="9" selection-end-line="99" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/triangulation/Point.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
+        <state relative-caret-position="165">
           <caret line="11" selection-start-line="11" selection-end-line="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/triangulation/Triangle.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-137">
-          <caret line="183" column="33" lean-forward="true" selection-start-line="183" selection-start-column="4" selection-end-line="183" selection-end-column="33" />
+        <state relative-caret-position="2745">
+          <caret line="183" column="33" selection-start-line="183" selection-start-column="4" selection-end-line="183" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/triangulation/down">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/triangulation/down.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="667">
+          <caret line="3446" column="55" selection-start-line="3446" selection-start-column="55" selection-end-line="3446" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/triangulation/Triangulation.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3844">
+          <caret line="99" column="9" selection-start-line="99" selection-start-column="9" selection-end-line="99" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/triangulation/data.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="3642" column="49" selection-start-line="3642" selection-start-column="49" selection-end-line="3642" selection-end-column="49" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/triangulation/TriangulationUI.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="350" column="37" lean-forward="true" selection-start-line="350" selection-start-column="37" selection-end-line="350" selection-end-column="37" />
+        <state relative-caret-position="495">
+          <caret line="354" column="8" selection-start-line="354" selection-start-column="8" selection-end-line="354" selection-end-column="8" />
         </state>
       </provider>
     </entry>

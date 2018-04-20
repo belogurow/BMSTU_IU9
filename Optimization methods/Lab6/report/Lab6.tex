@@ -1,0 +1,493 @@
+%% It is just an empty TeX file.
+%% Write your code here.
+% !TEX encoding = UTF-8 Unicode
+\documentclass[a4paper, 12pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[left=20mm, top=15mm, right=10mm, bottom=15mm]{geometry}    
+
+            
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or epsÃÂ§ with pdflatex; use eps in DVI mode
+\usepackage[14pt]{extsizes}
+\usepackage{setspace,amsmath}
+\usepackage{mathtools}
+\usepackage{ dsfont }
+\usepackage{amsmath,amssymb}
+\usepackage[unicode]{hyperref}
+
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{minted}
+\usepackage{caption}
+
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{cmap} % Улучшенный поиск русских слов в полученном pdf-файле
+\usepackage[T2A]{fontenc} % Поддержка русских букв
+\usepackage[utf8]{inputenc} % Кодировка utf8
+\usepackage[english, russian]{babel} % Языки: русский, английский
+
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+\begin{document}
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+\begin{center}
+Федеральное государственное бюджетное образовательное учреждение высшего профессионального образования Московский государственный технический университет имени Н.Э. Баумана
+\end{center}
+
+
+\vfill
+
+\centerline{\large{Лабораторная работа №6. Вариант 1.}}
+
+\centerline{\large{«Методы решения задач линейного и}} 
+\centerline{\large{линейного целочисленного программирования»}} 
+
+\centerline{\large{по курсу}}
+\centerline{\large{«Методы оптимизации»}}
+
+
+\vfill
+
+Студент группы ИУ9-82 \hfill Белогуров А.А.
+
+Преподаватель \hfill Каганов Ю.T. 
+\vfill
+
+\centerline{Москва, 2018}
+\clearpage
+\end{titlepage}
+
+\newpage
+\setcounter{page}{2}
+
+\tableofcontents
+
+\newpage
+
+\section{Цель работы}
+
+\begin{enumerate}
+    \item Изучение симплекс-метода линейного программирования и методов линейного целочисленного программирования.
+    \item Разработка программы реализации алгоритма симплекс-метода линейного программирования и алгоритмов линейного целочисленного программирования.
+    \item Решение задачи линейного и линейного целочисленного программирования. 
+\end{enumerate}
+
+\newpage
+
+\section{Постановка задачи}
+    \textbf {Дано}: 1 Вариант. Функция:
+    \begin{equation}
+        f(x) = x_1 - x_2 + x_3.
+    \end{equation}
+    Функции ограничений:
+    \begin{equation}
+        \begin{cases}
+            -x_1 + 2x_2 - x_3 = 4 \\
+            3 x_1 + x_2 + x_4 = 14 \\
+            x_1, ..., x_4 \geq 0
+        \end{cases}
+    \end{equation}
+    
+\subsection{Задача 6.1}
+
+    \begin{enumerate}
+        \item Найти условный максимум для задачи линейного программирования симплекс-методом Дж. Данцига.
+        \item Реализовать алгоритмы с помощью языка программирования высокого уровня.
+    \end{enumerate}
+    
+\subsection{Задача 6.2}
+
+    \begin{enumerate}
+        \item Найти условный максимум для задачи линейного целочисленного программирования методом «ветвей и границ».
+        \item Реализовать алгоритмы с помощью языка программирования высокого уровня.
+    \end{enumerate}
+    
+    
+\newpage
+\section{Исследование}
+    Найдем условный максимум для функции:
+    \begin{equation}
+          f(x) = x_1 - x_2 + x_3
+    \end{equation}
+    с помощью сервиса WolframAlpha.com:
+    
+     \begin{equation}
+        max(f(x)) = 10,\quad (x_1, x_2, x_3, x_4) = (0, 14, 24, 0)
+    \end{equation}
+    
+\subsection{Задача 6.1}
+
+    \subsubsection{Симлекс-метод}
+        Это алгоритм решения оптимизационной задачи линейного программирования путём перебора вершин выпуклого многогранника в многомерном пространстве.
+
+        Сущность метода: построение базисных решений, на которых монотонно убывает линейный функционал, до ситуации, когда выполняются необходимые условия локальной оптимальности.
+
+\subsection{Задача 6.2}
+
+    \subsubsection{Метод ветвей и границ}
+    Общий алгоритмический метод для нахождения оптимальных решений различных задач оптимизации, особенно дискретной и комбинаторной оптимизации. По существу, метод является вариацией полного перебора с отсевом подмножеств допустимых решений, заведомо не содержащих оптимальных решений.
+    
+    Общая идея метода может быть описана на примере поиска минимума функции $f(x)$ на множестве допустимых значений переменной $x$. Функция $f$ и переменная $x$ могут быть произвольной природы. Для метода ветвей и границ необходимы две процедуры: ветвление и нахождение оценок (границ).
+    
+    Так в данном случае необходимо решить задачу целочисленного линейного программирования, то необходимо изменить исходную функцию, так как её решением при первой итерации являются целые числа.
+    
+    Новая функция для \textbf{Задачи 6.2} будет выглядеть следующим образом:
+    \begin{equation}
+        f(x) = - x_1 + 11 x_2 - 1 x_3 + 5x_4
+    \end{equation}
+    
+    Функции ограничений не изменяются.
+    
+\newpage
+
+\section{Практическая реализация}
+
+    Все методы были реализованы на языке программирования \textbf{Python}. 
+
+    \textbf{Листинг 1.} Симлекс-метод.
+    \begin{minted}[frame=single, framesep=10pt, fontsize = \footnotesize, linenos=true, breaklines]{python}
+class MatrixSimplex:
+    def __init__(self, A, b, c, B_idx):
+		self.A = np.matrix(A)
+		self.b = np.matrix(b)
+		self.c = np.matrix(c)
+
+		self.B_idx = B_idx
+		self.N_idx = [i for i in range(self.A.shape[1]) if i not in self.B_idx]
+
+	def get_B(self):
+		return self.A[:, self.B_idx]
+
+	def get_Cb(self):
+		return self.c[:, self.B_idx]
+
+	def get_Cn(self):
+		return self.c[:, self.N_idx]
+
+	def get_N(self):
+		return self.A[:, self.N_idx]
+
+	def computeZ(self, InvB, N):
+		# z = Cb*InvB*b - (Cb*InvB*N - Cn)*Xn
+		Cb = self.get_Cb()
+		Cb_InvB = np.dot(Cb, InvB)
+
+		Cb_InvB_b = np.dot(Cb_InvB, self.b.T)
+
+		Cb_InvB_N = np.dot(Cb_InvB, N)
+		bracket_term = np.subtract(Cb_InvB_N, self.get_Cn())
+		return Cb_InvB_b, -1 * bracket_term
+
+	def computeXb(self, InvB, N):
+		return np.dot(InvB, self.b.T)
+
+	def is_optimal(self, z):
+		for x in np.nditer(z):
+			if x > 0:
+				return False
+		return True
+
+	def compute_entering_variable(self, z):
+		max_ascent = 0
+		index = -1
+		it = np.nditer(z.T, flags=['f_index'])
+		while not it.finished:
+			if it[0] > max_ascent:
+				max_ascent = it[0]
+				index = it.index
+			it.iternext()
+		if index is not -1:  # else returns None
+			return self.N_idx[index]
+
+	def replace(self, ev_idx, dv_idx):
+		for i in range(len(self.B_idx)):
+			if self.B_idx[i] == dv_idx:
+				self.B_idx[i] = ev_idx
+				break
+
+		self.N_idx = [i for i in range(self.A.shape[1]) if i not in self.B_idx]
+
+	def calculate_value(self, z, Xb):
+		print("z = ", z[0, 0])
+		for i in range(self.c.shape[1]):
+			index = 0
+			in_basis = False
+			for j in self.B_idx:
+				if i == j:
+					print("x[{}] = {}".format(j, Xb[index, 0]))
+					in_basis = True
+				index += 1
+			if not in_basis:
+				print("x[{}] = {}".format(i, 0))
+		print("")
+		return
+
+	def do_simplex(self):
+		print("\n######## Start Simplex ###########\n")
+		while True:
+			InvB = np.linalg.inv(self.get_B())
+			N = self.get_N()
+
+			z, z_var = self.computeZ(InvB, N)
+
+			Xb = self.computeXb(InvB, N)
+
+			if self.is_optimal(z_var):
+				print("Optimal solution found..")
+				self.calculate_value(z, Xb)
+				return z
+
+			ev_idx = self.compute_entering_variable(z_var)
+			if ev_idx is None:
+				print("Invalid")
+				return 0
+
+			ev = self.A[:, ev_idx]
+			dv_idx = self.min_ratio_test(Xb, ev)
+
+			if dv_idx is None:
+				print("Invalid")
+				return 0
+
+			self.replace(ev_idx, dv_idx)
+    \end{minted}
+
+    \textbf{Листинг 2.} Метод ветвей и границ.
+    \begin{minted}[frame=single, framesep=10pt, fontsize = \footnotesize, linenos=true, breaklines]{python}
+class Node:
+	def __init__(self, x_bounds=[], freeze_var_list=[], index=0, upper_or_lower=0):
+		self._x_bounds = x_bounds
+		self._freeze_var_list = freeze_var_list
+		self._index = index
+		self._upper_or_lower = upper_or_lower
+
+	def freeze_lower_var(self, index, val):
+		self._x_bounds[index] = (None, val)
+		self._freeze_var_list.append(index)
+
+	def freeze_upper_var(self, index, val):
+		self._x_bounds[index] = (val, None)
+		self._freeze_var_list.append(index)
+
+	def freeze_var(self, index, val):
+		self._x_bounds[index] = (val, val)
+		self._freeze_var_list.append(index)
+
+	def set_lp_res(self, res):
+		self._res = res
+
+	def check_integer_var_all_solved(self, m):
+		return True if m == len(self._freeze_var_list) else False
+
+
+def check_all_integers(list):
+	is_integer = True
+	for i in range(len(list) - 1):
+		if not is_int(list[i]):
+			is_integer = False
+			break
+
+	return is_integer
+
+
+def calculate(A, b, c):
+	global node_counter
+
+	x_bounds = [(0, None) for i in range(len(c))]
+
+	print("\n######## Start B & B ###########\n")
+
+	node = Node(copy.deepcopy(x_bounds), [], node_counter)
+
+	node_counter += 1
+	res = solve_LP(x_bounds, A, b, c)
+
+	if check_all_integers(res.x):
+		print_result(res)
+		return res
+
+
+	lower = floor(res['x'][integer_var[0]])
+	upper = lower + 1
+
+	lower_node = Node(copy.deepcopy(x_bounds), [], node_counter, 1)
+	lower_node.freeze_lower_var(integer_var[0], lower)
+	add_dangling_node(lower_node, A, b, c)
+
+	node_counter += 1
+
+	upper_node = Node(copy.deepcopy(x_bounds), [], node_counter, 2)
+	upper_node.freeze_upper_var(integer_var[0], upper)
+	add_dangling_node(upper_node, A, b, c)
+
+	node_counter += 1
+
+	while len(dangling_nodes) > 0:
+
+		index = np.argmin(dangling_nodes_obj)
+
+		x_b = dangling_nodes[index]._x_bounds
+		frez = dangling_nodes[index]._freeze_var_list
+		res = dangling_nodes[index]._res
+		frez_var_index = len(frez)
+
+		u_or_l = dangling_nodes[index]._upper_or_lower
+		arbitrary_node = Node(copy.deepcopy(x_b), copy.deepcopy(frez), node_counter, copy.deepcopy(u_or_l))
+		u_or_l_b = lower - 1 if (u_or_l == 1) else upper + 1
+		arbitrary_node.freeze_var(integer_var[frez_var_index - 1], u_or_l_b)
+		x_b_arbi = arbitrary_node._x_bounds
+		if check_bounds(x_b_arbi, integer_var[frez_var_index - 1], u_or_l, x_bounds):
+			add_dangling_node(arbitrary_node, A, b, c)
+		else:
+			print("arbitrary Node infeasibile: ", arbitrary_node._index)
+
+		node_counter += 1
+
+		lower = floor(res['x'][integer_var[frez_var_index]])
+		upper = lower + 1
+
+		lower_node = Node(copy.deepcopy(x_b), copy.deepcopy(frez), node_counter, 1)
+		lower_node.freeze_lower_var(integer_var[frez_var_index], lower)
+		add_dangling_node(lower_node, A, b, c)
+
+		node_counter += 1
+
+		upper_node = Node(copy.deepcopy(x_b), copy.deepcopy(frez), node_counter, 2)
+		upper_node.freeze_upper_var(integer_var[frez_var_index], upper)
+		add_dangling_node(upper_node, A, b, c)
+
+		node_counter += 1
+
+		# убрать break в записке
+		# if check_all_integers():
+		break
+
+	result = get_max_integer_node()
+	print_result(result._res)
+
+
+def is_int(n):
+	return int(n) == float(n)
+
+
+def solve_LP(x_bounds, A_eq, b_eq, c):
+	return Simplex(c, A_eq=A_eq, b_eq=b_eq, bounds=x_bounds)
+
+
+def print_result(result):
+	x_list = result.x
+	print("z = {}".format(result.fun))
+
+	for i, item in enumerate(x_list):
+		print("x[{}] = {}".format(i, item))
+
+def get_max_integer_node():
+	global dangling_nodes
+	global dangling_nodes_obj
+	global result_Node
+
+	integer_nodes = []
+	for node in dangling_nodes:
+		if check_all_integers(node._res.x):
+			integer_nodes.append(node)
+
+	max_node_result = float("-INF")
+	max_node = None
+	for node in integer_nodes:
+		if node._res.fun >= max_node_result:
+			max_node = node
+			max_node_result = node._res.fun
+
+	return max_node
+
+def add_dangling_node(node, A, b, c):
+	global z_star
+	global dangling_nodes
+	global dangling_nodes_obj
+	global result_Node
+
+	res = solve_LP(node._x_bounds, A, b, c)
+	if check_feasibility(res) and res['fun'] > z_star:
+		node.set_lp_res(res)
+
+		if check_all_integers(res.x):
+			dangling_nodes_obj.append(res['fun'])
+			dangling_nodes.append(node)
+		elif len(dangling_nodes) == 0:
+			dangling_nodes_obj.append(res['fun'])
+			dangling_nodes.append(node)
+		else:
+			return
+
+		if node.check_integer_var_all_solved(len(integer_var)):
+			z_star = res['fun']
+			result_Node = node
+		return True
+	else:
+		return False
+\end{minted}
+
+\newpage
+
+\section{Результаты.}
+    Программы, представленные в \textbf{Листинге 1} и \textbf{Листинге 2} дали следующие результаты:
+    
+    \textbf{Листинг 5.} Результаты выполнения программ.
+    \begin{minted}[frame=single, framesep=10pt, fontsize = \footnotesize, linenos=true, breaklines]{text}
+Start Simplex method:
+    z =  10.0
+    x[0] = 0
+    x[1] = 14.0
+    x[2] = 24.0
+    x[3] = 0
+
+Start B&B method
+    [(None, 3), (None, 3), (0, None), (0, None)]
+    z = 56.0
+    x[0] = 2.0
+    x[1] = 3.0
+    x[2] = 0.0
+    x[3] = 5.0
+\end{minted}
+
+    Проверка полученных значений для ограничений:
+    \begin{equation}
+        \begin{cases}
+            -x_1 + 2x_2 - x_3 = 4 \\
+            3 x_1 + x_2 + x_4 = 14 \\
+            x_1, ..., x_4 \geq 0
+        \end{cases}
+    \end{equation}
+    
+     \textbf{Симплекс-метод}:
+     \begin{equation}
+        \begin{cases}
+            -1 \times 0 + 2 \times 14 -1 \times 24 + 0 \times 0 = 4 \\
+            3 \times 0 + 1 \times 14 + 0 \times 0 + 1 \times 0 = 14 \\
+            x_1, ..., x_4 \geq 0
+        \end{cases}
+    \end{equation}
+    Проверка прошла успешно.
+    
+    \textbf{Метод ветвей и границ}:
+    \begin{equation}
+        \begin{cases}
+            -1 \times 2 + 2 \times 3 -1 \times 0 + 0 \times 5 = 4 \\
+            3 \times 2 + 1 \times 3 + 0 \times 0 + 1 \times 5 = 14 \\
+            -\infty \leq x_1 \leq 3, \quad -\infty \leq x_2 \leq 3, \quad 0 \leq x_3 \leq \infty, \quad 0 \leq x_4 \leq \infty
+        \end{cases}
+    \end{equation}
+    Проверка прошла успешно.
+
+
+
+
+
+
+
+\end{document} 

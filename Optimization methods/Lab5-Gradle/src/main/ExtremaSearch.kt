@@ -158,7 +158,7 @@ class ExtremaSearch {
                 fun barrierFun(xValues: Matrix<Double>): Double {
                     var functionValue = 0.0
                     for (i in 0 until 3) {
-                        functionValue -= currentPenaltyCoef / maxCondFunctions(i, xValues, condFunctions)
+                        functionValue += currentPenaltyCoef / maxCondFunctions(i, xValues, condFunctions)
                     }
                     return functionValue
                 }

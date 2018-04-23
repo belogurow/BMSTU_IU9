@@ -1,0 +1,563 @@
+%% It is just an empty TeX file.
+%% Write your code here.
+% !TEX encoding = UTF-8 Unicode
+\documentclass[a4paper, 12pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[left=20mm, top=15mm, right=10mm, bottom=15mm]{geometry}    
+
+            
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or epsÃÂ§ with pdflatex; use eps in DVI mode
+\usepackage[14pt]{extsizes}
+\usepackage{setspace,amsmath}
+\usepackage{mathtools}
+\usepackage{ dsfont }
+\usepackage{amsmath,amssymb}
+\usepackage[unicode]{hyperref}
+
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{minted}
+\usepackage{caption}
+
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{cmap} % Улучшенный поиск русских слов в полученном pdf-файле
+\usepackage[T2A]{fontenc} % Поддержка русских букв
+\usepackage[utf8]{inputenc} % Кодировка utf8
+\usepackage[english, russian]{babel} % Языки: русский, английский
+
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+\begin{document}
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+\begin{center}
+Федеральное государственное бюджетное образовательное учреждение высшего профессионального образования Московский государственный технический университет имени Н.Э. Баумана
+\end{center}
+
+
+\vfill
+
+\centerline{\large{Лабораторная работа №7. Вариант 1.}}
+
+\centerline{\large{«Методы решения задач многокритериальной и}} 
+\centerline{\large{многоэкстремальной оптимизации»}} 
+
+\centerline{\large{по курсу}}
+\centerline{\large{«Методы оптимизации»}}
+
+
+\vfill
+
+Студент группы ИУ9-82 \hfill Белогуров А.А.
+
+Преподаватель \hfill Каганов Ю.T. 
+\vfill
+
+\centerline{Москва, 2018}
+\clearpage
+\end{titlepage}
+
+\newpage
+\setcounter{page}{2}
+
+\tableofcontents
+
+\newpage
+
+\section{Цель работы}
+
+\begin{enumerate}
+    \item Изучение методов решения задач многоэкстремальной и многокритериальной оптимизации.
+
+    \item Разработка программ реализации алгоритмов мультистарта (метода ближайшего соседа, метода конкурирующих точек), генетического алгоритма, алгоритмом многокритериальной оптимизации.
+    \item Решение задачи:
+    \begin{enumerate}
+        \item многоэкстремальной оптимизации для функции Шекеля;
+        \item многоэкстремальной оптимизации для заданных многоэкстремальных функций;
+        \item многокритериальной оптимизации.
+    \end{enumerate}
+
+\end{enumerate}
+
+\newpage
+
+\section{Постановка задачи}
+    \subsection{Задача 7.1}
+    
+    \textbf {Дано}: 1 Вариант. Функция Шекеля:
+    \begin{multline}
+        f(x) = -\sum_{i=1}^3 \frac{a}{f_i^0 + b \sum_{j=1}^{3} (x_j - x_{ij}^0)^2}, \\ \sum_{i=1}^3 \frac{1}{f_i^0} = f^0 = -c, x_{ij}^0 \in [\alpha, \beta]^3, 
+    \end{multline}
+    где $a=2$, $b=3$, $c=1$, $\alpha = 0$, $\beta = 5$.
+
+    \begin{enumerate}
+        \item Реализовать алгоритмы многоэкстремальной оптимизации методом мультистарта на одном из языков высокого уровня.
+        \item Решить задачу многоэкстремальной оптимизации с помощью метода мультистарта. 
+    \end{enumerate}
+    
+    \begin{enumerate}
+        \item Реализовать генетический алгоритм многоэкстремальной оптимизации на одном из языков высокого уровня.
+        \item Решить задачу многоэкстремальной оптимизации с помощью генетического алгоритма.
+    \end{enumerate}
+    
+\subsection{Задача 7.2}
+
+    \textbf {Дано}: 1 Вариант.
+    \begin{equation}
+        \begin{cases}
+            f_1(x) = x_1^2 + x_2^2 \rightarrow min, \\
+            f_2(x) = 4(x_1 - 5)^2 + 2(x_2 - 6)^4 \rightarrow min, \\
+            g_1(x) = x_2 - x_1 + 1 \leq 0, \\
+            g_2(x) = x_1 + x_2 - 2 \leq 0.
+        \end{cases}
+    \end{equation}
+
+    \begin{enumerate}
+        \item Реализовать метод свертки критериев (метод «идеальной точки») многокритериальной оптимизации на одном из языков высокого уровня.
+    	\item Требуется найти множества сильно эффективных решений (оптимальных по Парето) и слабо эффективных решений  (оптимальных по Слейтеру) для (2).
+    	\item Поиск  четырех эффективных точек определяется путем задания бинарных отношений между критериями и получением вектора весовых коэффициентов методом Т. Саати для (2).
+    	\item Исследовать полученное представление решений в пространстве критериев с учетом заданных ограничений для (2).
+    	\item Реализовать алгоритмы программированием на C++ и Python
+    \end{enumerate}
+
+    
+    
+\newpage
+\section{Исследование}
+    Найдем экстремум для функции Шекеля:
+        \begin{multline}
+        f(x) = -\sum_{i=1}^3 \frac{a}{f_i^0 + b \sum_{j=1}^{3} (x_j - x_{ij}^0)^2}, \\ \sum_{i=1}^3 \frac{1}{f_i^0} = f^0 = -c, x_{ij}^0 \in [\alpha, \beta]^3, 
+    \end{multline}
+    где $a=2$, $b=3$, $c=1$, $\alpha = 0$, $\beta = 5$, с помощью сервиса WolframAlpha.com:
+        
+     \begin{equation}
+        min(f(x)) = 18,\quad (x_1, x_2, x_3) = (4, 4, 4)
+    \end{equation}
+    
+\subsection{Задача 7.1}
+
+    \subsubsection{Алгоритм метода ближайшего соседа}
+    \begin{enumerate}
+        \item Генерируются $K$ точек $(z_1, z_2,..., z_k)$ случайным образом с помощью, например, алгоритма  Монте-Карло. Считается, что все они принадлежат различным кластерам (кластер ассоциируется с окрестностью локального минимума).
+        \item Находится ближайшая пара точек $(z_i, z_j)$, т.е. такая пара, для которой $\rho_{ij} = arg min_{k, l = 1,...,K} \rho_{kl}$.
+        \item Если расстояние $\rho_{ij} = \rho(z_i, z_j)$ между ближайшими соседями не превосходит некоторое достаточно малое число $\sigma > 0$, то точки $z_i$ и $z_j$, а также соответствующие им кластеры объединяются и число кластеров $K$ уменьшается на единицу. После этого происходит переход на Ш.2.
+        \item Остановка алгоритма происходит, либо если расстояние между ближайшеми соседями превосходит $\sigma$, либо если остается лишь один кластер.
+        \end{enumerate}
+    В качестве метрики $\rho(z_i, z_j)$ обычно выбирается евклидова метрика. Качество алгоритма как процедуры кластеризации существенно зависит от того, насколько  удачно выбрано число $\sigma$. Это число должно быть достаточно малым, во всяком случае меньше расстояний между соседними точками локальных минимумов.
+    
+    \subsubsection{Алгоритм метода конкурирующих точек}
+    \begin{enumerate}
+        \item Моделируется равномерное на $X$ распределение. В результате получается $N$ точек ${x_1, x_2,..., x_N}$.
+        \item Используя точки ${x_1, x_2,..., x_N}$ в качестве начальных, проводится одна или несколько итераций какого либо алгоритма локальной оптимизации. Получаем точки $(z_1, z_2,..., z_N)$.
+        \item Применяется какой либо метод кластеризации к точкам  $(z_1, z_2,..., z_N)$. Пусть $m$ - число получившихся кластеров. Если $m=1$, то переход на Ш.5. Иначе переход на Ш.4.
+        \item Выбираются представители $x_1, x_2,..., x_m$  от всех кластеров (естественно выбирать в кластерах с наименьшим значением целевой функции). Положим $N=m$ и переход на Ш.2.
+        \item Считаем, что находимся в окрестности точки глобального минимума. Выбрать представителя от единственного кластера. Используя его в качестве начальной точки для алгоритма локальной оптимизации, обладающего высокой скоростью сходимости в окрестности точки экстремума.
+
+    \end{enumerate}
+    
+    \subsubsection{Генетический алгоритм}
+    \textbf{Генетический алгортим} - это эвристический алгоритм поиска, используемый для решения задач оптимизации и моделирования путём случайного подбора, комбинирования и вариации искомых параметров с использованием механизмов, аналогичных естественному отбору в природе. 
+    
+    В нем используется основных 5 принципов:
+    \begin{enumerate}
+        \item \textbf{Формирование исходной популяции} - в зависимости от поставленной задачи генерируются $N$ особей $x^k = (x_1^k,..., x_n^k)^T$, для которой вычисляется функция фитнеса;
+        \item \textbf{Отбор (селекция)} - операция, которая осуществляет отбор особей (хромосом) $x^k$ в соответствии со значениями функции фитнеса $\mu(x^k)$ для последующего их скрещивания.
+        \item \textbf{Кроссинговер (скрещивание)} – это операция, при которой из нескольких, обычно двух хромосом (особей) $(x_i, x_j), \quad i \neq j$, называемых родителями, порождается одна или несколько новых, называемых потомками.
+        \item \textbf{Мутация} - это преобразование хромосомы, случайно изменяющее один или несколько из её генов. Оператор мутации предназначен для того, чтобы поддерживать разнообразие особей в популяции. Необходимо определить параметр $Pm \in (0, 1]$ - вероятность мутации.
+        \item \textbf{Формирование новой популяции}
+        \begin{enumerate}
+            \item С равной вероятностью из потомков мутантов предыдущего шага выбирается один $x^m = (x_1, x_2,..., x_p^M,..., x_n)$. 
+            \item Выбранный потомок добавляется в популяцию вместо хромосомы, которой соответствует наименьшее значение функции фитнеса (наихудшее из допустимых значений).
+            \item Вычисляется значение функции фитнеса для мутантного потомка $\mu_M = \mu(x^M)$.
+        \end{enumerate}
+        \item \textbf{Проверка условия останова генетического алгоритма} - условием окончания работы генетического алгоритма является формирование заданного количества популяций $t = Np$.
+    \end{enumerate}
+    
+    
+
+
+
+\subsection{Задача 7.2}
+
+    \subsubsection{Методы свертки критериев (метод «идеальной точки»)}
+    \begin{enumerate}
+    	\item Решение оптимизационных задач для каждого из критериев отдельно и получение «идеальной точки» c учетом ограничений.
+    	\item Выбор весовых коэффициентов. Величины весовых коэффициентов  - подбираются исходя из предварительно обусловленных соображений, которые могут быть выражены в виде дополнительных неформализуемых критериев. Чаще всего весовые коэффициенты выбираются путём бинарных сравнений и построения обратно симметричной матрицы. Далее вычисляются  собственные значения и, для максимального собственного значения, выбирается соответствующий собственный вектор, элементы которого используются как весовые коэффициенты (метод Т. Саати). В данном случае весовые коэффициенты могут варьироваться различным образом для исследования пространства эффективных точек.
+    	\item Получение оптимальных по Парето и Слейтеру решений. Для решения задачи можно использовать методы штрафных функций или метод модифицированных функций Лагранжа.
+     \end{enumerate}
+
+    
+\newpage
+
+\section{Практическая реализация}
+
+    Все методы были реализованы на языке программирования \textbf{Python}. Для алгоритмов с кластеризацией использовались следующие классы:
+    
+    \textbf{Листинг 1.} Вспомогательные классы для кластеризации.
+    \begin{minted}[frame=single, framesep=10pt, fontsize = \footnotesize, linenos=true, breaklines]{python}
+class FunValue:
+	def __init__(self, x_values, fun_value):
+		self.x_values = x_values
+		self.fun_value = fun_value
+
+	def __str__(self):
+		return "{}, {}".format(self.x_values, self.fun_value)
+
+
+class Cluster:
+	def __init__(self, fun_values=None):
+		if fun_values is None:
+			fun_values = []
+		self.funValues = [fun_values]
+
+	def euclidean_distance(self, another_cluster):
+		min_distance = float("INF")
+		for i in self.funValues:
+			distance = 0
+			for j in another_cluster.funValues:
+				distance += pow(i.fun_value - j.fun_value, 2)
+
+			if distance < min_distance:
+				min_distance = distance
+
+		return math.sqrt(min_distance)
+
+	def merge(self, another_cluster):
+		self.funValues += another_cluster.funValues
+
+	def min_by_value(self):
+		min_fun_value = None
+
+		for item in self.funValues:
+			if min_fun_value is None:
+				min_fun_value = item
+			elif item.fun_value < min_fun_value.fun_value:
+				min_fun_value = item
+
+		assert min_fun_value is not None
+		return min_fun_value
+
+	def __str__(self):
+		return "{}".format(self.funValues)
+    \end{minted}
+
+    \textbf{Листинг 2.} Метод ближайшего соседа.
+    \begin{minted}[frame=single, framesep=10pt, fontsize = \footnotesize, linenos=true, breaklines]{python}
+def nearest_neighbor(clusters, epsilon):
+	while True:
+		min_distance = float("INF")
+		min_i = -1
+		min_j = -1
+
+		for i in range(len(clusters)):
+			for j in range(len(clusters)):
+				if i != j and clusters[i].euclidean_distance(clusters[j]) < min_distance:
+					min_distance = clusters[i].euclidean_distance(clusters[j])
+					min_i = i
+					min_j = j
+
+		assert min_i > -1
+		assert min_j > -1
+
+		if min_distance < epsilon:
+			clusters[min_i].merge(clusters[min_j])
+			clusters.remove(clusters[min_j])
+		else:
+			break
+
+		if len(clusters) <= 1:
+			break
+
+	# for cluster in clusters:
+	# 	print()
+	# 	for funValue in cluster.funValues:
+	# 		print(funValue)
+
+	return clusters
+    \end{minted}
+
+    \textbf{Листинг 3.} Метод конкурирующих точек 
+    \begin{minted}[frame=single, framesep=10pt, fontsize = \footnotesize, linenos=true, breaklines]{python}
+def competing_points(cluster_count, epsilon):
+	not_changed_in_inter = False
+	step = (beta - alpha) / (cluster_count - 1)
+	clusters = [generate_cluster([alpha + i * step for _ in range(3)]) for i in range(cluster_count)]
+
+	while True:
+		for cluster in clusters:
+			for item in cluster.funValues:
+				nelder_mead = nelderMead(item.x_values)
+
+				item.fun_value = nelder_mead.fun
+				item.x_values = nelder_mead.x
+
+		clusters = nearest_neighbor(clusters, epsilon)
+
+		print(len(clusters))
+		if len(clusters) != 1:
+			if not_changed_in_inter:
+				not_changed_in_inter = False
+				epsilon *= 10
+			else:
+				not_changed_in_inter = True
+
+			min_from_clusters = []
+			for cluster in clusters:
+				min_from_clusters.append(Cluster(cluster.min_by_value()))
+
+			clusters = min_from_clusters
+		else:
+			min_fun_value = clusters[0].min_by_value()
+			nelder_mead = nelderMead(min_fun_value.x_values)
+			print("f({}) = {}".format(nelder_mead.x, nelder_mead.fun))
+			break
+\end{minted}
+
+\textbf{Листинг 4.} Генетический алгоритм  
+    \begin{minted}[frame=single, framesep=10pt, fontsize = \footnotesize, linenos=true, breaklines]{python}
+class GeneticAlgorithm():
+	def __init__(self):
+		self.alpha = 0
+		self.beta = 5
+		self.population_size = 60
+		self.number_of_genes = 20
+		self.crossover_probability = 0.5
+		self.mutation_probability = 1/self.number_of_genes
+		self.tournament_selection_parameter = 0.75
+		self.tournament_size = 3
+		self.number_of_variables = 3
+		self.variable_range = 5
+		self.number_of_generations = 150
+		self.number_of_best_individual_copies = 1
+		self.fitness = [0 for x in range(self.population_size)]
+
+		self.population = self.initialize_population(self.population_size, self.number_of_genes)
+
+	def run_ga(self):
+		k = 0
+		for iGenerations in range(self.number_of_generations):
+			print(k)
+			k += 1
+
+			maximum_fitness = 0.0
+			x_best = [0 for _ in range(self.number_of_variables)]
+			best_individual = None
+
+			# Decode chromosome and evaluate individual
+			for i in range(self.population_size):
+				chromosome = self.population[i]
+				x = self.decode_chromosome(chromosome, self.number_of_variables, self.variable_range)
+				self.fitness[i] = self.evaluate_individual(x)
+				if self.fitness[i] > maximum_fitness:
+					maximum_fitness = self.fitness[i]
+					x_best = x
+					best_individual = chromosome
+			temp_population = self.population
+
+			# Tournament selection
+			for i in range(round(self.population_size/2)):
+				j = i*2
+				i1 = self.tournament_select(self.fitness, self.tournament_selection_parameter, self.tournament_size)
+				i2 = self.tournament_select(self.fitness, self.tournament_selection_parameter, self.tournament_size)
+				chromosome_1 = self.population[i1]
+				chromosome_2 = self.population[i2]
+
+				# Crossover
+				r = random.random()
+				if r < self.crossover_probability:
+					new_chromosome_pair = self.cross(chromosome_1, chromosome_2)
+					temp_population[j] = new_chromosome_pair[0]
+					temp_population[j+1] = new_chromosome_pair[1]
+				else:
+					temp_population[j] = chromosome_1
+					temp_population[j+1] = chromosome_2
+
+			# Mutate
+			for i in range(self.population_size):
+				original_chromosome = temp_population[i]
+				mutated_chromosome = self.mutate(original_chromosome, self.mutation_probability)
+				temp_population[i] = mutated_chromosome
+
+			# Insert best individual
+			if best_individual is not None:
+				temp_population = self.insert_best_individual(temp_population, best_individual, self.number_of_best_individual_copies)
+			population = temp_population
+
+	    print("f({}) = {}".format(x_best, 1/maximum_fitness))
+
+	def initialize_population(self, population_size, number_of_genes):
+		population = [[0 for y in range(number_of_genes)] for x in range(population_size)]
+		step = (self.beta - self.alpha) / self.number_of_genes
+		for i in range(population_size):
+			for j in range(number_of_genes):
+				while True:
+					population[i][j] = step * random.random() + step
+
+					if 0 <= population[i][j] <= 1:
+						break
+		return population
+
+	def decode_chromosome(self, chromosome, number_of_variables, variable_range):
+		n_genes = len(chromosome)
+		n_split = round(n_genes/self.number_of_variables)
+		x = [0.0 for x in range(self.number_of_variables)]
+
+		for i in range(self.number_of_variables):
+			for j in range(n_split):
+				x[i] = x[i] + chromosome[n_split*(i-1)+j]*2**(-j)
+			x[i] = -self.variable_range + 2*self.variable_range*x[i]/(1-2**(-n_split))
+		return x
+
+	def evaluate_individual(self, x):
+		# The fitness function
+		x_values = x
+		if len(x_values) == 3:
+			a = 2
+			b = 3
+			c = 1
+
+			g = - 3 * a / (
+					-c / 3.0 + b * (pow(x_values[0] - 4.0, 2) + pow(x_values[1] - 4.0, 2) + pow(x_values[2] - 4.0, 2)))
+
+			fitness_value = 1/g
+		else:
+			print("ERROR: Wrong size individual")
+			sys.exit()
+		return fitness_value
+
+	def tournament_select(self, fitness, tournament_selection_parameter, tournament_size):
+		i_tmp_vector = [0 for x in range(tournament_size)]
+		fitness_vector = [0 for x in range(tournament_size)]
+		i_selected = None
+		for i in range(tournament_size):
+			i_tmp_vector[i] = int(random.random()*self.population_size)
+			fitness_vector[i] = fitness[i_tmp_vector[i]]
+
+		no_chosen_index = True
+		while no_chosen_index:
+			idx_maximum = fitness_vector.index(max(fitness_vector))
+			if len(fitness_vector) > 1:
+				if random.random() < tournament_selection_parameter:
+					i_selected = i_tmp_vector[idx_maximum]
+					no_chosen_index = False
+				else:
+					fitness_vector.pop(idx_maximum)
+					i_tmp_vector.pop(idx_maximum)
+			else:
+				i_selected = i_tmp_vector[0]
+				no_chosen_index = False
+
+		return i_selected
+
+	def cross(self, chromosome_1, chromosome_2):
+		n_genes = len(chromosome_1)
+		crossover_point = round(random.random() * n_genes)
+
+		new_chromosome_pair = [[0 for y in range(n_genes)] for x in range(2)]
+		for j in range(n_genes):
+			if j < crossover_point:
+				new_chromosome_pair[0][j] = chromosome_1[j]
+				new_chromosome_pair[1][j] = chromosome_2[j]
+			else:
+				new_chromosome_pair[0][j] = chromosome_2[j]
+				new_chromosome_pair[1][j] = chromosome_1[j]
+
+		return new_chromosome_pair
+
+	def mutate(self, chromosome, mutation_probability):
+		mutated_chromosome = chromosome
+		for j in range(self.number_of_genes):
+			if random.random() < mutation_probability:
+				mutated_chromosome[j] = 1-chromosome[j]
+
+		return mutated_chromosome
+
+	def insert_best_individual(self, population, best_individual, number_of_best_individual_copies):
+		for i in range(number_of_best_individual_copies):
+			population[i] = best_individual
+
+		return population
+\end{minted}
+
+    \textbf{Листинг 5.} Метод "идеальной точки".
+    \begin{minted}[frame=single, framesep=10pt, fontsize = \footnotesize, linenos=true, breaklines]{python}
+r0 = 1.0
+accelerator = 2.0
+epsilon = 10 ** -3
+k = 0
+
+def function_cut(a):
+	if a > 0:
+		return a
+	return 0
+
+def function_1(x):
+	return x[0] ** 2 + x[1] ** 2
+
+def function_2(x):
+	return 4 * (x[0] - 5) ** 2 + 2 * (x[1] - 6) ** 4
+
+def cond_1(x):
+	return x[1] - x[0] + 1
+
+def cond_2(x):
+	return x[0] + x[1] - 2
+
+
+def effective_points(w1, w2, x1, x2):
+	def F(x, r):
+		return (w1 * (function_1(x) - function_1(x1)) + w2 * (function_2(x) - function_2(x2)) + (r / 2.) * (
+				(function_cut(cond_1(x)) ** 2) + (function_cut(cond_2(x)) ** 2)))
+
+	def P(x, r):
+		return (r / 2.) * ((function_cut(cond_1(x)) ** 2) + (function_cut(cond_2(x)) ** 2))
+
+	def barrier_method(r, k, x0):
+		res = (minimize(lambda x: F(x, r), x0, method='CG'))
+		newx = res.x
+
+		if np.fabs(P(newx, r)) <= epsilon:
+			return newx
+		else:
+			return barrier_method(accelerator * r, k + 1, newx)
+
+	result = barrier_method(r0, k, [0.0, 0.0])
+	print('w1 = {}, w2 = {}, \nx = {}, f_1(x) = {:.2f}, f_2(x) = {:.2f}\n'.format(w1, w2, result, function_1(result), function_2(result)) )
+    \end{minted}
+
+
+
+\newpage
+
+\section{Результаты.}
+    Были получены следующие результаты:
+    
+    
+    \textbf{Листинг 5.} Результаты выполнения программ.
+    \begin{minted}[frame=single, framesep=10pt, fontsize = \footnotesize, linenos=true, breaklines]{text}
+Start Сompetitng points method method:
+    f([4.0605263157894731, 4.0605263157894731, 4.0605263157894731]) = 19.975867872760627
+
+Start Genetic Algorithm:
+    f([4.038834661591123, 4.030962344985451, 3.9695648282003884]) = 18.56699665784427
+    
+Start Effective points method:
+    w1 = 1, w2 = 1.0, 
+    x = [ 1.50000002  0.50000124], f_1(x) = 2.50, f_2(x) = 1879.12
+    
+    w1 = 2, w2 = 0.5, 
+    x = [ 1.50000002  0.50000247], f_1(x) = 2.50, f_2(x) = 1879.12
+    
+    w1 = 3, w2 = 0.3333333333333333, 
+    x = [ 1.5         0.50000329], f_1(x) = 2.50, f_2(x) = 1879.12
+    
+    w1 = 4, w2 = 0.25, 
+    x = [ 1.49999992  0.5000049 ], f_1(x) = 2.50, f_2(x) = 1879.12
+\end{minted}
+
+\end{document} 

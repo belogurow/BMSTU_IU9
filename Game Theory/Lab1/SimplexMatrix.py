@@ -1,22 +1,44 @@
-import numpy as np
 from copy import deepcopy
+
+import numpy as np
 import pandas as pd
+
+from Lab1.Conditions import FCondition, AConditionB
 
 
 class SimplexMatrix:
-    def __init__(self, A, b, c):
-        self.A = np.array(A)
-        self.b = np.array(b)
-        self.c = np.array(c)
+    def __init__(self, A, b, c, f_condition=FCondition.MAX, a_condition_b=AConditionB.LESS_OR_EQUAL):
+        """
+        1) F = cx -> max, Ax <= b
+        2) F = cx -> max, Ax >= b
+        3) F = cx -> min, Ax <= b
+        4) F = cx -> min, AX >= b
+        x_i >= 0
+        """
+        self.A = np.array(A, dtype='float64')
+        self.b = np.array(b, dtype='float64')
+        self.c = np.array(c, dtype='float64')
+        self.f_condition = f_condition
+        self.a_condition_b = a_condition_b
 
+    def prepare_variables(self):
+        # По умолчанию : F = cx -> max, Ax <= b
         # Канонический вид x = b - A
-        self.canonic = np.hstack((b, A))
-        self.f = np.insert(-c, 0, 0)
+
+        if self.f_condition is FCondition.MIN:
+            self.c = -self.c
+
+        if self.a_condition_b is AConditionB.GREATER_OR_EQUAL:
+            self.A = -self.A
+            self.b = -self.b
+
+        self.canonic = np.hstack((self.b, self.A))
+        self.f = np.insert(-self.c, 0, 0)
         self.canonic_with_f = np.vstack((self.canonic, self.f))
 
         self.rows, self.cols = self.canonic_with_f.shape
 
-        self.col = ['x' + str(self.rows - 1 + i) for i in range(1, self.rows)] + ['f']  # Свободные
+        self.col = ['x' + str(self.cols - 1 + i) for i in range(1, self.rows)] + ['f']  # Свободные
         self.row = ['s'] + ['x' + str(i) for i in range(1, self.cols)]  # Базис
 
         self.resolving_row_idx = None  # Индекс разрещающей строки

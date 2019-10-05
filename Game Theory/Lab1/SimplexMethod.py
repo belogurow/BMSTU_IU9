@@ -1,5 +1,6 @@
 import numpy as np
-from SimplexMatrix import SimplexMatrix
+
+from Lab1.SimplexMatrix import SimplexMatrix, FCondition
 
 INF = float('inf')
 
@@ -23,40 +24,49 @@ class SimplexMethod:
 
     def start(self):
         current_matrix = self.iterations[0]
+        current_matrix.prepare_variables()
         print("Start simplex method \n{}".format(current_matrix))
 
-        first_col = current_matrix.canonic[:, 0]
-        negative_element_idx = find_idx_of(np.min(first_col < 0))
 
-        if negative_element_idx == -1:
-            # Если в столбце S нет отрицательных элементов, то имеем опорное решение
-            # В последней строке ищем первый отрицательный элемент
-            while True:
-                resolving_col_idx = find_idx_of(current_matrix.f < 0)
-
+        # Если в столбце S нет отрицательных элементов, то имеем опорное решение
+        # В последней строке ищем первый отрицательный элемент
+        while True:
+            first_col = current_matrix.canonic[:, 0]
+            negative_element_idx = find_idx_of(first_col < 0)
+            if negative_element_idx != -1:
+                resolving_col_idx = find_idx_of(current_matrix.canonic[negative_element_idx][1:] < 0)
+                assert resolving_col_idx != -1, "Не найден отрицательный элемент в строке {}".format(negative_element_idx)
+            else:
+                resolving_col_idx = find_idx_of(current_matrix.f[1:] < 0)
                 if resolving_col_idx == -1:
                     # Отрицательных элементов нет, значит нашли оптимальное решение
                     break
 
-                # Найти минимальное положительное отношение элемента свободных членов
-                # к соотвествющему элементу в разрешающем столбце
-                first_col = current_matrix.canonic[:, 0]
-                resolving_col = current_matrix.canonic[:, resolving_col_idx]
-                divison = first_col / resolving_col
-                # resolving_row_idx = find_idx_of(np.min(divison > 0))
-                resolving_row_idx = np.argmin(replace_negative(divison))
+            # Необходимо добавить столбeц s
+            resolving_col_idx += 1
 
-                print('Замена базисной переменной {} на свободную {}'.format(current_matrix.row[resolving_col_idx],
-                                                                             current_matrix.col[resolving_row_idx]))
-                current_matrix.set_resolving_elements(resolving_row_idx, resolving_col_idx)
 
-                new_matrix = current_matrix.create_new_matrix()
-                self.iterations.append(new_matrix)
+            # Найти минимальное положительное отношение элемента свободных членов
+            # к соотвествющему элементу в разрешающем столбце
+            resolving_col = current_matrix.canonic[:, resolving_col_idx]
+            divison = first_col / resolving_col
+            resolving_row_idx = np.argmin(replace_negative(divison))
 
-                current_matrix = new_matrix
-        else:
-            # TODO поиск отрицательного элемента в столбце s -> замена базиса
-            assert negative_element_idx != -1
+            print('Замена базисной переменной {} на свободную {}'.format(current_matrix.row[resolving_col_idx],
+                                                                         current_matrix.col[resolving_row_idx]))
+            current_matrix.set_resolving_elements(resolving_row_idx, resolving_col_idx)
+
+            new_matrix = current_matrix.create_new_matrix()
+            self.iterations.append(new_matrix)
+
+            current_matrix = new_matrix
 
         self.result = current_matrix.f[0]
+
+        # Данная реализация всегда ищет максимум, если необходимо найти минимум
+        # то умножаем результат на -1
+        if current_matrix.f_condition == FCondition.MIN:
+            self.result *= -1
+            print('Так как ищем MIN, то умножаем резульат на -1 -> {}'.format(self.result))
+
         return self.result

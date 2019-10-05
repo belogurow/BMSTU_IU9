@@ -1,6 +1,7 @@
 import numpy as np
-from SimplexMatrix import SimplexMatrix
-from SimplexMethod import SimplexMethod
+
+from Lab1.SimplexMatrix import SimplexMatrix
+from Lab1.SimplexMethod import SimplexMethod
 
 c = np.array([2, 5, 3])
 A = np.array([[2, 1, 2],

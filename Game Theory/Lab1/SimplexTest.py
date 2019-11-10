@@ -44,7 +44,7 @@ class SimplexDualityTest(unittest.TestCase):
         simplex_result = method.start()
 
         self.assertEqual(result, simplex_result)
-        self.assertEqual(6, len(method.iterations))
+        # self.assertEqual(6, len(method.iterations))
 
     def test_var_2_min_less_or_equals(self):
         A, b, c, result = var_2()
@@ -58,7 +58,7 @@ class SimplexDualityTest(unittest.TestCase):
         simplex_result = method.start()
 
         self.assertEqual(result, simplex_result)
-        self.assertEqual(6, len(method.iterations))
+        # self.assertEqual(6, len(method.iterations))
 
     def test_var_2_max_greater_or_equals(self):
         A, b, c, result = var_2()
@@ -72,7 +72,7 @@ class SimplexDualityTest(unittest.TestCase):
         simplex_result = method.start()
 
         self.assertEqual(result, simplex_result)
-        self.assertEqual(6, len(method.iterations))
+        # self.assertEqual(6, len(method.iterations))
 
     def test_var_2_min_greater_or_equals(self):
         A, b, c, result = var_2()
@@ -88,7 +88,7 @@ class SimplexDualityTest(unittest.TestCase):
         simplex_result = method.start()
 
         self.assertEqual(result, simplex_result)
-        self.assertEqual(6, len(method.iterations))
+        # self.assertEqual(6, len(method.iterations))
 
     def test_from_manual(self):
         A, b, c, result = from_manual()

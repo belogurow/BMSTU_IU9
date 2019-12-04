@@ -1,5 +1,5 @@
 import cv2
-import numpy as np
+
 
 class Piece:
     def __init__(self, image, top_left_coords, bottom_right_coords):
@@ -9,6 +9,7 @@ class Piece:
 
         self.teng_val = None
         self.glvn_val = None
+        self.is_blured = None
 
     def teng(self):
         ksize = 5
@@ -20,7 +21,10 @@ class Piece:
         return self.teng_val
 
     def glvn(self):
-        FM = np.square(cv2.meanStdDev(self.piece)) / cv2.mean(self.piece)
-        self.glvn_val = cv2.mean(FM)[0]
+        # FM = np.square(cv2.meanStdDev(self.piece)) / cv2.mean(self.piece)
+        # self.glvn_val = cv2.mean(FM)[0]
+
+        mean, stdev = cv2.meanStdDev(self.piece)
+        self.glvn_val = (stdev[0] ** 2 / mean[0])[0]
 
         return self.glvn_val

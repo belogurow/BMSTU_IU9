@@ -1,6 +1,4 @@
-# Lab2.1
-
- Border detection
+# Lab2.2 - Border detection
 
 Input
 

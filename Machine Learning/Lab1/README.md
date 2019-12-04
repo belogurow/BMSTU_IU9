@@ -1,6 +1,4 @@
-# Lab1
-
- Image process
+# Lab1 - Image process
 
 * Rotate over center
 * Shrink

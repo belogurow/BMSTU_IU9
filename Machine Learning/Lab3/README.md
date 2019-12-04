@@ -1,6 +1,4 @@
-# Lab3
-
- ##### SVM from scratch
+# Lab3 -  SVM from scratch
 
 Ouput
 

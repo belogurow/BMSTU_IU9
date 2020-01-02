@@ -11,22 +11,22 @@ matrix_manual = np.array([[5, 8, 7, 5, 4],
                           [3, 5, 4, 12, 3]])
 
 if __name__ == "__main__":
-    matrix = matrix_manual
+    matrix = var_2
 
-    bernulli = [np.sum(row) / len(row) for row in matrix_manual]
+    bernulli = [np.sum(row) / len(row) for row in matrix]
     print(f"bernulli {bernulli}")
 
-    vald = [np.min(row) for row in matrix_manual]
+    vald = [np.min(row) for row in matrix]
     print(f"vald {vald}")
 
     alhpa = 0.5
-    gurvits = [alhpa * np.min(row) + (1 - alhpa) * np.max(row) for row in matrix_manual]
+    gurvits = [alhpa * np.min(row) + (1 - alhpa) * np.max(row) for row in matrix]
     print(f"gurvits {gurvits}")
 
-    optimal = [np.max(row) for row in matrix_manual]
+    optimal = [np.max(row) for row in matrix]
     print(f"optimal {optimal}")
 
-    maxes = [np.max(row) for row in matrix_manual.T]
-    savidge = ([maxes - row for row in matrix_manual])
+    maxes = [np.max(row) for row in matrix.T]
+    savidge = ([maxes - row for row in matrix])
     print(f"savidge {savidge}")
 

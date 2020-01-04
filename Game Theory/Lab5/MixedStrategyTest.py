@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from Lab5.MixedStategyMethod import MixedStrategyMethod
+from Lab5.MixedStrategyMethod import MixedStrategyMethod
 
 
 def var_2():
